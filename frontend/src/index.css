@@ -48,6 +48,18 @@ h2 {
   margin: 0 auto;
 }
 /* @media (max-width: 900px) {
+body {
+  background-color: #dff2fa;
+}
+.red {
+  border: 1px solid red;
+  border-radius: 6px;
+}
+.dropdown-menu {
+  background-color: #30475e !important;
+  border: none !important;
+}
+@media (max-width: 900px) {
   .carousel-caption h2 {
     font-size: 2.5vw;
   }
