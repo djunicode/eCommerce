@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Carousel, Image, Row, Col, Card } from 'react-bootstrap';
+import { Carousel, Row, Col, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from './Loader';
 import Message from './Message';
 import { listTopProducts } from '../actions/productActions';
-import Product from '../components/Product';
+// eslint-disable-next-line no-unused-vars
+import Product from './Product';
 
 const ProductCarousel = () => {
   const dispatch = useDispatch();
@@ -13,6 +13,7 @@ const ProductCarousel = () => {
   const productTopRated = useSelector(
     (state) => state.productTopRated,
   );
+  // eslint-disable-next-line no-unused-vars
   const { loading, error, products } = productTopRated;
 
   useEffect(() => {
@@ -70,8 +71,8 @@ const ProductCarousel = () => {
       sampletitle: 'New Chair 10',
       sampleprice: 1299,
       sampleid: 10,
-    }
-  ]
+    },
+  ];
 
   return loading ? (
     <Loader />
@@ -79,8 +80,6 @@ const ProductCarousel = () => {
     <Message variant="danger">{error}</Message>
   ) : (
     <Carousel pause="hover">
-
-
       {/* {products.map((product) => (
         <Carousel.Item key={product._id}>
           <Link to={`/product/${product._id}`}>
@@ -94,57 +93,54 @@ const ProductCarousel = () => {
         </Carousel.Item>
       ))} */}
 
-
-        {/* <Carousel.Item>
-          <Row>
-            {products.slice(0,3).map((product) => (
-              <Col key={product._id}>
-                <Product product={product} />
-              </Col>
-            ))}
-          </Row>
-        </Carousel.Item>
-        <Carousel.Item>
-          <Row>
-            {products.slice(3,6).map((product) => (
-              <Col key={product._id}>
-                <Product product={product} />
-              </Col>
-            ))}
-          </Row>
-        </Carousel.Item> */}
-
-        <Carousel.Item>
-          <Row>
-              {sample.slice(0,5).map((sample) => (
-                <Col key={sample.sampleid}>
-                  <Card className="my-3 p-2">
-                    <Card.Img src='../uploads/FURNITURE HOUSEHOLD.jpg' variant="top" className="my-0" style={{width:'100%', height:'auto'}}/>
-                    <Card.Body>
-                        <Card.Title as="h3">{sample.sampletitle}</Card.Title>
-                        <Card.Text as="h3">Rs. {sample.sampleprice}</Card.Text>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
-          </Row>
-        </Carousel.Item>
-        <Carousel.Item>
-          <Row>
-              {sample.slice(5,10).map((sample) => (
-                <Col key={sample.sampleid}>
-                  <Card className="my-3 p-2">
-                    <Card.Img src='../uploads/FURNITURE HOUSEHOLD.jpg' variant="top" className="my-0" style={{width:'100%', height:'auto'}}/>
-                    <Card.Body>
-                        <Card.Title as="h3">{sample.sampletitle}</Card.Title>
-                        <Card.Text as="h3">Rs. {sample.sampleprice}</Card.Text>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
-          </Row>
-        </Carousel.Item>
-    
+      <Carousel.Item>
+        <Row>
+          {sample.slice(0, 5).map((samples) => (
+            <Col key={samples.sampleid}>
+              <Card className="my-3 p-2">
+                <Card.Img
+                  src="../uploads/FURNITURE HOUSEHOLD.jpg"
+                  variant="top"
+                  className="my-0"
+                  style={{ width: '100%', height: 'auto' }}
+                />
+                <Card.Body>
+                  <Card.Title as="h3">
+                    {samples.sampletitle}
+                  </Card.Title>
+                  <Card.Text as="h3">
+                    Rs. {samples.sampleprice}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Carousel.Item>
+      <Carousel.Item>
+        <Row>
+          {sample.slice(5, 10).map((samples) => (
+            <Col key={samples.sampleid}>
+              <Card className="my-3 p-2">
+                <Card.Img
+                  src="../uploads/FURNITURE HOUSEHOLD.jpg"
+                  variant="top"
+                  className="my-0"
+                  style={{ width: '100%', height: 'auto' }}
+                />
+                <Card.Body>
+                  <Card.Title as="h3">
+                    {samples.sampletitle}
+                  </Card.Title>
+                  <Card.Text as="h3">
+                    Rs. {samples.sampleprice}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Carousel.Item>
     </Carousel>
   );
 };

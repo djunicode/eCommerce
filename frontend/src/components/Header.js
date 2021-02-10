@@ -9,10 +9,10 @@ import { logout } from '../actions/userActions';
 import { DARK_BLUE_2, LIGHT_PEACH } from '../util/colors';
 
 const Header = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const userLogin = useSelector((state) => state.userLogin)
-  const { userInfo } = userLogin
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   const logoutHandler = () => {
     dispatch(logout());
@@ -111,11 +111,10 @@ const StyledNavLink = styled(Nav.Link)`
   color: ${LIGHT_PEACH};
   marginright: 6;
   textdecoration: 'none';
-  margin: 0 10px;
+  margin: 0 30px;
   border: 2px #ffdfc3 solid;
-  border-radius: 8px;
-  font-size: 16px;
-  padding: 8px;
+  font-size: 14px;
+  padding: 10px 25px;
 
   &:hover {
     text-decoration: none;
@@ -126,7 +125,7 @@ const StyledNavLink = styled(Nav.Link)`
 
 const StyledNavDropDown = styled(NavDropdown)`
   background-color: ${DARK_BLUE_2} !important;
-  font-size: 16px;
+  font-size: 14px;
   border: none !important;
   margin-right: 6px !important;
 `;
@@ -138,7 +137,7 @@ const StyledLinkContainer = styled(LinkContainer)`
 const StyledNavDropDownItem = styled(NavDropdown.Item)`
   background-color: ${DARK_BLUE_2};
   color: ${LIGHT_PEACH};
-  font-size: 16px;
+  font-size: 14px;
 
   &:hover {
     background-color: ${LIGHT_PEACH};

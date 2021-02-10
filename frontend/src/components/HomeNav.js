@@ -2,12 +2,12 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import styled from 'styled-components';
 import SearchBox from './SearchBox';
 import { logout } from '../actions/userActions';
-import styled from 'styled-components';
 
-const Header = () => {
+const HomeNav = () => {
   const dispatch = useDispatch();
 
   const userLogin = useSelector((state) => state.userLogin);
@@ -17,24 +17,22 @@ const Header = () => {
     dispatch(logout());
   };
 
-
   // STYLED COMPONENTS
   const Navbars = styled(Navbar)`
-    background: #30475E;
+    background: #30475e;
     padding: 1.5rem 80px;
-  `
+  `;
   const Icon = styled.i`
-    color: #FFDFC3;
+    color: #ffdfc3;
     margin-left: 5vw;
-  `
+  `;
   const Containers = styled.div`
     margin: 0;
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-  `
-
+  `;
 
   return (
     <header>
@@ -93,4 +91,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default HomeNav;
