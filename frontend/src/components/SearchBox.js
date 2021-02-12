@@ -1,18 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
 import { DARK_BLUE_2, LIGHT_PEACH } from '../util/colors';
+
+import { search } from '../actions/searchActions';
 
 const SearchBox = ({ history }) => {
   const [keyword, setKeyword] = useState('');
 
+  const dispatch = useDispatch();
+
+  const searchState = useSelector((state) => state.search);
+  const { loading, error, products } = searchState;
+
   const submitHandler = (e) => {
     e.preventDefault();
+    dispatch(search(keyword));
     if (keyword.trim()) {
       history.push(`/search/${keyword}`);
     } else {
       history.push('/');
     }
+    console.log(keyword);
   };
 
   return (
@@ -24,7 +34,7 @@ const SearchBox = ({ history }) => {
         placeholder="Search Products..."
         className="mr-sm-2 ml-sm-5"
       />
-      <StyledButton>
+      <StyledButton onClick={submitHandler}>
         <i className="fas fa-search" />
       </StyledButton>
     </StyledForm>

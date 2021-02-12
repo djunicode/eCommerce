@@ -57,6 +57,23 @@ body {
   background-color: #30475e !important;
   border: none !important;
 }
+.card {
+  border: none !important;
+  padding: -1px;
+}
+.card-header {
+  background-color: #dff2fa;
+  text-transform: uppercase;
+  font-weight: 900 !important;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.card-body {
+  background-color: #dff2fa;
+  padding-bottom: 10px;
+}
+
 @media (max-width: 900px) {
   .carousel-caption h2 {
     font-size: 2.5vw;
