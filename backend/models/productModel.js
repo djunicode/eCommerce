@@ -1,4 +1,5 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
+import mongoose_fuzzy_searching from 'mongoose-fuzzy-searching';
 
 const reviewSchema = mongoose.Schema(
   {
@@ -14,7 +15,7 @@ const reviewSchema = mongoose.Schema(
   {
     timestamps: true,
   }
-)
+);
 
 const productSchema = mongoose.Schema(
   {
@@ -32,11 +33,20 @@ const productSchema = mongoose.Schema(
       required: true,
     },
     brand: {
-      type: String,
-      required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Brand',
     },
     category: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
+    },
+    subcategory: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'SubCategory',
+    },
+    new: {
+      type: Boolean,
+      default: false,
       required: true,
     },
     description: {
@@ -54,7 +64,17 @@ const productSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
+    discount: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
     price: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    discountedPrice: {
       type: Number,
       required: true,
       default: 0,
@@ -68,8 +88,24 @@ const productSchema = mongoose.Schema(
   {
     timestamps: true,
   }
-)
+);
 
-const Product = mongoose.model('Product', productSchema)
+productSchema.plugin(mongoose_fuzzy_searching, {
+  fields: [
+    {
+      name: 'name',
+      minSize: 2,
+      weight: 5,
+    },
+    {
+      name: 'brand',
+      minSize: 3,
+      weight: 1,
+      prefixOnly: true,
+    },
+  ],
+});
 
-export default Product
+const Product = mongoose.model('Product', productSchema);
+
+export default Product;

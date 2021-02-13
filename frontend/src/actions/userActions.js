@@ -27,30 +27,54 @@ import {
 } from '../constants/userConstants';
 import { ORDER_LIST_MY_RESET } from '../constants/orderConstants';
 
+const url = 'http://localhost:5000/graphql';
+
 export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({
       type: USER_LOGIN_REQUEST,
     });
 
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
+    const data = await axios.post(
+      url,
+      {
+        query: `
+        query {
+          authUser(email: "${email}", password: "${password}"){
+            _id
+            name
+            email
+            phoneNo
+            isAdmin
+            token
+          }
+        }
+      `,
       },
-    };
-
-    const { data } = await axios.post(
-      '/api/users/login',
-      { email, password },
-      config,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
     );
+
+    const reconstructedData = {
+      _id: data.data.data.authUser._id,
+      name: data.data.data.authUser.name,
+      email: data.data.data.authUser.email,
+      phoneNo: data.data.data.authUser.phoneNo,
+      isAdmin: data.data.data.authUser.isAdmin,
+    };
 
     dispatch({
       type: USER_LOGIN_SUCCESS,
-      payload: data,
+      payload: reconstructedData,
     });
 
-    localStorage.setItem('userInfo', JSON.stringify(data));
+    localStorage.setItem(
+      'userInfo',
+      JSON.stringify(reconstructedData),
+    );
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,
@@ -82,36 +106,57 @@ export const register = (name, number, email, password) => async (
       type: USER_REGISTER_REQUEST,
     });
 
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
+    const data = await axios.post(
+      'http://localhost:5000/graphql',
+      {
+        query: `
+        mutation {
+          registerUser(userInput: {name: "${name}", phoneNo: "${number}", email: "${email}", password: "${password}", isAdmin: ${false}}){
+            _id
+            name
+            phoneNo
+            email
+            isAdmin
+          }
+        }
+        `,
       },
-    };
-
-    const { data } = await axios.post(
-      '/api/users',
-      { name, number, email, password },
-      config,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
     );
+
+    const reconstructedData = {
+      _id: data.data.data.registerUser._id,
+      name: data.data.data.registerUser.name,
+      email: data.data.data.registerUser.email,
+      phoneNo: data.data.data.registerUser.phoneNo,
+      isAdmin: data.data.data.registerUser.isAdmin,
+    };
 
     dispatch({
       type: USER_REGISTER_SUCCESS,
-      payload: data,
+      payload: reconstructedData,
     });
 
     dispatch({
       type: USER_LOGIN_SUCCESS,
-      payload: data,
+      payload: reconstructedData,
     });
 
-    localStorage.setItem('userInfo', JSON.stringify(data));
+    localStorage.setItem(
+      'userInfo',
+      JSON.stringify(reconstructedData),
+    );
   } catch (error) {
     dispatch({
       type: USER_REGISTER_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
-          : error.message,
+          : error.response.data.errors[0].message,
     });
   }
 };

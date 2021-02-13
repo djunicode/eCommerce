@@ -1,27 +1,34 @@
 {
-    "parser": "babel-eslint",
-    "parserOptions": {
-      "sourceType": "module",
-      "allowImportExportEverywhere": false,
-      "codeFrame": false
-    },
-    "extends": ["airbnb", "plugin:prettier/recommended", "prettier/react"],
-    "env": {
-      "browser": true,
-      "es6": true,
-      "jest": true
-    },
-    "rules": {
-      "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-      "no-console":"off",
-      "react/prop-types":"off",
-      "no-underscore-dangle":"off",
-      "no-nested-ternary":"off",
-      "no-alert":"off",
-      "no-case-declarations":"off",
-      "jsx-a11y/control-has-associated-label":"off",
-      "prettier/prettier": ["error",{
-        "endOfLine": "auto"}
-      ]
-    }
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module",
+    "allowImportExportEverywhere": false,
+    "codeFrame": false
+  },
+  "extends": [
+    "airbnb",
+    "plugin:prettier/recommended",
+    "prettier/react"
+  ],
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jest": true
+  },
+  "rules": {
+    "react/jsx-filename-extension": [
+      1,
+      { "extensions": [".js", ".jsx"] }
+    ],
+    "no-console": "off",
+    "react/prop-types": "off",
+    "no-underscore-dangle": "off",
+    "no-nested-ternary": "off",
+    "no-alert": "off",
+    "no-case-declarations": "off",
+    "jsx-a11y/control-has-associated-label": "off",
+    "prettier/prettier": ["error",{
+      "endOfLine": "auto"}
+    ]
   }
+}

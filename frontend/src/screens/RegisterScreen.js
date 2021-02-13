@@ -42,7 +42,7 @@ const RegisterScreen = ({ location, history }) => {
   const validationFunc = (nameParam, numberParam, emailParam) => {
     if (nameParam) {
       const nameRegex = /[A-Za-z ]+$/;
-      console.log(nameParam.match(nameRegex));
+      // console.log(nameParam.match(nameRegex));
       // console.log(name);
       if (nameParam.match(nameRegex)) {
         setValidationStatus({
