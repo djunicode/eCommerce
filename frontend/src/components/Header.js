@@ -97,7 +97,7 @@ export default Header;
 
 const StyledNavbar = styled(Navbar)`
   background-color: ${DARK_BLUE_2};
-  padding: 16px !important;
+  padding: 20px !important;
 `;
 
 const StyledH1 = styled.h1`

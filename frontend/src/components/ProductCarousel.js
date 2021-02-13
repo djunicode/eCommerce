@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { Carousel, Row, Col, Card } from 'react-bootstrap';
+import { Carousel, Row, Col, Card, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
 import Loader from './Loader';
 import Message from './Message';
 import { listTopProducts } from '../actions/productActions';
@@ -97,22 +98,19 @@ const ProductCarousel = () => {
         <Row>
           {sample.slice(0, 5).map((samples) => (
             <Col key={samples.sampleid}>
-              <Card className="my-3 p-2">
-                <Card.Img
-                  src="../uploads/FURNITURE HOUSEHOLD.jpg"
-                  variant="top"
-                  className="my-0"
-                  style={{ width: '100%', height: 'auto' }}
-                />
-                <Card.Body>
-                  <Card.Title as="h3">
-                    {samples.sampletitle}
-                  </Card.Title>
-                  <Card.Text as="h3">
-                    Rs. {samples.sampleprice}
-                  </Card.Text>
+              <NACard>
+                <Card.Body style={{ padding: '10px' }}>
+                  <img
+                    src="../uploads/FURNITURE HOUSEHOLD.jpg"
+                    variant="top"
+                    alt="new arrival"
+                    style={{ width: '100%', height: 'auto' }}
+                  />
+                  <NAtitle>{samples.sampletitle}</NAtitle>
+                  <NAprice>Rs. {samples.sampleprice}</NAprice>
+                  <NAbutton>View</NAbutton>
                 </Card.Body>
-              </Card>
+              </NACard>
             </Col>
           ))}
         </Row>
@@ -121,22 +119,19 @@ const ProductCarousel = () => {
         <Row>
           {sample.slice(5, 10).map((samples) => (
             <Col key={samples.sampleid}>
-              <Card className="my-3 p-2">
-                <Card.Img
-                  src="../uploads/FURNITURE HOUSEHOLD.jpg"
-                  variant="top"
-                  className="my-0"
-                  style={{ width: '100%', height: 'auto' }}
-                />
-                <Card.Body>
-                  <Card.Title as="h3">
-                    {samples.sampletitle}
-                  </Card.Title>
-                  <Card.Text as="h3">
-                    Rs. {samples.sampleprice}
-                  </Card.Text>
+              <NACard>
+                <Card.Body style={{ padding: '10px' }}>
+                  <img
+                    src="../uploads/FURNITURE HOUSEHOLD.jpg"
+                    variant="top"
+                    alt="new arrival"
+                    style={{ width: '100%', height: 'auto' }}
+                  />
+                  <NAtitle>{samples.sampletitle}</NAtitle>
+                  <NAprice>Rs. {samples.sampleprice}</NAprice>
+                  <NAbutton>View</NAbutton>
                 </Card.Body>
-              </Card>
+              </NACard>
             </Col>
           ))}
         </Row>
@@ -146,3 +141,28 @@ const ProductCarousel = () => {
 };
 
 export default ProductCarousel;
+
+// STYLED COMPONENTS
+const NACard = styled(Card)`
+  border: none;
+  margin: 0;
+`;
+const NAtitle = styled(Card.Title)`
+  font-size: 1.4rem;
+  text-transform: capitalize;
+  margin: 25px 0 5px 0;
+`;
+const NAprice = styled(Card.Text)`
+  font-weight: light;
+  text-transform: capitalize;
+  font-size: 1.4rem;
+`;
+const NAbutton = styled(Button)`
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  color: white;
+  background-color: #f05454;
+  padding: 10px;
+  width: 100%;
+  margin-top: 5px;
+`;

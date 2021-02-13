@@ -108,7 +108,10 @@ function HomeScreen({ match }) {
     <>
       <Meta />
       {!keyword ? (
-        <ProductCarousel />
+        <>
+          <h1>New Arrivals</h1>
+          <ProductCarousel />
+        </>
       ) : (
         <Link to="/" className="btn btn-light">
           Go Back
@@ -116,7 +119,7 @@ function HomeScreen({ match }) {
       )}
 
       {/* CATEGORIES */}
-      <h1>Categories</h1>
+      <h1 style={{ margin: '80px 0 0 0' }}>Categories</h1>
       <Row className="justify-content-center">
         {category.map((categories) => (
           <Col
