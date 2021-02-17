@@ -29,6 +29,7 @@ import {
   orderListReducer,
 } from './reducers/orderReducers';
 import { searchReducer } from './reducers/searchReducers';
+import { filterReducer } from './reducers/filterReducers';
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -53,6 +54,7 @@ const reducer = combineReducers({
   orderListMy: orderListMyReducer,
   orderList: orderListReducer,
   search: searchReducer,
+  filter: filterReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem('cartItems')

@@ -18,7 +18,7 @@ export const search = (search) => async (dispatch) => {
       {
         query: `
                 query {
-                    searchProduct(searchTerm: "tan"){
+                    searchProduct(searchTerm: "${search}"){
                         _id
                         name
                         discount

@@ -4,18 +4,22 @@ import {
   Col,
   Accordion,
   Card,
-  ListGroup,
   Form,
   Button,
-  ButtonToolbar,
   Badge,
 } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import RangeSlider from 'react-bootstrap-range-slider';
-import { BORDER_DARK, LIGHT_BLUE, DARK_BLUE_2 } from '../util/colors';
+import { filter } from '../actions/filterActions';
+import { LIGHT_BLUE, DARK_BLUE_2 } from '../util/colors';
 
-const FilterSidebar = (props) => {
+let selectedBrands = [];
+let selectedRating = [];
+
+const FilterSidebar = () => {
+  const dispatch = useDispatch();
+
   const brands = ['Nike', 'Nikon', 'Puma'];
   const rating = [4, 3, 2, 1];
 
@@ -30,25 +34,42 @@ const FilterSidebar = (props) => {
     avgRating: true,
   });
 
-  const selectedBrands = [];
-  const selectedRating = [];
-
   const removeDuplicates = (data) => {
     return [...new Set(data)];
+  };
+
+  const brandsHandler = (elem) => {
+    console.log(
+      elem.target.id,
+      selectedBrands.includes(elem.target.id),
+    );
+    selectedBrands.includes(elem.target.id)
+      ? (selectedBrands = selectedBrands.filter(
+          (item) => item !== elem.target.id,
+        ))
+      : selectedBrands.push(elem.target.id);
+  };
+
+  const ratingHandler = (elem) => {
+    selectedRating.includes(elem.target.id)
+      ? (selectedRating = selectedRating.filter(
+          (item) => item !== elem.target.id,
+        ))
+      : selectedRating.push(elem.target.id);
   };
 
   const filterSubmitHandler = (e) => {
     e.preventDefault();
     console.log(priceRange);
-    console.log(removeDuplicates(selectedBrands));
-    console.log(removeDuplicates(selectedRating));
+    removeDuplicates(selectedBrands);
+    removeDuplicates(selectedRating);
     const filters = {
       price: priceRange,
       brands: selectedBrands,
-      rating: selectedRating
+      rating: selectedRating,
     };
-    localStorage.setItem('filters-proshop', JSON.stringify(filters));
-    window.location.reload();
+    dispatch(filter(filters));
+    // window.location.reload();
   };
 
   return (
@@ -59,14 +80,25 @@ const FilterSidebar = (props) => {
       <Row>
         <StyledAccordian defaultActiveKey="0">
           <Card>
-            <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => {
-              setChevronState({
-                price: !chevronState.price,
-                brand: chevronState.brand,
-                avgRating: chevronState.avgRating,
-              });
-            }}>
-              Price <i className={chevronState.price ? `fas fa-chevron-up` : `fas fa-chevron-down`} />
+            <Accordion.Toggle
+              as={Card.Header}
+              eventKey="0"
+              onClick={() => {
+                setChevronState({
+                  price: !chevronState.price,
+                  brand: chevronState.brand,
+                  avgRating: chevronState.avgRating,
+                });
+              }}
+            >
+              Price{' '}
+              <i
+                className={
+                  chevronState.price
+                    ? `fas fa-chevron-up`
+                    : `fas fa-chevron-down`
+                }
+              />
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="0">
               <Card.Body>
@@ -93,14 +125,25 @@ const FilterSidebar = (props) => {
       <Row>
         <StyledAccordian defaultActiveKey="1">
           <Card>
-            <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => {
-              setChevronState({
-                price: chevronState.price,
-                brand: !chevronState.brand,
-                avgRating: chevronState.avgRating,
-              });
-            }}>
-              Brand <i className={chevronState.brand ? `fas fa-chevron-up` : `fas fa-chevron-down`} />
+            <Accordion.Toggle
+              as={Card.Header}
+              eventKey="0"
+              onClick={() => {
+                setChevronState({
+                  price: chevronState.price,
+                  brand: !chevronState.brand,
+                  avgRating: chevronState.avgRating,
+                });
+              }}
+            >
+              Brand{' '}
+              <i
+                className={
+                  chevronState.brand
+                    ? `fas fa-chevron-up`
+                    : `fas fa-chevron-down`
+                }
+              />
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="0">
               <Card.Body>
@@ -110,9 +153,7 @@ const FilterSidebar = (props) => {
                       type="checkbox"
                       label={elem}
                       id={elem}
-                      onChange={(elem) =>
-                        selectedBrands.push(elem.target.id)
-                      }
+                      onChange={brandsHandler}
                       style={{ scale: 100 }}
                       key={elem}
                     />
@@ -126,14 +167,25 @@ const FilterSidebar = (props) => {
       <Row>
         <StyledAccordian defaultActiveKey="0">
           <Card>
-            <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => {
-              setChevronState({
-                price: chevronState.price,
-                brand: chevronState.brand,
-                avgRating: !chevronState.avgRating,
-              });
-            }}>
-              Avg Rating <i className={chevronState.avgRating ? `fas fa-chevron-up` : `fas fa-chevron-down`} />
+            <Accordion.Toggle
+              as={Card.Header}
+              eventKey="0"
+              onClick={() => {
+                setChevronState({
+                  price: chevronState.price,
+                  brand: chevronState.brand,
+                  avgRating: !chevronState.avgRating,
+                });
+              }}
+            >
+              Avg Rating{' '}
+              <i
+                className={
+                  chevronState.avgRating
+                    ? `fas fa-chevron-up`
+                    : `fas fa-chevron-down`
+                }
+              />
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="0">
               <Card.Body>
@@ -149,9 +201,7 @@ const FilterSidebar = (props) => {
                         </>
                       }
                       id={elem}
-                      onChange={(elem) =>
-                        selectedRating.push(elem.target.id)
-                      }
+                      onChange={ratingHandler}
                       size="lg"
                       key={elem}
                     />
@@ -165,7 +215,7 @@ const FilterSidebar = (props) => {
       <Row>
         <StyledSubmitButton
           onClick={filterSubmitHandler}
-          variant='outline-dark'
+          variant="outline-dark"
         >
           Apply Filters
         </StyledSubmitButton>
@@ -181,9 +231,9 @@ const StyledLeftSidebar = styled.div`
   top: 85px;
   left: 6px;
   width: 300px;
-  overflow-y:auto;
+  overflow-y: auto;
   text-align: left;
-  box-shadow: 8px 0 6px -6px #bbb; 
+  box-shadow: 8px 0 6px -6px #bbb;
   padding-left: 15px;
   margin-right: 10px;
   margin-left: 10px;
@@ -234,7 +284,7 @@ const StyledSubmitButton = styled(Button)`
   border-color: ${DARK_BLUE_2} !important;
   background-color: ${LIGHT_BLUE};
 
-  &:hover{
+  &:hover {
     background-color: ${DARK_BLUE_2};
   }
 `;

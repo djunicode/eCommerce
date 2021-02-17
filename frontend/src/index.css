@@ -1,5 +1,7 @@
 main {
-  min-height: 80vh;
+  min-height: 70vh;
+  margin-top: 110px;
+  z-index: 1000 !important;
 }
 
 h3 {
@@ -72,6 +74,10 @@ body {
 .card-body {
   background-color: #dff2fa;
   padding-bottom: 10px;
+}
+
+.fa-star {
+  color: #30475e !important;
 }
 
 @media (max-width: 900px) {

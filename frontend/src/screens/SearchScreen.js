@@ -1,27 +1,27 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Row, Col } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
+import styled from 'styled-components';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Product from '../components/Product';
 import FilterSidebar from '../components/FilterSidebar';
-import styled from 'styled-components';
 
-import { tempProds } from "../util/productData";
+import { tempProds } from '../util/productData';
 import { LIGHT_BLUE } from '../util/colors';
 
-const SearchScreen = (props) => {
-  const dispatch = useDispatch();
-
+const SearchScreen = () => {
   const searchedProduct = useSelector((state) => state.search);
   const { loading, error, products } = searchedProduct;
-  console.log(products);
-  console.log(tempProds);
+  // console.log(products);
+  // console.log(tempProds);
 
-  const filters = JSON.parse(localStorage.getItem('filters-proshop'));
-  //localStorage.removeItem('filters-proshop');
-  console.log(filters);
-  localStorage.setItem('filters-proshop', false);
+  // const filters = JSON.parse(localStorage.getItem('filters-proshop'));
+  // localStorage.removeItem('filters-proshop');
+  // console.log(filters);
+  // localStorage.setItem('filters-proshop', false);
+
+  const filtersApplied = useSelector((state) => state.filter);
+  const { loadingF, errorF, filters } = filtersApplied;
 
   return (
     <>
@@ -33,13 +33,19 @@ const SearchScreen = (props) => {
         <>
           <FilterSidebar />
           <StyledGridDiv>
-              {tempProds.data && (
-                tempProds.data.searchProduct.map((product) => (
-                  <>
-                    {filters ? (product.price < filters.price &&  filters.brands.includes(product.brand.name) && <Product product={product} key={product._id}/>) : (<Product product={product} key={product._id}/>)}
-                  </>
-                ))
-              )}
+            {tempProds.data &&
+              tempProds.data.searchProduct.map((product) => (
+                <>
+                  {filters ? (
+                    product.price < filters.price &&
+                    filters.brands.includes(product.brand.name) && (
+                      <Product product={product} key={product._id} />
+                    )
+                  ) : (
+                    <Product product={product} key={product._id} />
+                  )}
+                </>
+              ))}
           </StyledGridDiv>
         </>
       )}

@@ -1,25 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card } from 'react-bootstrap';
+import styled from 'styled-components';
 import Rating from './Rating';
 
-import styled from 'styled-components';
 import { LIGHT_BLUE } from '../util/colors';
 
 const Product = ({ product }) => {
-
   return (
     <StyledCard className="my-3">
       <Link to={`/product/${product._id}`}>
         <StyledImg src={product.image} variant="top" />
-        {product.discount>0 && (<StyledDiscount as="p">-{product.discount}%</StyledDiscount>)}
+        {product.discount > 0 && (
+          <StyledDiscount as="p">-{product.discount}%</StyledDiscount>
+        )}
       </Link>
 
       <StyledCardBody>
         <Card.Text as="h4">
-          <Rating
-            value={product.rating}
-          />
+          <Rating value={product.rating} />
         </Card.Text>
 
         <Link to={`/product/${product._id}`}>
@@ -29,8 +28,8 @@ const Product = ({ product }) => {
         </Link>
 
         <StyledBrand as="div">
-            <p>{product.brand.name}</p>
-          </StyledBrand>
+          <p>{product.brand.name}</p>
+        </StyledBrand>
 
         <StyledPrice as="b">Rs {product.price} /-</StyledPrice>
       </StyledCardBody>
@@ -42,10 +41,12 @@ export default Product;
 
 const StyledCard = styled(Card)`
   background-color: ${LIGHT_BLUE};
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
+    0 3px 10px 0 rgba(0, 0, 0, 0.19);
 
-  &:hover{
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  &:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+      0 6px 20px 0 rgba(0, 0, 0, 0.19);
   }
 `;
 

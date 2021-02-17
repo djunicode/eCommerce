@@ -1,22 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { DARK_BLUE_2, LIGHT_PEACH } from '../util/colors';
 
 import { search } from '../actions/searchActions';
+import { filter } from '../actions/filterActions';
 
 const SearchBox = ({ history }) => {
   const [keyword, setKeyword] = useState('');
 
   const dispatch = useDispatch();
 
-  const searchState = useSelector((state) => state.search);
-  const { loading, error, products } = searchState;
+  // Apply once data received from backend
+  // const searchState = useSelector((state) => state.search);
+  // const { loading, error, products } = searchState;
 
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(search(keyword));
+    dispatch(filter());
     if (keyword.trim()) {
       history.push(`/search/${keyword}`);
     } else {
