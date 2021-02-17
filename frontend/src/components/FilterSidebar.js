@@ -10,12 +10,13 @@ import {
   ButtonToolbar,
   Badge,
 } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import RangeSlider from 'react-bootstrap-range-slider';
 import { BORDER_DARK, LIGHT_BLUE, DARK_BLUE_2 } from '../util/colors';
 
 const FilterSidebar = (props) => {
-  const brands = ['Nike', 'Adidas', 'Puma'];
+  const brands = ['Nike', 'Nikon', 'Puma'];
   const rating = [4, 3, 2, 1];
 
   const priceBar = {
@@ -41,6 +42,13 @@ const FilterSidebar = (props) => {
     console.log(priceRange);
     console.log(removeDuplicates(selectedBrands));
     console.log(removeDuplicates(selectedRating));
+    const filters = {
+      price: priceRange,
+      brands: selectedBrands,
+      rating: selectedRating
+    };
+    localStorage.setItem('filters-proshop', JSON.stringify(filters));
+    window.location.reload();
   };
 
   return (
