@@ -1,10 +1,6 @@
 import Product from '../../models/productModel.js';
-import Category from '../../models/categoryModel.js';
 import Brand from '../../models/brandModel.js';
 import { admin, loggedin } from '../../utils/verifyUser.js';
-
-// To cache getAllProducts, getAllCategories, getProductByCategories, getProductById
-// redis.set("key", JSON.stringify(obj));
 
 // Create new product
 // private/admin
@@ -41,18 +37,65 @@ const createProduct = async (args, req) => {
   }
 };
 
-// get product
+// get product by category
 // public
-const getProduct = async (args, { req, redis }) => {
+// cached
+const getProductByCategory = async (args, { req, redis }) => {
   try {
-    const product = Product.find({ name: args.name }).populate(
-      'user brand category subcategory'
-    );
-    if (product) {
-      return product;
+    const products = await redis.get('category:products:' + args.categoryId);
+
+    if (products) {
+      return JSON.parse(products);
     } else {
-      res.status(404);
-      throw new Error('Product not found');
+      const products = await Product.find({
+        category: args.categoryId,
+      }).populate('user brand category subcategory');
+
+      if (products) {
+        redis.setex(
+          'category:products:' + args.categoryId,
+          process.env.FAST_CACHE,
+          JSON.stringify(products)
+        );
+        return products;
+      } else {
+        res.status(404);
+        throw new Error('Product not found');
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+// get product by sub category
+// public
+// cached
+const getProductBySubCategory = async (args, { req, redis }) => {
+  try {
+    const products = await redis.get(
+      'subcategory:products:' + args.subCategoryId
+    );
+
+    if (products) {
+      return JSON.parse(products);
+    } else {
+      const products = await Product.find({
+        subcategory: args.subCategoryId,
+      }).populate('user brand category subcategory');
+
+      if (products) {
+        redis.setex(
+          'subcategory:products:' + args.subCategoryId,
+          process.env.FAST_CACHE,
+          JSON.stringify(products)
+        );
+        return products;
+      } else {
+        res.status(404);
+        throw new Error('Product not found');
+      }
     }
   } catch (err) {
     console.log(err);
@@ -62,16 +105,29 @@ const getProduct = async (args, { req, redis }) => {
 
 // get product by id
 // public
+// cached
 const getProductById = async (args, { req, redis }) => {
   try {
-    const product = Product.find({ _id: args.id }).populate(
-      'user brand category subcategory'
-    );
-    if (product) {
-      return product;
+    const products = await redis.get('product:' + args.id);
+
+    if (products) {
+      return JSON.parse(products);
     } else {
-      res.status(404);
-      throw new Error('Product not found');
+      const products = await Product.find({ _id: args.id }).populate(
+        'user brand category subcategory'
+      );
+
+      if (products) {
+        redis.setex(
+          'product:' + args.id,
+          process.env.FAST_CACHE,
+          JSON.stringify(products)
+        );
+        return products;
+      } else {
+        res.status(404);
+        throw new Error('Product not found');
+      }
     }
   } catch (err) {
     console.log(err);
@@ -81,15 +137,29 @@ const getProductById = async (args, { req, redis }) => {
 
 // new products
 // public
+// cached
 const getNewProducts = async (args, { req, redis }) => {
   try {
-    const product = await Product.find({ new: true });
-    if (product) {
-      console.log(product);
-      return product;
+    const products = await redis.get('newproducts');
+
+    if (products) {
+      return JSON.parse(products);
     } else {
-      res.status(404);
-      throw new Error('Product not found');
+      const product = await Product.find({ new: true }).populate(
+        'user brand category subcategory'
+      );
+
+      if (products) {
+        redis.setex(
+          'newproducts',
+          process.env.FAST_CACHE,
+          JSON.stringify(products)
+        );
+        return products;
+      } else {
+        res.status(404);
+        throw new Error('Product not found');
+      }
     }
   } catch (err) {
     console.log(err);
@@ -165,7 +235,8 @@ const deleteProduct = async (args, { req, redis }) => {
 
 export {
   createProduct,
-  getProduct,
+  getProductByCategory,
+  getProductBySubCategory,
   getProductById,
   getNewProducts,
   updateProduct,

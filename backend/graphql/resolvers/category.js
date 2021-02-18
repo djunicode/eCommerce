@@ -25,10 +25,22 @@ const createCategory = async (args, { req, redis }) => {
   }
 };
 
+// cached
 const getCategories = async (args, { req, redis }) => {
   try {
-    const categories = await Category.find({});
-    return categories;
+    const categories = await redis.get('category:all');
+
+    if (categories) {
+      return JSON.parse(categories);
+    } else {
+      const categories = await Category.find({});
+      redis.setex(
+        'category:all',
+        process.env.SLOW_CACHE,
+        JSON.stringify(categories)
+      );
+      return categories;
+    }
   } catch (err) {
     throw err;
   }
@@ -91,10 +103,26 @@ const createSubCategory = async (args, { req, redis }) => {
   }
 };
 
+// cached
 const getSubCategories = async (args, { req, redis }) => {
   try {
-    const subCategories = await SubCategory.find({}).populate('category');
-    return subCategories;
+    const subCategories = await redis.get(
+      'category:subcategory:' + args.categoryId
+    );
+    
+    if (subCategories) {
+      return JSON.parse(subCategories);
+    } else {
+      const subCategories = await SubCategory.find({
+        category: args.categoryId,
+      }).populate('category');
+      redis.setex(
+        'category:subcategory:' + args.categoryId,
+        process.env.SLOW_CACHE,
+        JSON.stringify(subCategories)
+      );
+      return subCategories;
+    }
   } catch (err) {
     throw err;
   }

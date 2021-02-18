@@ -26,19 +26,21 @@ export default buildSchema(`
         questions: [Question]
         question(level: String!, index: String!): Question
 
-        getCategories: [Category]
+        getCategories: [Category!]!
         
-        getSubCategories: [SubCategory]
+        getSubCategories(categoryId: ID!): [SubCategory!]!
         
         authUser(email: String!, password: String!): User!
         getUserProfile: User!
         getUsers: [User!]!
         getUserById(userId: ID!): User!
         
-        getProduct(name: String!): [Product!]!
+        getProductByCategory(categoryId: ID!): [Product!]!
+        getProductBySubCategory(subCategoryId: ID!): [Product!]!
         getProductById(id: ID!): [Product!]!
         getNewProducts: [Product!]!
         deleteProduct(id: ID!): Product!
+
         isDeliverable(shippingAddressInput: ShippingAddressInput): Boolean!,
         
         searchProduct(searchTerm: String!): [Product!]!
