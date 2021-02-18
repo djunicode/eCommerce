@@ -26,6 +26,9 @@
     "no-nested-ternary": "off",
     "no-alert": "off",
     "no-case-declarations": "off",
-    "jsx-a11y/control-has-associated-label": "off"
+    "jsx-a11y/control-has-associated-label": "off",
+    "prettier/prettier": ["error",{
+      "endOfLine": "auto"}
+    ]
   }
 }

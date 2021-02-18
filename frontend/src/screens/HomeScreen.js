@@ -9,6 +9,7 @@ import Paginate from '../components/Paginate';
 import ProductCarousel from '../components/ProductCarousel';
 import Meta from '../components/Meta';
 import { listProducts } from '../actions/productActions';
+import Chatbot from '../components/Chatbot/Chatbot';
 
 const HomeScreen = ({ match }) => {
   const { keyword } = match.params;
@@ -55,6 +56,7 @@ const HomeScreen = ({ match }) => {
           />
         </>
       )}
+      <Chatbot />
     </>
   );
 };

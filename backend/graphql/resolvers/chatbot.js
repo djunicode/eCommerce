@@ -1,10 +1,22 @@
 import Question from '../../models/questionModel.js';
 import { loggedin, admin } from '../../utils/verifyUser.js';
 
-const questions = async () => {
+// cached
+const questions = async (args, { req, redis }) => {
   try {
-    const questions = await Question.find({});
-    return questions;
+    const questions = await redis.get('questions:all');
+
+    if (questions) {
+      return JSON.parse(questions);
+    } else {
+      const questions = await Question.find({});
+      redis.setex(
+        'questions:all',
+        process.env.SLOW_CACHE,
+        JSON.stringify(questions)
+      );
+      return questions;
+    }
   } catch (err) {
     throw err;
   }

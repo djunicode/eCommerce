@@ -27,6 +27,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(express.json());
+app.use(cors({ credentials: true }));
 app.use(verify);
 app.use(cors());
 

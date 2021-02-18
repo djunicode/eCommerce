@@ -99,6 +99,7 @@ productSchema.plugin(mongoose_fuzzy_searching, {
     },
     {
       name: 'brand',
+      keys: ['name'],
       minSize: 3,
       weight: 1,
       prefixOnly: true,
