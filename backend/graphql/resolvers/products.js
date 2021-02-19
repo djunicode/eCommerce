@@ -23,6 +23,7 @@ const createProduct = async (args, req) => {
         image: args.productInput.image,
         brand: resp._id,
         category: args.productInput.category,
+        subcategory: args.productInput.subcategory,
         new: args.productInput.new,
         countInStock: args.productInput.countInStock,
         numReviews: args.productInput.numReviews,
@@ -233,6 +234,54 @@ const deleteProduct = async (args, { req, redis }) => {
   }
 };
 
+//add product review
+//private/
+const createProductReview = async (args, req) => {
+  try {
+    if(loggedin(req)) {
+      const product = await Product.find({ _id: args.productId });
+      if(product) {
+        let reviews = product[0].reviews;
+        let numReviews = product[0].numReviews;
+        numReviews = product[0].reviews.length + 1;
+        const review = {
+          name: args.productReview.name,
+          rating: args.productReview.rating,
+          comment: args.productReview.comment,
+          user: args.productReview.user
+        }
+        reviews.push(review);
+        const updatedProduct = {
+          reviews: reviews,
+          numReviews: numReviews,
+        }
+        await Product.findByIdAndUpdate(args.productId, {$set: updatedProduct,});
+        const newUpdatedProduct = await Product.findById(args.productId);
+        return newUpdatedProduct;
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+//get product reviews
+//public
+const getProductReviews = async (args) => {
+  try {
+    const product = await Product.find({ _id: args.productId });
+    if(product) {
+      const reviews = product[0].reviews;
+      // console.log(reviews);
+      return reviews;
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
 export {
   createProduct,
   getProductByCategory,
@@ -241,4 +290,6 @@ export {
   getNewProducts,
   updateProduct,
   deleteProduct,
+  createProductReview,
+  getProductReviews,
 };

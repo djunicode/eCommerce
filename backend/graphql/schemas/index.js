@@ -40,6 +40,7 @@ export default buildSchema(`
         getProductById(id: ID!): [Product!]!
         getNewProducts: [Product!]!
         deleteProduct(id: ID!): Product!
+        getProductReviews(productId: ID!): [productReview]!
 
         isDeliverable(shippingAddressInput: ShippingAddressInput): Boolean!,
         
@@ -68,6 +69,7 @@ export default buildSchema(`
 
         createProduct(productInput: ProductInput):  Product!
         updateProduct(productId: ID!, updateProduct: updateProduct): Product!
+        createProductReview(productId: ID!, productReview: ProductReview!): Product!
     }
     schema {
         query: rootQuery
