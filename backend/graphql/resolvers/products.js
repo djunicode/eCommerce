@@ -146,7 +146,7 @@ const getNewProducts = async (args, { req, redis }) => {
     if (products) {
       return JSON.parse(products);
     } else {
-      const product = await Product.find({ new: true }).populate(
+      const products = await Product.find({ new: true }).populate(
         'user brand category subcategory'
       );
 

@@ -45,7 +45,7 @@ export default buildSchema(`
         isDeliverable(shippingAddressInput: ShippingAddressInput): Boolean!,
         
         searchProduct(searchTerm: String!): [Product!]!
-        filterProducts(filters: FilterInput): [Product!]!
+        filterProducts(searchTerm: String!, filters: FilterInput): [Product!]!
     }
     type rootMutation {
         createOrder(orderInput: OrderInput): Order!
