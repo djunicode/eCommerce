@@ -8,20 +8,27 @@ import {
   Button,
   Badge,
 } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import RangeSlider from 'react-bootstrap-range-slider';
 import { filter } from '../actions/filterActions';
+import { getCategories } from '../actions/categoryActions';
 import { LIGHT_BLUE, DARK_BLUE_2 } from '../util/colors';
 
 let selectedBrands = [];
 let selectedRating = [];
 
-const FilterSidebar = () => {
+const FilterSidebar = (props) => {
   const dispatch = useDispatch();
 
-  const brands = ['Nike', 'Nikon', 'Puma'];
+  let brands = [];
   const rating = [4, 3, 2, 1];
+
+  const prodData = useSelector(state => state.category);
+  const { products } = prodData;
+  console.log(products);
+  products.map(prod => brands.push(prod.brand.name));
+  brands = [...new Set(brands)]
 
   const priceBar = {
     max: 10000,
@@ -273,6 +280,7 @@ const StyledFormFlexRow = styled(Form)`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  flex-wrap: wrap;
 `;
 
 const StyledSubmitButton = styled(Button)`

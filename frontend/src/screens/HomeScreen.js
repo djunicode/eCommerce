@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { getCategories } from '../actions/categoryActions';
 import { Row, Col } from 'react-bootstrap';
 import Product from '../components/Product';
 import Message from '../components/Message';
@@ -57,6 +58,13 @@ const HomeScreen = ({ match }) => {
         </>
       )}
       <Chatbot />
+      <div>
+        <Link to="category/602e31dc8cbfa84740fdc3da" onClick={() => {
+          dispatch(getCategories(1));
+        }}>
+          Category 1
+        </Link>
+      </div>
     </>
   );
 };

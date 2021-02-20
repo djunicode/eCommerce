@@ -7,6 +7,7 @@ import Rating from './Rating';
 import { LIGHT_BLUE } from '../util/colors';
 
 const Product = ({ product }) => {
+  console.log(product);
   return (
     <StyledCard className="my-3">
       <Link to={`/product/${product._id}`}>
@@ -41,12 +42,10 @@ export default Product;
 
 const StyledCard = styled(Card)`
   background-color: ${LIGHT_BLUE};
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
-    0 3px 10px 0 rgba(0, 0, 0, 0.19);
+  border-bottom: 1px solid gray !important;
 
   &:hover {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
-      0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1.5px 5px 0 rgba(0, 0, 0, 0.19);
   }
 `;
 
