@@ -50,12 +50,14 @@ function HomeScreen() {
                 <Ctitle className="ctitle">
                   {homecategories.name}
                 </Ctitle>
-                <Cbutton
-                  className="cbutton"
-                  variant="outline-primary"
-                >
-                  SHOP NOW
-                </Cbutton>
+                <Link to={`/category/${homecategories._id}`}>
+                  <Cbutton
+                    className="cbutton"
+                    variant="outline-primary"
+                  >
+                    SHOP NOW
+                  </Cbutton>
+                </Link>
               </Card.ImgOverlay>
             </CatCard>
           </Col>
@@ -70,7 +72,7 @@ function HomeScreen() {
 
       <h1>New Arrivals</h1>
       <ProductCarousel />
-      <h1 style={{ margin: '80px 0 0 0' }}>Categories</h1>
+      <h1 style={{ margin: '100px 0 0 0' }}>Categories</h1>
 
       {loading ? (
         <Loader />

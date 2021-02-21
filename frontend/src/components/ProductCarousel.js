@@ -8,6 +8,7 @@ import {
   Button,
   CardDeck,
 } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Loader from './Loader';
@@ -69,7 +70,7 @@ const ProductCarousel = () => {
                 .map((topproducts) => (
                   <Col key={topproducts._id}>
                     <NACard>
-                      <Card.Body style={{ padding: '10px' }}>
+                      <Card.Body>
                         <img
                           src={topproducts.image}
                           variant="top"
@@ -84,7 +85,9 @@ const ProductCarousel = () => {
                         </NAprice>
                       </Card.Body>
                       <NAFooter>
-                        <NAbutton>View</NAbutton>
+                        <Link to={`/category/${topproducts._id}`}>
+                          <NAbutton>View</NAbutton>
+                        </Link>
                       </NAFooter>
                     </NACard>
                   </Col>
@@ -140,6 +143,7 @@ const NAFooter = styled(Card.Footer)`
   background-color: none;
   padding: 0;
   border: none;
+  margin-top: 15px;
 `;
 const NAbutton = styled(Button)`
   font-size: 0.8rem;
