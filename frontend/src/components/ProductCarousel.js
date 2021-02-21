@@ -70,7 +70,7 @@ const ProductCarousel = () => {
                 .map((topproducts) => (
                   <Col key={topproducts._id}>
                     <NACard>
-                      <Card.Body>
+                      <Card.Body styles={{ padding: '0' }}>
                         <img
                           src={topproducts.image}
                           variant="top"
@@ -85,7 +85,7 @@ const ProductCarousel = () => {
                         </NAprice>
                       </Card.Body>
                       <NAFooter>
-                        <Link to={`/category/${topproducts._id}`}>
+                        <Link to={`/product/${topproducts._id}`}>
                           <NAbutton>View</NAbutton>
                         </Link>
                       </NAFooter>
