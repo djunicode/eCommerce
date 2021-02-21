@@ -7,7 +7,7 @@ import {
 
 const url = 'http://localhost:5000/graphql';
 
-export const getCategories = (id) => async (dispatch) => {
+export const getCategories = (id, sort="none") => async (dispatch) => {
   try {
     dispatch({
       type: CATEGORY_LIST_REQUEST,
@@ -63,9 +63,18 @@ export const getCategories = (id) => async (dispatch) => {
     console.log('categoryActions.js');
     console.log(data);
 
+    let sortedData;
+    if(sort === 'asc'){
+      sortedData = data.data.getProductByCategory.sort((a, b) => a.price-b.price);
+    } else if(sort === 'desc'){
+      sortedData = data.data.getProductByCategory.sort((a, b) => b.price-a.price);
+    } else {
+      sortedData = data.data.getProductByCategory;
+    }
+
     dispatch({
       type: CATEGORY_LIST_SUCCESS,
-      payload: data.data.getProductByCategory,
+      payload: sortedData,
     });
   } catch (error) {
     dispatch({

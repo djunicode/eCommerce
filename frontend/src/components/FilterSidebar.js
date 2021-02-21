@@ -26,9 +26,11 @@ const FilterSidebar = (props) => {
 
   const prodData = useSelector(state => state.category);
   const { products } = prodData;
-  console.log(products);
   products.map(prod => brands.push(prod.brand.name));
   brands = [...new Set(brands)]
+
+  const filterData = useSelector(state => state.filter);
+  const { filters } = filterData;
 
   const priceBar = {
     max: 10000,
@@ -163,6 +165,7 @@ const FilterSidebar = (props) => {
                       onChange={brandsHandler}
                       style={{ scale: 100 }}
                       key={elem}
+                      defaultChecked={Object.keys(filters).length > 0 && filters.brands.includes(elem) ? true : false}
                     />
                   ))}
                 </StyledFormFlexRow>

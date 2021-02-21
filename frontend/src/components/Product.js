@@ -7,7 +7,6 @@ import Rating from './Rating';
 import { LIGHT_BLUE } from '../util/colors';
 
 const Product = ({ product }) => {
-  console.log(product);
   return (
     <StyledCard className="my-3">
       <Link to={`/product/${product._id}`}>
