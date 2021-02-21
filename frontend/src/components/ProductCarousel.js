@@ -70,7 +70,7 @@ const ProductCarousel = () => {
                 .map((topproducts) => (
                   <Col key={topproducts._id}>
                     <NACard>
-                      <Card.Body styles={{ padding: '0' }}>
+                      <Card.Body style={{ padding: '0' }}>
                         <img
                           src={topproducts.image}
                           variant="top"
