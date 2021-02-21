@@ -29,6 +29,10 @@ import {
   orderListReducer,
 } from './reducers/orderReducers';
 import { chatbotReducer } from './reducers/chatbotReducers';
+import {
+  categoryListReducer,
+  subCategoryListReducer,
+} from './reducers/categoryReducers';
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -53,6 +57,8 @@ const reducer = combineReducers({
   orderListMy: orderListMyReducer,
   orderList: orderListReducer,
   chatbot: chatbotReducer,
+  categoryList: categoryListReducer,
+  subCategoryList: subCategoryListReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem('cartItems')

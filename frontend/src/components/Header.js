@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import styled from 'styled-components';
+import CategoryNav from './CategoryNavbar';
 import SearchBox from './SearchBox';
 import { logout } from '../actions/userActions';
 import { DARK_BLUE_2, LIGHT_PEACH } from '../util/colors';
@@ -89,6 +90,7 @@ const Header = () => {
           </Container>
         </StyledNavbar>
       </header>
+      <CategoryNav />
     </>
   );
 };
