@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import {
   PRODUCTID_CREATE_FAIL,
   PRODUCTID_CREATE_SUCCESS,
@@ -20,4 +21,4 @@ export const productidReducer = (
     default:
       return state;
   }
-}
+};
