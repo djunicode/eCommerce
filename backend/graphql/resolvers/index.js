@@ -27,6 +27,11 @@ import {
   getNewProducts,
   updateProduct,
   deleteProduct,
+  createProductReview,
+  getProductReviews,
+  createProductQuestion,
+  createProductAnswer,
+  getProductQnAs,
 } from './products.js';
 
 import {
@@ -74,6 +79,11 @@ export default {
   getNewProducts: getNewProducts,
   updateProduct: updateProduct,
   deleteProduct: deleteProduct,
+  createProductReview: createProductReview,
+  getProductReviews: getProductReviews,
+  createProductQuestion: createProductQuestion,
+  createProductAnswer: createProductAnswer,
+  getProductQnAs: getProductQnAs,
   //orders
   orders: getOrders,
   myorders: getMyOrders,

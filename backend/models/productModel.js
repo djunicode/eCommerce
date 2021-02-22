@@ -17,6 +17,16 @@ const reviewSchema = mongoose.Schema(
   }
 );
 
+const questionSchema = mongoose.Schema(
+  {
+    question: { type: String, default: '' },
+    answer: { type: String, default: '' },
+  },
+  {
+    timestamps: true,
+  }
+);
+
 const productSchema = mongoose.Schema(
   {
     user: {
@@ -54,6 +64,7 @@ const productSchema = mongoose.Schema(
       required: true,
     },
     reviews: [reviewSchema],
+    questions: [questionSchema],
     rating: {
       type: Number,
       required: true,
