@@ -23,6 +23,7 @@ const createProduct = async (args, req) => {
         image: args.productInput.image,
         brand: resp._id,
         category: args.productInput.category,
+        subcategory: args.productInput.subcategory,
         new: args.productInput.new,
         countInStock: args.productInput.countInStock,
         numReviews: args.productInput.numReviews,

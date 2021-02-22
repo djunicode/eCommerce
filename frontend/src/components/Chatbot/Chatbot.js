@@ -163,8 +163,8 @@ export default function Chatbot() {
                 })}
             {}
           </Container>
-          <FOOTER_STYLES className="ml-2 mb-2">
-            <small className="ml-2">
+          <FOOTER_STYLES className="mb-2">
+            <small>
               {options.length === 0
                 ? ''
                 : 'Choose from one of the replies below'}
@@ -174,7 +174,7 @@ export default function Chatbot() {
               style={{
                 whiteSpace: 'nowrap',
                 overflowX: 'auto',
-                width: '90%',
+                width: '98%',
               }}
             >
               {options.map((option) => {
@@ -250,7 +250,7 @@ const CARD_STYLES = styled(Card)`
   margin: 0px;
   height: 497px;
   width: 348px;
-  box-shadow: 5px 5px 5px;
+  box-shadow: 2px 2px 15px;
   position: relative;
 `;
 
