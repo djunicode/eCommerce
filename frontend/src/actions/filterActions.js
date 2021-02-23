@@ -10,7 +10,7 @@ export const filter = (filters) => (dispatch) => {
     dispatch({
       type: FILTER_LIST_REQUEST,
     });
-    console.log(filters);
+    // console.log(filters);
 
     dispatch({
       type: FILTER_LIST_RESET,

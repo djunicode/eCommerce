@@ -10,7 +10,7 @@
 
 ::-webkit-scrollbar-thumb {
   border-radius: 2.5px;
-  background-color: #fff;
+  background-color: #30475e !important;
 }
 
 main {

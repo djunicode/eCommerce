@@ -18,7 +18,7 @@ const Product = ({ product }) => {
 
       <StyledCardBody>
         <Card.Text as="h4">
-          <Rating value={product.rating} />
+          <Rating value={3} />
         </Card.Text>
 
         <Link to={`/product/${product._id}`}>
@@ -42,15 +42,18 @@ export default Product;
 const StyledCard = styled(Card)`
   background-color: ${LIGHT_BLUE};
   border-bottom: 1px solid gray !important;
+  margin: 6px;
 
   &:hover {
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1.5px 5px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2),
+      0 1.5px 5px 0 rgba(0, 0, 0, 0.19);
   }
 `;
 
 const StyledImg = styled(Card.Img)`
   width: 250px !important;
   height: 250px !important;
+  margin-bottom: auto;
 `;
 
 const StyledDiscount = styled(Card.Text)`
@@ -64,7 +67,7 @@ const StyledDiscount = styled(Card.Text)`
 `;
 
 const StyledCardBody = styled(Card.Body)`
-  padding: 10px !important;
+  padding: 3px !important;
 `;
 
 const StyledTitle = styled(Card.Title)`
