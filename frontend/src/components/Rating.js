@@ -5,7 +5,7 @@ const Rating = ({ value, text, color }) => {
     <div className="rating mt-3">
       <span>
         <i
-          style={{ color, fontSize:'1.1rem' }}
+          style={{ color, fontSize: '1.1rem' }}
           className={
             value >= 1
               ? 'fas fa-star'
@@ -17,7 +17,7 @@ const Rating = ({ value, text, color }) => {
       </span>
       <span>
         <i
-          style={{ color, fontSize:'1.1rem' }}
+          style={{ color, fontSize: '1.1rem' }}
           className={
             value >= 2
               ? 'fas fa-star'
@@ -29,7 +29,7 @@ const Rating = ({ value, text, color }) => {
       </span>
       <span>
         <i
-          style={{ color, fontSize:'1.1rem' }}
+          style={{ color, fontSize: '1.1rem' }}
           className={
             value >= 3
               ? 'fas fa-star'
@@ -41,7 +41,7 @@ const Rating = ({ value, text, color }) => {
       </span>
       <span>
         <i
-          style={{ color, fontSize:'1.1rem' }}
+          style={{ color, fontSize: '1.1rem' }}
           className={
             value >= 4
               ? 'fas fa-star'
@@ -53,7 +53,7 @@ const Rating = ({ value, text, color }) => {
       </span>
       <span>
         <i
-          style={{ color, fontSize:'1.1rem' }}
+          style={{ color, fontSize: '1.1rem' }}
           className={
             value >= 5
               ? 'fas fa-star'
@@ -63,7 +63,9 @@ const Rating = ({ value, text, color }) => {
           }
         />
       </span>
-      <span style={{fontSize:'1.1rem', fontWeight:'1000'}}>{text && text}</span>
+      <span style={{ fontSize: '1.1rem', fontWeight: '1000' }}>
+        {text && text}
+      </span>
     </div>
   );
 };
