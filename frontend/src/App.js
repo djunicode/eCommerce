@@ -18,6 +18,7 @@ import UserEditScreen from './screens/UserEditScreen';
 import ProductListScreen from './screens/ProductListScreen';
 import ProductEditScreen from './screens/ProductEditScreen';
 import OrderListScreen from './screens/OrderListScreen';
+import OrderSummaryScreen from './screens/OrderSummaryScreen';
 
 const App = () => {
   return (
@@ -71,6 +72,10 @@ const App = () => {
             path="/search/:keyword/page/:pageNumber"
             component={HomeScreen}
             exact
+          />
+          <Route
+            path="/OrderSummaryScreen"
+            component={OrderSummaryScreen}
           />
           <Route path="/" component={HomeScreen} exact />
         </Container>

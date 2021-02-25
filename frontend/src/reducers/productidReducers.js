@@ -13,8 +13,12 @@ export const productidReducer = (
     case PRODUCTID_CREATE_REQUEST:
       return { ...state, loading: true };
     case PRODUCTID_CREATE_SUCCESS:
-      console.log(action.payload);
-      return { ...state, loading: false, data: action.payload };
+      console.log(action.payload.getProductById[0]);
+      return {
+        ...state,
+        loading: false,
+        data: action.payload.getProductById[0],
+      };
     case PRODUCTID_CREATE_FAIL:
       console.log(action.payload);
       return { ...state, loading: false, error: action.payload };

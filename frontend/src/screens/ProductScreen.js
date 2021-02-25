@@ -1,62 +1,86 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Container,
   Row,
   Col,
-  Image,
-  ListGroup,
+  // Image,
+  // ListGroup,
   Card,
   Button,
   Form,
 } from 'react-bootstrap';
 import ReactImageMagnify from 'react-image-magnify';
-import { set } from 'mongoose';
+// import { set } from 'mongoose';
 import Rating from '../components/Rating';
-import Message from '../components/Message';
-import Loader from '../components/Loader';
-import Meta from '../components/Meta';
-import {
-  listProductDetails,
-  createProductReview,
-} from '../actions/productActions';
-import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants';
+// import Message from '../components/Message';
+// import Loader from '../components/Loader';
+// import Meta from '../components/Meta';
+// import {
+//   listProductDetails,
+//   createProductReview,
+// } from '../actions/productActions';
+// import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants';
 import watchImg687 from '../images/wristwatch_687.jpg';
 import watchImg1200 from '../images/wristwatch_1200.jpg';
 import { getProduct } from '../actions/productidAction';
 import Review from '../components/Review';
 import Question from '../components/Question';
-
-const ProductScreen = ({ history, match }) => {
+// { history, match }
+const ProductScreen = () => {
   const [qty, setQty] = useState(1);
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState('');
+  // const [rating, setRating] = useState(0);
+  // const [comment, setComment] = useState('');
   const [pd, setPd] = useState(true);
   const [rr, setRr] = useState(false);
   const [q, setQ] = useState(false);
 
-  const product = {
-    name: 'dhiraj',
-  };
-
-  const query = `query{
-    getProductById(id: "602d3a5531c2d135d0b5bc03") {
-      name,
-      price, 
-      description,
-      discountedPrice,
-      category{
-        name
-      }
-      subcategory{
-        name
-      }
-    }
-  }`;
-
   const dispatch = useDispatch();
+  const product = useSelector((state) => state.productid);
+
+  const query = ` query{
+    getProductById (id: "6033f161eb01e64a1ccf705f") {
+        _id
+        name
+        discount
+        price
+        discountedPrice
+        user {
+            _id
+            name
+            phoneNo
+            email
+            password
+            isAdmin
+            token
+        }
+        image
+        brand {
+            _id
+            name
+        }
+        category {
+            _id
+            name
+        }
+        subcategory {
+            _id
+            name
+        }
+        new
+        countInStock
+        numReviews
+        reviews {
+            name
+            rating
+            comment
+            user
+        }
+        description
+    }
+}`;
 
   const handleTab = (e) => {
     if (e.target.name === 'pd') {
@@ -79,6 +103,12 @@ const ProductScreen = ({ history, match }) => {
   useEffect(() => {
     dispatch(getProduct(query));
   }, []);
+
+  useEffect(() => {
+    if (product.data.brand) {
+      console.log(product.data.brand.name);
+    }
+  }, [product]);
 
   return (
     <>
@@ -130,7 +160,7 @@ const ProductScreen = ({ history, match }) => {
                 paddingBottom: '0px',
               }}
             >
-              Some Chair
+              {product.data.name}
             </h1>
             <small
               style={{
@@ -140,7 +170,7 @@ const ProductScreen = ({ history, match }) => {
                 transform: 'translateY(-1.5%)',
               }}
             >
-              Brand Name
+              {product.data.brand && product.data.brand.name}
             </small>
             <Rating value={4.5} text="(4.5)" />
             <div
@@ -155,14 +185,10 @@ const ProductScreen = ({ history, match }) => {
                   marginBottom: '1000px',
                 }}
               >
-                Rs 1299
+                Rs {product.data.price}
               </span>
               <br />
-              Lorem ipsum dolor sit, amet consectetur adipisicing
-              elit. Exercitationem harum nihil illo nam praesentium,
-              voluptate illum explicabo accusantium doloremque. Minima
-              corrupti culpa, odio maiores beatae pariatur voluptatem
-              dolorem optio necessitatibus.
+              {product.data.description}
             </div>
             <Row className="mt-3">
               <Col xs={6}>
@@ -207,31 +233,30 @@ const ProductScreen = ({ history, match }) => {
                 <Row
                   style={{
                     display: 'flex',
-                    justifyContent: 'center',
                     alignItems: 'center',
+                    flexDirection: 'col',
                   }}
                 >
-                  <Col xs={3} style={{ padding: '0px' }}>
-                    <span
-                      style={{
-                        color: 'black',
-                        fontWeight: '1000',
-                        fontSize: '1.1rem',
-                      }}
-                    >
-                      Qty:
-                    </span>
-                  </Col>
-                  <Col
-                    xs={3}
+                  <span
+                    className="mr-2"
+                    style={{
+                      color: 'black',
+                      fontWeight: '1000',
+                      fontSize: '1.1rem',
+                    }}
+                  >
+                    Qty:
+                  </span>
+                  <span
+                    className="mr-1"
                     style={{ padding: '0px', textAlign: 'center' }}
                   >
                     <i
                       className="fas fa-minus-square"
                       style={{ fontSize: '2rem', color: '#5EAAA8' }}
                     />
-                  </Col>
-                  <Col xs={3} style={{ padding: '0px' }}>
+                  </span>
+                  <span className="mr-1" style={{ padding: '0px' }}>
                     <div
                       style={{
                         padding: '0.75rem 1rem',
@@ -241,40 +266,37 @@ const ProductScreen = ({ history, match }) => {
                         alignItems: 'center',
                       }}
                     >
-                      20
+                      {qty}
                     </div>
-                  </Col>
-                  <Col
-                    xs={3}
+                  </span>
+                  <span
                     style={{ padding: '0px', textAlign: 'center' }}
                   >
                     <i
                       className="fas fa-plus-square"
                       style={{ fontSize: '2rem', color: '#5EAAA8' }}
                     />
-                  </Col>
+                  </span>
                 </Row>
               </Col>
             </Row>
             <Row
-              className="mt-4"
+              className="mt-4 pl-3"
               style={{
                 display: 'flex',
-                justifyContent: 'center',
                 alignItems: 'center',
               }}
             >
-              <Col xs={3} style={{ paddingRight: '0px' }}>
-                <span
-                  style={{
-                    color: 'black',
-                    fontWeight: '1000',
-                    fontSize: '1.1rem',
-                  }}
-                >
-                  Colour:
-                </span>
-              </Col>
+              <span
+                style={{
+                  color: 'black',
+                  fontWeight: '1000',
+                  fontSize: '1.1rem',
+                  marginRight: '3px',
+                }}
+              >
+                Colour:
+              </span>
               <Col
                 xs={9}
                 style={{ textAlign: 'left', paddingLeft: '0px' }}
@@ -302,25 +324,24 @@ const ProductScreen = ({ history, match }) => {
               </Col>
             </Row>
             <Row
-              className="mt-4"
+              className="mt-4 pl-3"
               style={{
                 display: 'flex',
-                justifyContent: 'center',
                 alignItems: 'center',
               }}
             >
-              <Col xs={3}>
-                <label
-                  style={{
-                    color: 'black',
-                    fontWeight: '1000',
-                    fontSize: '1.1rem',
-                  }}
-                >
-                  Delivery:
-                </label>
-              </Col>
-              <Col xs={9}>
+              <label
+                style={{
+                  color: 'black',
+                  fontWeight: '1000',
+                  fontSize: '1.1rem',
+                  transform: 'translateY(-30%)',
+                }}
+                className="mr-2"
+              >
+                Delivery:
+              </label>
+              <span style={{ width: '70%' }}>
                 <Form.Control
                   type="text"
                   placeholder="Enter pincode"
@@ -345,19 +366,11 @@ const ProductScreen = ({ history, match }) => {
                 >
                   CHECK
                 </Button>
-              </Col>
-            </Row>
-            <Row
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <Col xs={3} />
-              <Col xs={9} style={{ fontSize: '0.7rem' }}>
-                Enter pincode to check whther delivery is available.
-              </Col>
+                <br />
+                <span style={{ fontSize: '0.7rem' }}>
+                  Enter pincode to check whther delivery is available.
+                </span>
+              </span>
             </Row>
             <Row
               className="mt-3 mb-4"

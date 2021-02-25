@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import axios from 'axios';
 import {
   PRODUCTID_CREATE_FAIL,
@@ -26,7 +27,7 @@ export const getProduct = (query) => async (dispatch) => {
       type: PRODUCTID_CREATE_SUCCESS,
       payload: data.data,
     });
-  }catch (error) {
+  } catch (error) {
     dispatch({
       type: PRODUCTID_CREATE_FAIL,
       payload: error,
