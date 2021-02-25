@@ -1,3 +1,5 @@
+/* eslint-disable import/prefer-default-export */
+/* eslint no-shadow: "error" */
 import axios from 'axios';
 import {
   SEARCH_LIST_FAIL,
@@ -7,7 +9,7 @@ import {
 
 const url = 'http://localhost:5000/graphql';
 
-export const search = (search) => async (dispatch) => {
+export const search = (searchTerm) => async (dispatch) => {
   try {
     dispatch({
       type: SEARCH_LIST_REQUEST,
@@ -18,7 +20,7 @@ export const search = (search) => async (dispatch) => {
       {
         query: `
                 query {
-                    searchProduct(searchTerm: "${search}"){
+                    searchProduct(searchTerm: "${searchTerm}"){
                         _id
                         name
                         discount

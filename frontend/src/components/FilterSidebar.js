@@ -1,3 +1,5 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable no-unused-expressions */
 import React, { useState } from 'react';
 import {
   Row,
@@ -6,11 +8,9 @@ import {
   Card,
   Form,
   Button,
-  Badge,
 } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import RangeSlider from 'react-bootstrap-range-slider';
 import { filter } from '../actions/filterActions';
 import { LIGHT_BLUE, DARK_BLUE_2 } from '../util/colors';
 
@@ -82,12 +82,12 @@ const FilterSidebar = () => {
     // console.log(priceRange);
     removeDuplicates(selectedBrands);
     removeDuplicates(selectedRating);
-    const filters = {
+    const filtersSelected = {
       price: priceRange,
       brands: selectedBrands,
       rating: selectedRating,
     };
-    dispatch(filter(filters));
+    dispatch(filter(filtersSelected));
     // window.location.reload();
   };
 

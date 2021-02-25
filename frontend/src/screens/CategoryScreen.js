@@ -1,9 +1,10 @@
+/* eslint no-return-assign: "error" */
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
 
 import styled from 'styled-components';
-import { Badge, DropdonButton, Dropdown } from 'react-bootstrap';
+import { Dropdown } from 'react-bootstrap';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Product from '../components/Product';
@@ -12,7 +13,7 @@ import { getCategories } from '../actions/categoryActions';
 
 import { LIGHT_BLUE, DARK_BLUE_2 } from '../util/colors';
 
-const CategoryScreen = (props) => {
+const CategoryScreen = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
 

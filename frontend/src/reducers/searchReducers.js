@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import {
   SEARCH_LIST_FAIL,
   SEARCH_LIST_REQUEST,

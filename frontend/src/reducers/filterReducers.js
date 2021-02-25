@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import {
   FILTER_LIST_FAIL,
   FILTER_LIST_REQUEST,

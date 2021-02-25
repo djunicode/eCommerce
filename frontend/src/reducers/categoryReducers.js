@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import {
   CATEGORY_LIST_FAIL,
   CATEGORY_LIST_REQUEST,

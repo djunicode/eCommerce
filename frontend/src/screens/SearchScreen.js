@@ -1,15 +1,16 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import styled from 'styled-components';
-import Loader from '../components/Loader';
-import Message from '../components/Message';
-import Product from '../components/Product';
-import FilterSidebar from '../components/FilterSidebar';
+// import React from 'react';
+// import { useSelector } from 'react-redux';
+// import styled from 'styled-components';
+// import Loader from '../components/Loader';
+// import Message from '../components/Message';
+// import Product from '../components/Product';
+// import FilterSidebar from '../components/FilterSidebar';
 
-import { tempProds } from '../util/productData';
-import { LIGHT_BLUE } from '../util/colors';
+// import { tempProds } from '../util/productData';
+// import { LIGHT_BLUE } from '../util/colors';
 
 const SearchScreen = () => {
+  /*
   const searchedProduct = useSelector((state) => state.search);
   const { loading, error, products } = searchedProduct;
   // console.log(products);
@@ -51,10 +52,12 @@ const SearchScreen = () => {
       )}
     </>
   );
+  */
 };
 
 export default SearchScreen;
 
+/*
 const StyledGridDiv = styled.div`
   display: flex;
   flex-direction: row;
@@ -69,3 +72,4 @@ const StyledGridDiv = styled.div`
   z-index: 100 !important;
   background-color: ${LIGHT_BLUE};
 `;
+*/
