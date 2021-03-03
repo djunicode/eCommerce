@@ -6,5 +6,6 @@ export const searchProduct = async (args, { req, redis }) => {
   const prods = await Product.fuzzySearch(args.searchTerm).populate(
     'user brand category subcategory'
   );
-  return prods.filter((prod) => prod.confidenceScore > 7);
+
+  return prods.filter((prod) => prod._doc.confidenceScore > 7);
 };

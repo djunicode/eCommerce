@@ -9,7 +9,7 @@ import {
 
 const url = 'http://localhost:5000/graphql';
 
-export const search = (searchTerm) => async (dispatch) => {
+export const search = (searchTerm, sort = 'none') => async (dispatch) => {
   try {
     dispatch({
       type: SEARCH_LIST_REQUEST,
@@ -47,12 +47,26 @@ export const search = (searchTerm) => async (dispatch) => {
         },
       },
     );
+
+    let sortedData;
+    if (sort === 'asc') {
+      sortedData = data.data.searchProduct.sort(
+        (a, b) => a.price - b.price,
+      );
+    } else if (sort === 'desc') {
+      sortedData = data.data.searchProduct.sort(
+        (a, b) => b.price - a.price,
+      );
+    } else {
+      sortedData = data.data.searchProduct;
+    }
+
     console.log('searchActions.js');
-    console.log(data);
+    console.log(sortedData);
 
     dispatch({
       type: SEARCH_LIST_SUCCESS,
-      payload: data,
+      payload: sortedData,
     });
   } catch (error) {
     dispatch({

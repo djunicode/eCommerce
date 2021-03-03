@@ -53,6 +53,7 @@ export const getCategories = (id, sort = 'none') => async (
                         user
                     }
                     description
+                    avgRating
                 }
             }
         `,

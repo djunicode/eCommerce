@@ -41,11 +41,12 @@ export default buildSchema(`
         getNewProducts: [Product!]!
         deleteProduct(id: ID!): Product!
         getProductReviews(productId: ID!): [productReview]!
+        getProductQnAs(productId: ID!): [productQ]
 
         isDeliverable(shippingAddressInput: ShippingAddressInput): Boolean!,
         
         searchProduct(searchTerm: String!): [Product!]!
-        filterProducts(filters: FilterInput): [Product!]!
+        filterProducts(searchTerm: String!, filters: FilterInput): [Product!]!
     }
     type rootMutation {
         createOrder(orderInput: OrderInput): Order!
@@ -70,6 +71,8 @@ export default buildSchema(`
         createProduct(productInput: ProductInput):  Product!
         updateProduct(productId: ID!, updateProduct: updateProduct): Product!
         createProductReview(productId: ID!, productReview: ProductReview!): Product!
+        createProductQuestion(productId: ID!, question: String!): Product!
+        createProductAnswer(productId: ID!, answer: String!, Qindex: Int!): Product!
     }
     schema {
         query: rootQuery

@@ -21,6 +21,7 @@ const FilterSidebar = () => {
   const dispatch = useDispatch();
 
   let brands = [];
+  let ratings = [];
   const rating = [4, 3, 2, 1];
   const prices = {
     max: 1,
@@ -31,6 +32,7 @@ const FilterSidebar = () => {
   const { products } = prodData;
   products.map((prod) => {
     brands.push(prod.brand.name);
+    ratings.push(prod.avgRating);
     if (prod.price > prices.max) {
       prices.max = prod.price;
     }
@@ -39,13 +41,14 @@ const FilterSidebar = () => {
     }
   });
   brands = [...new Set(brands)];
+  ratings = [...new Set(ratings)];
 
   const filterData = useSelector((state) => state.filter);
   const { filters } = filterData;
 
   const [priceRange, setPriceRange] = useState({
-    max: 10000,
-    min: 0,
+    max: Math.max.apply(Math, [...products.map(elem => elem.price)]),
+    min: Math.min.apply(Math, [...products.map(elem => elem.price)]),
   });
   const [chevronState, setChevronState] = useState({
     price: true,
@@ -58,6 +61,9 @@ const FilterSidebar = () => {
   };
 
   const brandsHandler = (elem) => {
+    if(selectedBrands.length === brands.length){
+      selectedBrands = [];
+    }
     console.log(
       elem.target.id,
       selectedBrands.includes(elem.target.id),
@@ -70,6 +76,9 @@ const FilterSidebar = () => {
   };
 
   const ratingHandler = (elem) => {
+    if(selectedRating.length === ratings.length){
+      selectedRating = [];
+    }
     selectedRating.includes(elem.target.id)
       ? (selectedRating = selectedRating.filter(
           (item) => item !== elem.target.id,
@@ -82,10 +91,17 @@ const FilterSidebar = () => {
     // console.log(priceRange);
     removeDuplicates(selectedBrands);
     removeDuplicates(selectedRating);
+    if(selectedBrands.length === 0){
+      selectedBrands = brands;
+    }
+    console.log(selectedBrands);
+    if(selectedRating.length === 0){
+      selectedRating = ratings;
+    }
     const filtersSelected = {
       price: priceRange,
       brands: selectedBrands,
-      rating: selectedRating,
+      rating: Math.min.apply(Math, selectedRating),
     };
     dispatch(filter(filtersSelected));
     // window.location.reload();
@@ -355,6 +371,7 @@ const StyledTabToggleBtn = styled.button`
   font-size: 16px;
   border: none;
   border-radius: 8px;
+  z-index: 5000 !important;
   background-color: ${DARK_BLUE_2};
   color: ${LIGHT_BLUE};
   visibility: ${(props) =>

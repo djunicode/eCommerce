@@ -146,7 +146,7 @@ const getNewProducts = async (args, { req, redis }) => {
     if (products) {
       return JSON.parse(products);
     } else {
-      const product = await Product.find({ new: true }).populate(
+      const products = await Product.find({ new: true }).populate(
         'user brand category subcategory'
       );
 
@@ -243,7 +243,9 @@ const createProductReview = async (args, req) => {
       if(product) {
         let reviews = product[0].reviews;
         let numReviews = product[0].numReviews;
+        let avgRate = (product[0].avgRating*numReviews) + args.productReview.rating;
         numReviews = product[0].reviews.length + 1;
+        avgRate = avgRate/numReviews;
         const review = {
           name: args.productReview.name,
           rating: args.productReview.rating,
@@ -254,6 +256,7 @@ const createProductReview = async (args, req) => {
         const updatedProduct = {
           reviews: reviews,
           numReviews: numReviews,
+          avgRating: avgRate,
         }
         await Product.findByIdAndUpdate(args.productId, {$set: updatedProduct,});
         const newUpdatedProduct = await Product.findById(args.productId);
@@ -282,6 +285,75 @@ const getProductReviews = async (args) => {
   }
 }
 
+//add product questions
+//private/
+const createProductQuestion = async (args, req) => {
+  try {
+    if(loggedin(req)) {
+      const product = await Product.find({ _id: args.productId });
+      if(product) {
+        let questions = product[0].questions;
+        const question = {
+          question: args.question,
+        }
+        questions.push(question);
+        const updatedProduct = {
+          questions: questions,
+        }
+        await Product.findByIdAndUpdate(args.productId, {$set: updatedProduct,});
+        const newUpdatedProduct = await Product.findById(args.productId);
+        return newUpdatedProduct;
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+//add product answers
+//private/
+const createProductAnswer = async (args, req) => {
+  try {
+    if(loggedin(req)) {
+      const product = await Product.find({ _id: args.productId });
+      if(product) {
+        let questions = product[0].questions;
+        
+        questions[args.Qindex] = {
+          question: questions[args.Qindex].question,
+          answer: args.answer,
+        }
+
+        const updatedProduct = {
+          questions: questions,
+        }
+        await Product.findByIdAndUpdate(args.productId, {$set: updatedProduct,});
+        const newUpdatedProduct = await Product.findById(args.productId);
+        return newUpdatedProduct;
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+//get product QnAs
+//public
+const getProductQnAs = async (args) => {
+  try {
+    const product = await Product.find({ _id: args.productId });
+    if(product) {
+      const questions = product[0].questions;
+      return questions;
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
 export {
   createProduct,
   getProductByCategory,
@@ -292,4 +364,7 @@ export {
   deleteProduct,
   createProductReview,
   getProductReviews,
+  createProductQuestion,
+  createProductAnswer,
+  getProductQnAs,
 };

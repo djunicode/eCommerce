@@ -11,6 +11,7 @@ const products = [
     countInStock: 3,
     rating: 0,
     numReviews: 0,
+    new: true,
   },
   {
     name: 'iPhone 11 Pro 256GB Memory',
@@ -37,6 +38,7 @@ const products = [
     countInStock: 0,
     rating: 0,
     numReviews: 0,
+    new: true,
   },
   {
     name: 'Sony Playstation 4 Pro White Version',
@@ -63,6 +65,7 @@ const products = [
     countInStock: 7,
     rating: 0,
     numReviews: 0,
+    new: true,
   },
   {
     name: 'Amazon Echo Dot 3rd Generation',
