@@ -1,5 +1,6 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable no-unused-expressions */
+/* eslint-disable prefer-spread */
 import React, { useState } from 'react';
 import {
   Row,
@@ -47,8 +48,12 @@ const FilterSidebar = () => {
   const { filters } = filterData;
 
   const [priceRange, setPriceRange] = useState({
-    max: Math.max.apply(Math, [...products.map(elem => elem.price)]),
-    min: Math.min.apply(Math, [...products.map(elem => elem.price)]),
+    max: Math.max.apply(Math, [
+      ...products.map((elem) => elem.price),
+    ]),
+    min: Math.min.apply(Math, [
+      ...products.map((elem) => elem.price),
+    ]),
   });
   const [chevronState, setChevronState] = useState({
     price: true,
@@ -61,7 +66,7 @@ const FilterSidebar = () => {
   };
 
   const brandsHandler = (elem) => {
-    if(selectedBrands.length === brands.length){
+    if (selectedBrands.length === brands.length) {
       selectedBrands = [];
     }
     console.log(
@@ -76,7 +81,7 @@ const FilterSidebar = () => {
   };
 
   const ratingHandler = (elem) => {
-    if(selectedRating.length === ratings.length){
+    if (selectedRating.length === ratings.length) {
       selectedRating = [];
     }
     selectedRating.includes(elem.target.id)
@@ -91,11 +96,11 @@ const FilterSidebar = () => {
     // console.log(priceRange);
     removeDuplicates(selectedBrands);
     removeDuplicates(selectedRating);
-    if(selectedBrands.length === 0){
+    if (selectedBrands.length === 0) {
       selectedBrands = brands;
     }
     console.log(selectedBrands);
-    if(selectedRating.length === 0){
+    if (selectedRating.length === 0) {
       selectedRating = ratings;
     }
     const filtersSelected = {

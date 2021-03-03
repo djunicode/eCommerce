@@ -1,9 +1,6 @@
 import styled from 'styled-components';
-import {
-  DARK_BLUE_2,
-  LIGHT_BLUE,
-} from './colors';
 import { Dropdown } from 'react-bootstrap';
+import { DARK_BLUE_2, LIGHT_BLUE } from './colors';
 
 export const StyledContainerDiv = styled.div`
   box-shadow: 0 12px 30px -10px rgba(150, 170, 180, 0.5);
@@ -86,7 +83,7 @@ export const StyledGridDiv = styled.div`
   align-items: flex-start;
   align-self: center !important;
   flex-wrap: wrap;*/
-  display:grid;
+  display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   overflow-y: auto !important;
   z-index: 1000 !important;

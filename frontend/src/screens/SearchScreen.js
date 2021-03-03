@@ -10,8 +10,9 @@ import Product from '../components/Product';
 import FilterSidebar from '../components/FilterSidebar';
 import { search } from '../actions/searchActions';
 
-import { StyledBadgeSortDiv, 
-  StyledBadge, 
+import {
+  StyledBadgeSortDiv,
+  StyledBadge,
   StyledDropdownToggle,
   StyledDropdownItem,
   StyledGridDiv,
@@ -23,7 +24,7 @@ import { DARK_BLUE_2 } from '../util/colors';
 const SearchScreen = () => {
   const { keyword } = useParams();
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     dispatch(search(keyword));
   }, [dispatch, keyword]);
@@ -64,18 +65,10 @@ const SearchScreen = () => {
                   SORT BY
                 </StyledDropdownToggle>
                 <Dropdown.Menu>
-                  <StyledDropdownItem
-                    as="button"
-                    onClick={() => {}}
-                  >
+                  <StyledDropdownItem as="button" onClick={() => {}}>
                     Price - Low to High
                   </StyledDropdownItem>
-                  <StyledDropdownItem
-                    as="button"
-                    onClick={() =>
-                      {}
-                    }
-                  >
+                  <StyledDropdownItem as="button" onClick={() => {}}>
                     Price - High to Low
                   </StyledDropdownItem>
                 </Dropdown.Menu>

@@ -9,7 +9,9 @@ import {
 
 const url = 'http://localhost:5000/graphql';
 
-export const search = (searchTerm, sort = 'none') => async (dispatch) => {
+export const search = (searchTerm, sort = 'none') => async (
+  dispatch,
+) => {
   try {
     dispatch({
       type: SEARCH_LIST_REQUEST,

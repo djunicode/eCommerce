@@ -12,8 +12,9 @@ import { getCategories } from '../actions/categoryActions';
 
 import { DARK_BLUE_2 } from '../util/colors';
 
-import { StyledBadgeSortDiv, 
-  StyledBadge, 
+import {
+  StyledBadgeSortDiv,
+  StyledBadge,
   StyledDropdownToggle,
   StyledDropdownItem,
   StyledGridDiv,
@@ -95,7 +96,8 @@ const CategoryScreen = () => {
                 (product) =>
                   product.price <= filters.price.max &&
                   product.price >= filters.price.min &&
-                  filters.brands.includes(product.brand.name) && (filters.rating <= product.avgRating) && (
+                  filters.brands.includes(product.brand.name) &&
+                  filters.rating <= product.avgRating && (
                     <>
                       <Product product={product} key={product._id} />
                       {(noProds = true)}
