@@ -1,6 +1,7 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable prefer-spread */
+/* eslint-disable no-use-before-define */
 import React, { useState } from 'react';
 import {
   Row,
@@ -66,34 +67,90 @@ const FilterSidebar = () => {
   };
 
   const brandsHandler = (elem) => {
-    if (selectedBrands.length === brands.length) {
-      selectedBrands = [];
-    }
-    console.log(
-      elem.target.id,
-      selectedBrands.includes(elem.target.id),
-    );
-    selectedBrands.includes(elem.target.id)
-      ? (selectedBrands = selectedBrands.filter(
+    if (selectedBrands.length === 1) {
+      if (selectedBrands.includes(elem.target.id)) {
+        const filtersSelected = {
+          price: priceRange,
+          brands,
+          rating: Math.min.apply(Math, selectedRating),
+        };
+        selectedBrands = [];
+        dispatch(filter(filtersSelected));
+      } else {
+        selectedBrands.push(elem.target.id);
+        filterSubmitHandler();
+      }
+    } else if (selectedBrands.length === brands.length - 1) {
+      if (selectedBrands.includes(elem.target.id)) {
+        selectedBrands = selectedBrands.filter(
           (item) => item !== elem.target.id,
-        ))
-      : selectedBrands.push(elem.target.id);
+        );
+      } else {
+        selectedBrands.push(elem.target.id);
+      }
+      filterSubmitHandler();
+    } else {
+      if (selectedBrands.includes(elem.target.id)) {
+        selectedBrands = selectedBrands.filter(
+          (item) => item !== elem.target.id,
+        );
+      } else {
+        selectedBrands.push(elem.target.id);
+      }
+      filterSubmitHandler();
+    }
   };
 
   const ratingHandler = (elem) => {
-    if (selectedRating.length === ratings.length) {
-      selectedRating = [];
-    }
+    // if (selectedRating.length === ratings.length) {
+    //   selectedRating = [];
+    // }
     selectedRating.includes(elem.target.id)
       ? (selectedRating = selectedRating.filter(
           (item) => item !== elem.target.id,
         ))
       : selectedRating.push(elem.target.id);
+    if (selectedBrands.length === 0) {
+      const filtersSelected = {
+        price: priceRange,
+        brands,
+        rating: Math.min.apply(Math, selectedRating),
+      };
+      if (selectedRating.length === 0) {
+        dispatch(
+          filter({
+            ...filtersSelected,
+            rating: 0,
+          }),
+        );
+      } else dispatch(filter(filtersSelected));
+    } else {
+      filterSubmitHandler();
+    }
   };
 
-  const filterSubmitHandler = (e) => {
-    e.preventDefault();
+  const filterSubmitHandler = () => {
+    // e.preventDefault();
     // console.log(priceRange);
+    removeDuplicates(selectedBrands);
+    removeDuplicates(selectedRating);
+    // if (selectedBrands.length === 0) {
+    //   selectedBrands = brands;
+    // }
+    console.log(selectedRating);
+    // if (selectedRating.length === 0) {
+    //   selectedRating = ratings;
+    // }
+    const filtersSelected = {
+      price: priceRange,
+      brands: selectedBrands,
+      rating: Math.min.apply(Math, selectedRating),
+    };
+    dispatch(filter(filtersSelected));
+    // window.location.reload();
+  };
+
+  const commonPriceHander = () => {
     removeDuplicates(selectedBrands);
     removeDuplicates(selectedRating);
     if (selectedBrands.length === 0) {
@@ -103,13 +160,57 @@ const FilterSidebar = () => {
     if (selectedRating.length === 0) {
       selectedRating = ratings;
     }
+  };
+
+  const price1Handler = () => {
+    commonPriceHander();
     const filtersSelected = {
-      price: priceRange,
+      price: {
+        max: Math.floor(prices.max / 3),
+        min: prices.min,
+      },
       brands: selectedBrands,
       rating: Math.min.apply(Math, selectedRating),
     };
+    setPriceRange({
+      max: Math.floor(prices.max / 3),
+      min: prices.min,
+    });
     dispatch(filter(filtersSelected));
-    // window.location.reload();
+  };
+
+  const price2Handler = () => {
+    commonPriceHander();
+    const filtersSelected = {
+      price: {
+        max: Math.floor((2 * prices.max) / 3),
+        min: Math.floor(prices.max / 3),
+      },
+      brands: selectedBrands,
+      rating: Math.min.apply(Math, selectedRating),
+    };
+    setPriceRange({
+      max: Math.floor((2 * prices.max) / 3),
+      min: Math.floor(prices.max / 3),
+    });
+    dispatch(filter(filtersSelected));
+  };
+
+  const price3Handler = () => {
+    commonPriceHander();
+    const filtersSelected = {
+      price: {
+        max: prices.max,
+        min: Math.floor((2 * prices.max) / 3),
+      },
+      brands: selectedBrands,
+      rating: Math.min.apply(Math, selectedRating),
+    };
+    setPriceRange({
+      max: prices.max,
+      min: Math.floor((2 * prices.max) / 3),
+    });
+    dispatch(filter(filtersSelected));
   };
 
   const [show, setShow] = useState({
@@ -179,12 +280,7 @@ const FilterSidebar = () => {
                             prices.max / 3,
                           )}`}
                           id={1}
-                          onChange={() => {
-                            setPriceRange({
-                              max: Math.floor(prices.max / 3),
-                              min: prices.min,
-                            });
-                          }}
+                          onChange={price1Handler}
                           style={{ scale: 100 }}
                           key={1}
                           defaultChecked={
@@ -205,12 +301,7 @@ const FilterSidebar = () => {
                             (2 * prices.max) / 3,
                           )}`}
                           id={2}
-                          onChange={() => {
-                            setPriceRange({
-                              max: Math.floor((2 * prices.max) / 3),
-                              min: Math.floor(prices.max / 3),
-                            });
-                          }}
+                          onChange={price2Handler}
                           style={{ scale: 100 }}
                           key={2}
                           defaultChecked={
@@ -230,12 +321,7 @@ const FilterSidebar = () => {
                             (2 * prices.max) / 3,
                           )} - Rs ${prices.max}`}
                           id={3}
-                          onChange={() => {
-                            setPriceRange({
-                              max: prices.max,
-                              min: Math.floor((2 * prices.max) / 3),
-                            });
-                          }}
+                          onChange={price3Handler}
                           style={{ scale: 100 }}
                           key={3}
                           defaultChecked={
@@ -352,14 +438,6 @@ const FilterSidebar = () => {
             </Card>
           </StyledAccordian>
         </Row>
-        <Row>
-          <StyledSubmitButton
-            onClick={filterSubmitHandler}
-            variant="outline-dark"
-          >
-            Apply Filters
-          </StyledSubmitButton>
-        </Row>
       </StyledLeftSidebar>
     </>
   );
@@ -442,18 +520,4 @@ const StyledFormFlexRow = styled(Form)`
   flex-direction: row;
   justify-content: space-between;
   flex-wrap: wrap;
-`;
-
-const StyledSubmitButton = styled(Button)`
-  margin-top: 12px;
-  border-radius: 10px;
-  width: 90%;
-  margin-bottom: 90px;
-  color: ${DARK_BLUE_2};
-  border-color: ${DARK_BLUE_2} !important;
-  background-color: ${LIGHT_BLUE};
-
-  &:hover {
-    background-color: ${DARK_BLUE_2};
-  }
 `;

@@ -31,11 +31,11 @@ const CategoryScreen = () => {
 
   const searchedCategory = useSelector((state) => state.category);
   const { loading, error, products } = searchedCategory;
-  console.log(products);
+  // console.log(products);
 
   const filtersApplied = useSelector((state) => state.filter);
   const { filters } = filtersApplied;
-  console.log(filters);
+  // console.log(filters);
 
   let noProds = true;
   const renderedProds = [];
