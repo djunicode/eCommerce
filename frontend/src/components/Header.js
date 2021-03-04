@@ -97,7 +97,7 @@ export default Header;
 
 const StyledNavbar = styled(Navbar)`
   background-color: ${DARK_BLUE_2};
-  padding: 16px !important;
+  padding: 20px !important;
 `;
 
 const StyledH1 = styled.h1`
@@ -111,11 +111,10 @@ const StyledNavLink = styled(Nav.Link)`
   color: ${LIGHT_PEACH};
   marginright: 6;
   textdecoration: 'none';
-  margin: 0 10px;
+  margin: 0 30px;
   border: 2px #ffdfc3 solid;
-  border-radius: 8px;
-  font-size: 16px;
-  padding: 8px;
+  font-size: 14px;
+  padding: 10px 25px;
 
   &:hover {
     text-decoration: none;
@@ -126,7 +125,7 @@ const StyledNavLink = styled(Nav.Link)`
 
 const StyledNavDropDown = styled(NavDropdown)`
   background-color: ${DARK_BLUE_2} !important;
-  font-size: 16px;
+  font-size: 14px;
   border: none !important;
   margin-right: 6px !important;
 `;
@@ -138,7 +137,7 @@ const StyledLinkContainer = styled(LinkContainer)`
 const StyledNavDropDownItem = styled(NavDropdown.Item)`
   background-color: ${DARK_BLUE_2};
   color: ${LIGHT_PEACH};
-  font-size: 16px;
+  font-size: 14px;
 
   &:hover {
     background-color: ${LIGHT_PEACH};
