@@ -39,7 +39,7 @@ function HomeScreen() {
     content.push(
       <Row className="justify-content-center" key="1">
         {categories.map((homecategories) => (
-          <Col xs={6} md={4} xl={3} key={homecategories._id}>
+          <Col xs={12} sm={6} md={4} xl={3} key={homecategories._id}>
             <CatCard>
               <Overlay />
               <Card.Img
