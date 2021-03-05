@@ -23,6 +23,7 @@ import { DARK_BLUE_2 } from '../util/colors';
 
 const SearchScreen = () => {
   const { keyword } = useParams();
+  console.log(keyword);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -34,8 +35,9 @@ const SearchScreen = () => {
   console.log(products);
 
   const filtersApplied = useSelector((state) => state.filter);
-  const { filters } = filtersApplied;
+  let { filters } = filtersApplied;
   console.log(filters);
+  filters = {};
 
   let noProds = true;
   const renderedProds = [];

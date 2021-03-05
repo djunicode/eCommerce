@@ -3,12 +3,13 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
 
-import { Dropdown } from 'react-bootstrap';
+import { Dropdown, Alert } from 'react-bootstrap';
+import styled from 'styled-components';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Product from '../components/Product';
 import FilterSidebar from '../components/FilterSidebar';
-import { getCategories } from '../actions/categoryActions';
+import { getProductByCategory } from '../actions/categoryActions';
 
 import { DARK_BLUE_2 } from '../util/colors';
 
@@ -26,19 +27,24 @@ const CategoryScreen = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getCategories(id));
+    dispatch(getProductByCategory(id));
   }, [dispatch, id]);
 
-  const searchedCategory = useSelector((state) => state.category);
+  const searchedCategory = useSelector(
+    (state) => state.productsByCategory,
+  );
   const { loading, error, products } = searchedCategory;
-  // console.log(products);
+  console.log(products);
 
   const filtersApplied = useSelector((state) => state.filter);
   const { filters } = filtersApplied;
-  // console.log(filters);
+  console.log(filters);
 
   let noProds = true;
-  const renderedProds = [];
+  let renderedProds = [];
+  useEffect(() => {
+    renderedProds = [];
+  }, [filters, products, id]);
 
   return (
     <>
@@ -67,14 +73,16 @@ const CategoryScreen = () => {
                 <Dropdown.Menu>
                   <StyledDropdownItem
                     as="button"
-                    onClick={() => dispatch(getCategories(id, 'asc'))}
+                    onClick={() =>
+                      dispatch(getProductByCategory(id, 'asc'))
+                    }
                   >
                     Price - Low to High
                   </StyledDropdownItem>
                   <StyledDropdownItem
                     as="button"
                     onClick={() =>
-                      dispatch(getCategories(id, 'desc'))
+                      dispatch(getProductByCategory(id, 'desc'))
                     }
                   >
                     Price - High to Low
@@ -106,23 +114,52 @@ const CategoryScreen = () => {
                   ),
               )}
           </StyledGridDiv>
-          {noProds && Object.keys(filters).length > 0 && (
-            <>
-              {(noProds = false)}
-              <StyledSimilarProdsH1>
-                Similar Products
-              </StyledSimilarProdsH1>
-              <StyledGridDiv>
-                {products.map(
-                  (product) =>
-                    filters.brands.includes(product.brand.name) &&
-                    !renderedProds.includes(product) && (
-                      <Product product={product} key={product._id} />
-                    ),
+          {noProds &&
+            Object.keys(filters).length > 0 &&
+            filters.rating !== Infinity && (
+              <>
+                {(noProds = false)}
+                {renderedProds.length === 0 && (
+                  <StyledWarning variant="danger">
+                    No Products Found
+                  </StyledWarning>
                 )}
-              </StyledGridDiv>
-            </>
-          )}
+                <StyledSimilarProdsH1>
+                  Similar Products
+                </StyledSimilarProdsH1>
+                <StyledGridDiv>
+                  {products.map(
+                    (product) =>
+                      filters.brands.includes(product.brand.name) &&
+                      !renderedProds.includes(product) && (
+                        <Product
+                          product={product}
+                          key={product._id}
+                        />
+                      ),
+                  )}
+                </StyledGridDiv>
+              </>
+            )}
+          {noProds &&
+            Object.keys(filters).length > 0 &&
+            filters.rating === Infinity && (
+              <>
+                {(noProds = false)}
+                <StyledGridDiv>
+                  {products.map(
+                    (product) =>
+                      filters.brands.includes(product.brand.name) &&
+                      !renderedProds.includes(product) && (
+                        <Product
+                          product={product}
+                          key={product._id}
+                        />
+                      ),
+                  )}
+                </StyledGridDiv>
+              </>
+            )}
         </>
       )}
     </>
@@ -130,3 +167,12 @@ const CategoryScreen = () => {
 };
 
 export default CategoryScreen;
+
+const StyledWarning = styled(Alert)`
+  margin-left: 330px !important;
+  margin-top: 12px;
+
+  @media (max-width: 900px) {
+    margin: 12px !important;
+  }
+`;

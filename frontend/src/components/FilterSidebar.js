@@ -2,6 +2,8 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable prefer-spread */
 /* eslint-disable no-use-before-define */
+/* eslint-disable no-unused-vars */
+
 import React, { useState } from 'react';
 import {
   Row,
@@ -19,7 +21,7 @@ import { LIGHT_BLUE, DARK_BLUE_2 } from '../util/colors';
 let selectedBrands = [];
 let selectedRating = [];
 
-const FilterSidebar = () => {
+const FilterSidebar = ({ page }) => {
   const dispatch = useDispatch();
 
   let brands = [];
@@ -30,7 +32,12 @@ const FilterSidebar = () => {
     min: 100000,
   };
 
-  const prodData = useSelector((state) => state.category);
+  const prodData = useSelector((state) => {
+    if (page === 'Search') {
+      return state.search;
+    }
+    return state.productsByCategory;
+  });
   const { products } = prodData;
   products.map((prod) => {
     brands.push(prod.brand.name);
@@ -47,6 +54,7 @@ const FilterSidebar = () => {
 
   const filterData = useSelector((state) => state.filter);
   const { filters } = filterData;
+  console.log(filters);
 
   const [priceRange, setPriceRange] = useState({
     max: Math.max.apply(Math, [
@@ -130,24 +138,15 @@ const FilterSidebar = () => {
   };
 
   const filterSubmitHandler = () => {
-    // e.preventDefault();
-    // console.log(priceRange);
     removeDuplicates(selectedBrands);
     removeDuplicates(selectedRating);
-    // if (selectedBrands.length === 0) {
-    //   selectedBrands = brands;
-    // }
     console.log(selectedRating);
-    // if (selectedRating.length === 0) {
-    //   selectedRating = ratings;
-    // }
     const filtersSelected = {
       price: priceRange,
       brands: selectedBrands,
       rating: Math.min.apply(Math, selectedRating),
     };
     dispatch(filter(filtersSelected));
-    // window.location.reload();
   };
 
   const commonPriceHander = () => {

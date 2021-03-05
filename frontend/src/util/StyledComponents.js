@@ -46,7 +46,7 @@ export const StyledBadgeSortDiv = styled.div`
 `;
 
 export const StyledBadge = styled.p`
-  font-size: 20px;
+  font-size: 16px;
   border-radius: 8px;
   background-color: ${LIGHT_BLUE} !important;
   color: ${DARK_BLUE_2} !important;

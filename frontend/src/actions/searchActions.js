@@ -23,22 +23,38 @@ export const search = (searchTerm, sort = 'none') => async (
         query: `
                 query {
                     searchProduct(searchTerm: "${searchTerm}"){
-                        _id
-                        name
-                        discount
-                        price
-                        image
-                        brand {
-                            _id
-                            name
-                        }
-                        category {
-                            _id
-                            name
-                        }
-                        countInStock
-                        numReviews
-                        description
+                      _id
+                      name
+                      discount
+                      price
+                      discountedPrice
+                      user{
+                          _id
+                      }
+                      image
+                      brand{
+                          _id
+                          name
+                      }
+                      category{
+                          _id
+                          name
+                      }
+                      subcategory{
+                          _id
+                          name
+                      }
+                      new
+                      countInStock
+                      numReviews
+                      reviews{
+                          name
+                          rating
+                          comment
+                          user
+                      }
+                      description
+                      avgRating
                   }
                 }
                 `,

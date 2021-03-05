@@ -38,7 +38,7 @@ const SearchBox = ({ history }) => {
         className="mr-sm-2 ml-sm-5"
       />
       <StyledButton onClick={submitHandler}>
-        <i className="fas fa-search" />
+        <Icon className="fas fa-search" />
       </StyledButton>
     </StyledForm>
   );
@@ -51,13 +51,13 @@ const StyledForm = styled(Form)`
   justify-content: center;
   margin: auto;
   border: 2px ${LIGHT_PEACH} solid;
-  border-radius: 4px;
   align-items: space-between;
   flex-wrap: nowrap !important;
 `;
 
 const StyledFormControl = styled(Form.Control)`
   width: 80% !important;
+  font-size: 14px;
   margin: auto 0 !important;
   padding-left: 0 !important;
   background-color: ${DARK_BLUE_2};
@@ -83,8 +83,15 @@ const StyledFormControl = styled(Form.Control)`
 const StyledButton = styled(Button)`
   background-color: ${DARK_BLUE_2} !important;
   color: ${LIGHT_PEACH} !important;
-  font-size: 20px;
+  font-size: 16px;
   padding-right: 0 !important;
   outline: none !important;
   box-shadow: none !important;
+`;
+
+const Icon = styled.i`
+  &:hover {
+    transform: scale(1.1);
+    color: #d4d4d4;
+  }
 `;
