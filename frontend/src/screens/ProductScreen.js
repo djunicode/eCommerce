@@ -1,3 +1,7 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useEffect } from 'react';
 // import { Link } from 'react-router-dom';
@@ -11,6 +15,7 @@ import {
   Card,
   Button,
   Form,
+  Nav,
 } from 'react-bootstrap';
 import ReactImageMagnify from 'react-image-magnify';
 // import { set } from 'mongoose';
@@ -254,6 +259,9 @@ const ProductScreen = () => {
                     <i
                       className="fas fa-minus-square"
                       style={{ fontSize: '2rem', color: '#5EAAA8' }}
+                      onClick={() => {
+                        setQty((qt) => (qt > 1 ? qt - 1 : qt));
+                      }}
                     />
                   </span>
                   <span className="mr-1" style={{ padding: '0px' }}>
@@ -275,6 +283,13 @@ const ProductScreen = () => {
                     <i
                       className="fas fa-plus-square"
                       style={{ fontSize: '2rem', color: '#5EAAA8' }}
+                      onClick={() => {
+                        setQty((qt) =>
+                          qt < product.data.countInStock
+                            ? qt + 1
+                            : qt,
+                        );
+                      }}
                     />
                   </span>
                 </Row>
@@ -411,52 +426,57 @@ const ProductScreen = () => {
         </Row>
       </Container>
       <Container className="my-5" style={{ padding: '0px' }}>
-        <Button
-          className="rounded-top"
-          style={{
-            padding: '6px 12px',
-            backgroundColor: 'white',
-            textTransform: 'none',
-            color: 'black',
-          }}
-          name="pd"
-          onClick={(e) => {
-            handleTab(e);
-          }}
+        <Nav fill variant="tabs" defaultActiveKey="/home">
+          <Nav.Item style={{ marginRight: '0', flex: '0 1 auto' }}>
+            <Nav.Link
+              name="pd"
+              onClick={(e) => {
+                handleTab(e);
+              }}
+              style={{
+                backgroundColor: `${pd ? '#F9F9F9' : 'white'}`,
+                fontWeight: '700',
+                padding: '0.4rem 0.5rem',
+              }}
+            >
+              Product Details
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item style={{ marginRight: '0', flex: '0 1 auto' }}>
+            <Nav.Link
+              name="rr"
+              onClick={(e) => {
+                handleTab(e);
+              }}
+              style={{
+                backgroundColor: `${rr ? '#F9F9F9' : 'white'}`,
+                fontWeight: '700',
+                padding: '0.4rem 0.5rem',
+              }}
+            >
+              Ratings &amp; Reviews
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item style={{ marginRight: '0', flex: '0 1 auto' }}>
+            <Nav.Link
+              name="q"
+              onClick={(e) => {
+                handleTab(e);
+              }}
+              style={{
+                backgroundColor: `${q ? '#F9F9F9' : 'white'}`,
+                fontWeight: '700',
+                padding: '0.4rem 0.5rem',
+              }}
+            >
+              Questions
+            </Nav.Link>
+          </Nav.Item>
+        </Nav>
+        <Card
+          className="p-4"
+          style={{ backgroundColor: '#F9F9F9', border: 'none' }}
         >
-          Product Details
-        </Button>
-        <Button
-          className="rounded-top"
-          style={{
-            padding: '6px 12px',
-            backgroundColor: 'white',
-            textTransform: 'none',
-            color: 'black',
-          }}
-          name="rr"
-          onClick={(e) => {
-            handleTab(e);
-          }}
-        >
-          Ratings &amp; Reviews
-        </Button>
-        <Button
-          className="rounded-top"
-          style={{
-            padding: '6px 12px',
-            backgroundColor: 'white',
-            textTransform: 'none',
-            color: 'black',
-          }}
-          name="q"
-          onClick={(e) => {
-            handleTab(e);
-          }}
-        >
-          Questions
-        </Button>
-        <Card className="p-4" style={{ backgroundColor: '#F9F9F9' }}>
           {pd && (
             <>
               <span
@@ -472,7 +492,11 @@ const ProductScreen = () => {
                 <Col md={2} xs={5} style={{ color: '#5F5F5F' }}>
                   Ideal For
                 </Col>
-                <Col xs={7} md={10} style={{ color: 'black' }}>
+                <Col
+                  xs={7}
+                  md={10}
+                  style={{ color: 'black', fontWeight: '600' }}
+                >
                   Men and women, boys, girls, unisex
                 </Col>
               </Row>
@@ -480,7 +504,11 @@ const ProductScreen = () => {
                 <Col md={2} xs={5} style={{ color: '#5F5F5F' }}>
                   Shape
                 </Col>
-                <Col xs={7} md={10} style={{ color: 'black' }}>
+                <Col
+                  xs={7}
+                  md={10}
+                  style={{ color: 'black', fontWeight: '600' }}
+                >
                   Rectangle
                 </Col>
               </Row>
@@ -488,7 +516,11 @@ const ProductScreen = () => {
                 <Col md={2} xs={5} style={{ color: '#5F5F5F' }}>
                   Cover Material
                 </Col>
-                <Col xs={7} md={10} style={{ color: 'black' }}>
+                <Col
+                  xs={7}
+                  md={10}
+                  style={{ color: 'black', fontWeight: '600' }}
+                >
                   No cover
                 </Col>
               </Row>
@@ -496,7 +528,11 @@ const ProductScreen = () => {
                 <Col md={2} xs={5} style={{ color: '#5F5F5F' }}>
                   Filling Material
                 </Col>
-                <Col xs={7} md={10} style={{ color: 'black' }}>
+                <Col
+                  xs={7}
+                  md={10}
+                  style={{ color: 'black', fontWeight: '600' }}
+                >
                   EVA
                 </Col>
               </Row>
@@ -504,7 +540,11 @@ const ProductScreen = () => {
                 <Col md={2} xs={5} style={{ color: '#5F5F5F' }}>
                   Other Features
                 </Col>
-                <Col xs={7} md={10} style={{ color: 'black' }}>
+                <Col
+                  xs={7}
+                  md={10}
+                  style={{ color: 'black', fontWeight: '600' }}
+                >
                   Lorem ipsum dolor sit, amet consectetur adipisicing
                   elit. Exercitationem harum nihil illo nam
                   praesentium, voluptate illum explicabo accusantium
@@ -527,7 +567,11 @@ const ProductScreen = () => {
                 <Col md={2} xs={5} style={{ color: '#5F5F5F' }}>
                   Width
                 </Col>
-                <Col xs={7} md={10} style={{ color: 'black' }}>
+                <Col
+                  xs={7}
+                  md={10}
+                  style={{ color: 'black', fontWeight: '600' }}
+                >
                   24 inch
                 </Col>
               </Row>
@@ -535,7 +579,11 @@ const ProductScreen = () => {
                 <Col md={2} xs={5} style={{ color: '#5F5F5F' }}>
                   Height
                 </Col>
-                <Col xs={7} md={10} style={{ color: 'black' }}>
+                <Col
+                  xs={7}
+                  md={10}
+                  style={{ color: 'black', fontWeight: '600' }}
+                >
                   72 inch
                 </Col>
               </Row>
@@ -543,7 +591,11 @@ const ProductScreen = () => {
                 <Col md={2} xs={5} style={{ color: '#5F5F5F' }}>
                   Thickness
                 </Col>
-                <Col xs={7} md={10} style={{ color: 'black' }}>
+                <Col
+                  xs={7}
+                  md={10}
+                  style={{ color: 'black', fontWeight: '600' }}
+                >
                   6 mm
                 </Col>
               </Row>
@@ -551,7 +603,11 @@ const ProductScreen = () => {
                 <Col md={2} xs={5} style={{ color: '#5F5F5F' }}>
                   Weight
                 </Col>
-                <Col xs={7} md={10} style={{ color: 'black' }}>
+                <Col
+                  xs={7}
+                  md={10}
+                  style={{ color: 'black', fontWeight: '600' }}
+                >
                   500 g
                 </Col>
               </Row>

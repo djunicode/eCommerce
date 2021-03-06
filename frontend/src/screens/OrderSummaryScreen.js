@@ -13,6 +13,7 @@ import {
   Button,
   // Form,
 } from 'react-bootstrap';
+import styled from 'styled-components';
 
 function OrderSummaryScreen() {
   const [os, setOs] = useState('on');
@@ -31,6 +32,16 @@ function OrderSummaryScreen() {
     }
   };
 
+  const handleBack = (e) => {
+    if (e.target.name === 'da') {
+      setDa('off');
+      setOs('on');
+    } else if (e.target.name === 'p') {
+      setP('off');
+      setDa('on');
+    }
+  };
+
   return (
     <>
       <div
@@ -39,64 +50,35 @@ function OrderSummaryScreen() {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          transform: 'translateX(4%)',
         }}
       >
         <span className="mr-5">
-          {os === 'on' && (
-            <i
-              style={{ color: '#F05454' }}
-              className="fas fa-circle"
-            />
-          )}
-          {os === 'off' && (
-            <i
-              style={{ color: '#F05454' }}
-              className="far fa-circle"
-            />
-          )}
+          {os === 'on' && <On>1</On>}
+          {os === 'off' && <Off>1</Off>}
           {os === 'done' && (
             <i
-              style={{ color: 'green' }}
+              style={{ color: 'green', fontSize: '24px' }}
               className="fas fa-check-circle"
             />
           )}
         </span>
         <span className="mr-5">
-          {da === 'on' && (
-            <i
-              style={{ color: '#F05454' }}
-              className="fas fa-circle"
-            />
-          )}
-          {da === 'off' && (
-            <i
-              style={{ color: '#F05454' }}
-              className="far fa-circle"
-            />
-          )}
+          {da === 'on' && <On>2</On>}
+          {da === 'off' && <Off>2</Off>}
           {da === 'done' && (
             <i
-              style={{ color: 'green' }}
+              style={{ color: 'green', fontSize: '24px' }}
               className="fas fa-check-circle"
             />
           )}
         </span>
         <span className="mr-5">
-          {p === 'on' && (
-            <i
-              style={{ color: '#F05454' }}
-              className="fas fa-circle"
-            />
-          )}
-          {p === 'off' && (
-            <i
-              style={{ color: '#F05454' }}
-              className="far fa-circle"
-            />
-          )}
+          {p === 'on' && <On>3</On>}
+          {p === 'off' && <Off>3</Off>}
           {p === 'done' && (
             <i
-              style={{ color: 'green' }}
+              style={{ color: 'green', fontSize: '24px' }}
               className="fas fa-check-circle"
             />
           )}
@@ -110,8 +92,32 @@ function OrderSummaryScreen() {
           border: '1px solid #D5D5D5',
           letterSpacing: '0.5px',
           height: 'auto',
+          position: 'relative',
         }}
       >
+        {p === 'on' && (
+          <Back
+            className="btn-danger rounded py-1 px-3"
+            name="p"
+            onClick={(e) => {
+              handleBack(e);
+            }}
+          >
+            <i className="fas fa-arrow-left" />
+          </Back>
+        )}
+        {da === 'on' && (
+          <Back
+            className="btn-danger rounded py-1 px-3"
+            name="da"
+            onClick={(e) => {
+              handleBack(e);
+            }}
+          >
+            <i className="fas fa-arrow-left" />
+          </Back>
+        )}
+
         {os === 'on' && (
           <>
             <h1
@@ -542,3 +548,32 @@ function OrderSummaryScreen() {
 }
 
 export default OrderSummaryScreen;
+
+const On = styled.div`
+  height: 25px;
+  width: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: #f05454;
+  color: white;
+`;
+
+const Off = styled.div`
+  height: 25px;
+  width: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  color: #f05454;
+  border: 2px solid #f05454;
+`;
+
+const Back = styled(Button)`
+  text-transform: none;
+  position: absolute;
+  top: -45px;
+  left: 0px;
+`;
