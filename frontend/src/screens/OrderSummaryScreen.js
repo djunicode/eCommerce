@@ -41,7 +41,7 @@ function OrderSummaryScreen() {
       setOs('done');
       setDa('on');
     }
-    if (e.target.name === 'pop') {
+    if (e.target.name === 'pop' && ana) {
       validate();
       if (
         errors.name === '' &&
@@ -57,6 +57,9 @@ function OrderSummaryScreen() {
       } else {
         setMessage('Please fill all the fields correctly');
       }
+    } else if (e.target.name === 'pop') {
+      setP('on');
+      setDa('done');
     }
   };
 
@@ -427,7 +430,9 @@ function OrderSummaryScreen() {
                         }}
                         value={values.name}
                       />
-                      <small style={{ color: 'red' }}>{errors.name}</small>
+                      <small style={{ color: 'red' }}>
+                        {errors.name}
+                      </small>
                     </Col>
                     <Col md={4}>
                       <label htmlFor="number">Number</label>
@@ -443,7 +448,9 @@ function OrderSummaryScreen() {
                         }}
                         value={values.number}
                       />
-                      <small style={{ color: 'red' }}>{errors.number}</small>
+                      <small style={{ color: 'red' }}>
+                        {errors.number}
+                      </small>
                     </Col>
                     <Col md={4}>
                       <label htmlFor="email">Email</label>
@@ -459,7 +466,9 @@ function OrderSummaryScreen() {
                         }}
                         value={values.email}
                       />
-                      <small style={{ color: 'red' }}>{errors.email}</small>
+                      <small style={{ color: 'red' }}>
+                        {errors.email}
+                      </small>
                     </Col>
                   </Row>
                   <Row className="mt-3">
@@ -477,7 +486,9 @@ function OrderSummaryScreen() {
                         }}
                         value={values.state}
                       />
-                      <small style={{ color: 'red' }}>{errors.state}</small>
+                      <small style={{ color: 'red' }}>
+                        {errors.state}
+                      </small>
                     </Col>
                     <Col md={4}>
                       <label htmlFor="city">City</label>
@@ -493,7 +504,9 @@ function OrderSummaryScreen() {
                         }}
                         value={values.city}
                       />
-                      <small style={{ color: 'red' }}>{errors.city}</small>
+                      <small style={{ color: 'red' }}>
+                        {errors.city}
+                      </small>
                     </Col>
                     <Col md={4}>
                       <label htmlFor="pincode">Pincode</label>
@@ -509,7 +522,9 @@ function OrderSummaryScreen() {
                         }}
                         value={values.pincode}
                       />
-                      <small style={{ color: 'red' }}>{errors.pincode}</small>
+                      <small style={{ color: 'red' }}>
+                        {errors.pincode}
+                      </small>
                     </Col>
                   </Row>
                   <Row className="mt-3">
@@ -527,7 +542,9 @@ function OrderSummaryScreen() {
                         }}
                         value={values.address}
                       />
-                      <small style={{ color: 'red' }}>{errors.address}</small>
+                      <small style={{ color: 'red' }}>
+                        {errors.address}
+                      </small>
                     </Col>
                   </Row>
                   <Row className="mt-3 mb-2">
