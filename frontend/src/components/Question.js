@@ -1,14 +1,14 @@
 import React from 'react';
 
-function Question() {
+function Question({ question, answer }) {
   return (
     <div>
       <hr />
       <span style={{ color: 'black', fontWeight: '1000' }}>
-        Q: Is it durable?
+        Q: {question}
       </span>
       <br />
-      <span style={{ color: '#5F5F5F' }}>A: Yes</span>
+      <span style={{ color: '#5F5F5F' }}>A: {answer}</span>
       <br />
       <p style={{ color: '#5F5F5F' }}>
         <small>Seller Name</small>&nbsp;|&nbsp;

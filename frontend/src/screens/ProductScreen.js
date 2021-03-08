@@ -19,6 +19,7 @@ import {
 } from 'react-bootstrap';
 import ReactImageMagnify from 'react-image-magnify';
 // import { set } from 'mongoose';
+import { set } from 'mongoose';
 import Rating from '../components/Rating';
 // import Message from '../components/Message';
 // import Loader from '../components/Loader';
@@ -33,6 +34,12 @@ import watchImg1200 from '../images/wristwatch_1200.jpg';
 import { getProduct } from '../actions/productidAction';
 import Review from '../components/Review';
 import Question from '../components/Question';
+
+const initialValues = {
+  question: '',
+  review: '',
+};
+
 // { history, match }
 const ProductScreen = () => {
   const [qty, setQty] = useState(1);
@@ -41,6 +48,11 @@ const ProductScreen = () => {
   const [pd, setPd] = useState(true);
   const [rr, setRr] = useState(false);
   const [q, setQ] = useState(false);
+  const [aaq, setAaq] = useState(false);
+  const [values, setValues] = useState(initialValues);
+  const [questions, setQuestions] = useState([
+    { question: 'Is it durable ?', answer: 'Yes' },
+  ]);
 
   const dispatch = useDispatch();
   const product = useSelector((state) => state.productid);
@@ -114,6 +126,27 @@ const ProductScreen = () => {
       console.log(product.data.brand.name);
     }
   }, [product]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setValues({
+      ...values,
+      [name]: value,
+    });
+  };
+
+  const handleDone = () => {
+    if (values.question) {
+      setQuestions((q) => {
+        setAaq(false);
+        return [
+          { question: values.question, answer: 'None Yet' },
+          ...q,
+        ];
+      });
+    }
+    setValues((v) => ({ ...v, question: '' }));
+  };
 
   return (
     <>
@@ -634,7 +667,12 @@ const ProductScreen = () => {
           )}
           {q && (
             <>
-              <span style={{ color: '#30475E' }}>
+              <span
+                style={{ color: '#30475E', cursor: 'pointer' }}
+                onClick={() => {
+                  setAaq((t) => !t);
+                }}
+              >
                 <i
                   className="far fa-edit"
                   style={{
@@ -648,7 +686,50 @@ const ProductScreen = () => {
                   ASK A QUESTION
                 </span>
               </span>
-              <Question />
+              {aaq && (
+                <>
+                  <hr />
+                  <label htmlFor="question">Question</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="question"
+                    placeholder="Enter your Qustion"
+                    name="question"
+                    style={{ backgroundColor: 'white' }}
+                    onChange={(e) => {
+                      handleInputChange(e);
+                    }}
+                    value={values.question}
+                  />
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Button
+                      className="btn btn-success rounded mt-2 px-2 py-1"
+                      style={{ fontWeight: '1000' }}
+                      onClick={() => {
+                        handleDone();
+                      }}
+                    >
+                      Done
+                    </Button>
+                  </div>
+                  <hr />
+                </>
+              )}
+              {questions.map((question, index) => {
+                return (
+                  <Question
+                    question={question.question}
+                    answer={question.answer}
+                  />
+                );
+              })}
             </>
           )}
         </Card>
