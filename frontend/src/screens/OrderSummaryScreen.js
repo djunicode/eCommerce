@@ -16,6 +16,44 @@ import {
   // Form,
 } from 'react-bootstrap';
 import styled from 'styled-components';
+import axios from 'axios';
+
+const orderAmount = 50;
+const myAppName = 'PROSHOP';
+const myDescription = 'Description goes here';
+const myColor = '#686CFD';
+
+const paymentHandler = async (e) => {
+  const API_URL = 'http://localhost:5000/';
+  e.preventDefault();
+  const orderUrl = `${API_URL}order`;
+  const response = await axios.get(orderUrl, {
+    params: { amount: orderAmount },
+  });
+  const { data } = response;
+  const options = {
+    key: process.env.RAZOR_PAY_TEST_KEY,
+    name: myAppName,
+    description: myDescription,
+    order_id: data.id,
+
+    handler: async (response) => {
+      try {
+        const paymentId = response.razorpay_payment_id;
+        const url = `${API_URL}capture/${paymentId}`;
+        const captureResponse = await axios.post(url, {});
+        console.log(captureResponse.data);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    theme: {
+      color: myColor,
+    },
+  };
+  const rzp1 = new window.Razorpay(options);
+  rzp1.open();
+};
 
 const initialValues = {
   name: '',
@@ -269,6 +307,20 @@ function OrderSummaryScreen() {
                     }}
                   >
                     Rs 1299
+                  </h1>
+                </Col>
+              </Row>
+              <hr />
+              <Row>
+                <Col xs={12} style={{ textAlign: 'end' }}>
+                  <h1
+                    style={{
+                      letterSpacing: '0',
+                      textTransform: 'none',
+                      paddingBottom: '0px',
+                    }}
+                  >
+                    Amount : Rs 1299
                   </h1>
                 </Col>
               </Row>
@@ -594,101 +646,7 @@ function OrderSummaryScreen() {
         )}
         {p === 'on' && (
           <>
-            <h1
-              style={{
-                letterSpacing: '0',
-                textTransform: 'none',
-                paddingBottom: '0px',
-              }}
-            >
-              Payment
-            </h1>
-            <>
-              <Row>
-                <Col md={7}>
-                  <Card className="px-3 py-2 mb-3">
-                    <h5
-                      className="ml-1"
-                      style={{
-                        letterSpacing: '0',
-                        textTransform: 'none',
-                        paddingBottom: '0px',
-                        display: 'inline',
-                      }}
-                    >
-                      Payment Method :
-                    </h5>
-                    <Row>
-                      <Col xs={6}>
-                        <div className="form-check">
-                          <input
-                            className="form-check-input"
-                            type="radio"
-                            name="flexRadioDefault"
-                            id="flexRadioDefault1"
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor="flexRadioDefault1"
-                          >
-                            Debit Card
-                          </label>
-                        </div>
-                      </Col>
-                      <Col xs={6}>
-                        <div className="form-check">
-                          <input
-                            className="form-check-input"
-                            type="radio"
-                            name="flexRadioDefault"
-                            id="flexRadioDefault2"
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor="flexRadioDefault2"
-                          >
-                            Credit Card
-                          </label>
-                        </div>
-                      </Col>
-                      <Col xs={6}>
-                        <div className="form-check">
-                          <input
-                            className="form-check-input"
-                            type="radio"
-                            name="flexRadioDefault"
-                            id="flexRadioDefault1"
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor="flexRadioDefault1"
-                          >
-                            Net Banking
-                          </label>
-                        </div>
-                      </Col>
-                      <Col xs={6}>
-                        <div className="form-check">
-                          <input
-                            className="form-check-input"
-                            type="radio"
-                            name="flexRadioDefault"
-                            id="flexRadioDefault2"
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor="flexRadioDefault2"
-                          >
-                            Cash on Delivery
-                          </label>
-                        </div>
-                      </Col>
-                    </Row>
-                    <Row />
-                  </Card>
-                </Col>
-              </Row>
-            </>
+            <Button onClick={paymentHandler} />
           </>
         )}
       </Container>
