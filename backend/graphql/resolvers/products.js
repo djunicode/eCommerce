@@ -38,6 +38,38 @@ const createProduct = async (args, req) => {
   }
 };
 
+// get all products
+// private
+// cached
+const getProducts = async (args, { req, redis }) => {
+  try {
+    if (admin(req)) {
+      const products = await redis.get('products:all');
+
+      if (products) {
+        return JSON.parse(products);
+      } else {
+        const products = await Product.find({}).populate(
+          'user brand category subcategory'
+        );
+
+        if (products) {
+          redis.setex(
+            'products:all',
+            process.env.SLOW_CACHE,
+            JSON.stringify(products)
+          );
+          return products;
+        } else {
+          throw new Error('No Products found');
+        }
+      }
+    }
+  } catch (err) {
+    throw err;
+  }
+};
+
 // get product by category
 // public
 // cached
@@ -60,7 +92,6 @@ const getProductByCategory = async (args, { req, redis }) => {
         );
         return products;
       } else {
-        res.status(404);
         throw new Error('Product not found');
       }
     }
@@ -94,7 +125,6 @@ const getProductBySubCategory = async (args, { req, redis }) => {
         );
         return products;
       } else {
-        res.status(404);
         throw new Error('Product not found');
       }
     }
@@ -126,7 +156,6 @@ const getProductById = async (args, { req, redis }) => {
         );
         return products;
       } else {
-        res.status(404);
         throw new Error('Product not found');
       }
     }
@@ -141,7 +170,7 @@ const getProductById = async (args, { req, redis }) => {
 // cached
 const getNewProducts = async (args, { req, redis }) => {
   try {
-    const products = await redis.get('newproducts');
+    const products = await redis.get('products:new');
 
     if (products) {
       return JSON.parse(products);
@@ -152,13 +181,12 @@ const getNewProducts = async (args, { req, redis }) => {
 
       if (products) {
         redis.setex(
-          'newproducts',
+          'products:new',
           process.env.FAST_CACHE,
           JSON.stringify(products)
         );
         return products;
       } else {
-        res.status(404);
         throw new Error('Product not found');
       }
     }
@@ -177,7 +205,6 @@ const updateProduct = async (args, { req, redis }) => {
       // console.log(args);
       const product = await Product.findById(args.productId);
       if (!product) {
-        res.status(404);
         throw new Error('Product not found');
       }
 
@@ -224,7 +251,6 @@ const deleteProduct = async (args, { req, redis }) => {
         // console.log(deleted);
         return { ...deleted._doc };
       } else {
-        res.status(404);
         throw new Error('Product not found');
       }
     }
@@ -238,43 +264,46 @@ const deleteProduct = async (args, { req, redis }) => {
 //private/
 const createProductReview = async (args, req) => {
   try {
-    //if(loggedin(req)) {
+    if (loggedin(req)) {
       const product = await Product.find({ _id: args.productId });
-      if(product) {
+      if (product) {
         let reviews = product[0].reviews;
         let numReviews = product[0].numReviews;
-        let avgRate = (product[0].avgRating*numReviews) + args.productReview.rating;
+        let avgRate =
+          product[0].avgRating * numReviews + args.productReview.rating;
         numReviews = product[0].reviews.length + 1;
-        avgRate = avgRate/numReviews;
+        avgRate = avgRate / numReviews;
         const review = {
           name: args.productReview.name,
           rating: args.productReview.rating,
           comment: args.productReview.comment,
-          user: args.productReview.user
-        }
+          user: args.productReview.user,
+        };
         reviews.push(review);
         const updatedProduct = {
           reviews: reviews,
           numReviews: numReviews,
           avgRating: avgRate,
-        }
-        await Product.findByIdAndUpdate(args.productId, {$set: updatedProduct,});
+        };
+        await Product.findByIdAndUpdate(args.productId, {
+          $set: updatedProduct,
+        });
         const newUpdatedProduct = await Product.findById(args.productId);
         return newUpdatedProduct;
       }
-    //}
+    }
   } catch (err) {
     console.log(err);
     throw err;
   }
-}
+};
 
 //get product reviews
 //public
 const getProductReviews = async (args) => {
   try {
     const product = await Product.find({ _id: args.productId });
-    if(product) {
+    if (product) {
       const reviews = product[0].reviews;
       // console.log(reviews);
       return reviews;
@@ -283,24 +312,26 @@ const getProductReviews = async (args) => {
     console.log(err);
     throw err;
   }
-}
+};
 
 //add product questions
 //private/
 const createProductQuestion = async (args, req) => {
   try {
-    if(loggedin(req)) {
+    if (loggedin(req)) {
       const product = await Product.find({ _id: args.productId });
-      if(product) {
+      if (product) {
         let questions = product[0].questions;
         const question = {
           question: args.question,
-        }
+        };
         questions.push(question);
         const updatedProduct = {
           questions: questions,
-        }
-        await Product.findByIdAndUpdate(args.productId, {$set: updatedProduct,});
+        };
+        await Product.findByIdAndUpdate(args.productId, {
+          $set: updatedProduct,
+        });
         const newUpdatedProduct = await Product.findById(args.productId);
         return newUpdatedProduct;
       }
@@ -309,26 +340,28 @@ const createProductQuestion = async (args, req) => {
     console.log(err);
     throw err;
   }
-}
+};
 
 //add product answers
 //private/
 const createProductAnswer = async (args, req) => {
   try {
-    if(loggedin(req)) {
+    if (loggedin(req)) {
       const product = await Product.find({ _id: args.productId });
-      if(product) {
+      if (product) {
         let questions = product[0].questions;
-        
+
         questions[args.Qindex] = {
           question: questions[args.Qindex].question,
           answer: args.answer,
-        }
+        };
 
         const updatedProduct = {
           questions: questions,
-        }
-        await Product.findByIdAndUpdate(args.productId, {$set: updatedProduct,});
+        };
+        await Product.findByIdAndUpdate(args.productId, {
+          $set: updatedProduct,
+        });
         const newUpdatedProduct = await Product.findById(args.productId);
         return newUpdatedProduct;
       }
@@ -337,14 +370,14 @@ const createProductAnswer = async (args, req) => {
     console.log(err);
     throw err;
   }
-}
+};
 
 //get product QnAs
 //public
 const getProductQnAs = async (args) => {
   try {
     const product = await Product.find({ _id: args.productId });
-    if(product) {
+    if (product) {
       const questions = product[0].questions;
       return questions;
     }
@@ -352,10 +385,11 @@ const getProductQnAs = async (args) => {
     console.log(err);
     throw err;
   }
-}
+};
 
 export {
   createProduct,
+  getProducts,
   getProductByCategory,
   getProductBySubCategory,
   getProductById,
