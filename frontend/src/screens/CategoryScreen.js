@@ -3,8 +3,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
 
-import { Dropdown, Alert } from 'react-bootstrap';
-import styled from 'styled-components';
+import { Dropdown } from 'react-bootstrap';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Product from '../components/Product';
@@ -20,6 +19,7 @@ import {
   StyledDropdownItem,
   StyledGridDiv,
   StyledSimilarProdsH1,
+  StyledWarning,
 } from '../util/StyledComponents';
 
 const CategoryScreen = () => {
@@ -104,6 +104,7 @@ const CategoryScreen = () => {
                 (product) =>
                   product.price <= filters.price.max &&
                   product.price >= filters.price.min &&
+                  product.avgRating >= filters.rating &&
                   filters.brands.includes(product.brand.name) &&
                   filters.rating <= product.avgRating && (
                     <>
@@ -167,12 +168,3 @@ const CategoryScreen = () => {
 };
 
 export default CategoryScreen;
-
-const StyledWarning = styled(Alert)`
-  margin-left: 330px !important;
-  margin-top: 12px;
-
-  @media (max-width: 900px) {
-    margin: 12px !important;
-  }
-`;

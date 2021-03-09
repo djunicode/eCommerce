@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Dropdown } from 'react-bootstrap';
+import { Dropdown, Alert } from 'react-bootstrap';
 import { DARK_BLUE_2, LIGHT_BLUE } from './colors';
 
 export const StyledContainerDiv = styled.div`
@@ -104,5 +104,14 @@ export const StyledSimilarProdsH1 = styled.h1`
 
   @media (max-width: 900px) {
     margin-left: 12px;
+  }
+`;
+
+export const StyledWarning = styled(Alert)`
+  margin-left: 330px !important;
+  margin-top: 12px;
+
+  @media (max-width: 900px) {
+    margin: 12px !important;
   }
 `;

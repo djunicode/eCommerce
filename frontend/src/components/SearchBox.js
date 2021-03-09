@@ -19,7 +19,7 @@ const SearchBox = ({ history }) => {
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(search(keyword));
-    dispatch(filter());
+    dispatch(filter({}));
     if (keyword.trim()) {
       history.push(`/search/${keyword}`);
     } else {

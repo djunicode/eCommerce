@@ -17,6 +17,7 @@ import {
   StyledDropdownItem,
   StyledGridDiv,
   StyledSimilarProdsH1,
+  StyledWarning,
 } from '../util/StyledComponents';
 
 import { DARK_BLUE_2 } from '../util/colors';
@@ -35,9 +36,16 @@ const SearchScreen = () => {
   console.log(products);
 
   const filtersApplied = useSelector((state) => state.filter);
-  let { filters } = filtersApplied;
+  const { filters } = filtersApplied;
   console.log(filters);
-  filters = {};
+
+  if (products.length === 0) {
+    return (
+      <Message variant="danger">
+        No Products Matched the Search criteria!
+      </Message>
+    );
+  }
 
   let noProds = true;
   const renderedProds = [];
@@ -54,7 +62,7 @@ const SearchScreen = () => {
           {products[0] && (
             <StyledBadgeSortDiv>
               <StyledBadge variant="danger">
-                {products[0].category.name.toUpperCase()}{' '}
+                {keyword.toUpperCase()}{' '}
                 <Link to="/home">
                   <i
                     className="fas fa-times"
@@ -78,18 +86,19 @@ const SearchScreen = () => {
             </StyledBadgeSortDiv>
           )}
           <StyledGridDiv>
-            {Object.keys(products).length > 0 &&
+            {products.length > 0 &&
               Object.keys(filters).length === 0 &&
               products.map((product) => (
                 <Product product={product} key={product._id} />
               ))}
 
-            {Object.keys(products).length > 0 &&
+            {products.length > 0 &&
               Object.keys(filters).length > 0 &&
               products.map(
                 (product) =>
                   product.price <= filters.price.max &&
                   product.price >= filters.price.min &&
+                  product.avgRating >= filters.rating &&
                   filters.brands.includes(product.brand.name) && (
                     <>
                       <Product product={product} key={product._id} />
@@ -99,23 +108,52 @@ const SearchScreen = () => {
                   ),
               )}
           </StyledGridDiv>
-          {noProds && Object.keys(filters).length > 0 && (
-            <>
-              {(noProds = false)}
-              <StyledSimilarProdsH1>
-                Similar Products
-              </StyledSimilarProdsH1>
-              <StyledGridDiv>
-                {products.map(
-                  (product) =>
-                    filters.brands.includes(product.brand.name) &&
-                    !renderedProds.includes(product) && (
-                      <Product product={product} key={product._id} />
-                    ),
+          {noProds &&
+            Object.keys(filters).length > 0 &&
+            filters.rating !== Infinity && (
+              <>
+                {(noProds = false)}
+                {renderedProds.length === 0 && (
+                  <StyledWarning variant="danger">
+                    No Products Found
+                  </StyledWarning>
                 )}
-              </StyledGridDiv>
-            </>
-          )}
+                <StyledSimilarProdsH1>
+                  Similar Products
+                </StyledSimilarProdsH1>
+                <StyledGridDiv>
+                  {products.map(
+                    (product) =>
+                      filters.brands.includes(product.brand.name) &&
+                      !renderedProds.includes(product) && (
+                        <Product
+                          product={product}
+                          key={product._id}
+                        />
+                      ),
+                  )}
+                </StyledGridDiv>
+              </>
+            )}
+          {noProds &&
+            Object.keys(filters).length > 0 &&
+            filters.rating === Infinity && (
+              <>
+                {(noProds = false)}
+                <StyledGridDiv>
+                  {products.map(
+                    (product) =>
+                      filters.brands.includes(product.brand.name) &&
+                      !renderedProds.includes(product) && (
+                        <Product
+                          product={product}
+                          key={product._id}
+                        />
+                      ),
+                  )}
+                </StyledGridDiv>
+              </>
+            )}
         </>
       )}
     </>

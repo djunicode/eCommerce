@@ -132,6 +132,7 @@ const FilterSidebar = ({ page }) => {
           }),
         );
       } else dispatch(filter(filtersSelected));
+      console.log(filtersSelected);
     } else {
       filterSubmitHandler();
     }
@@ -147,6 +148,7 @@ const FilterSidebar = ({ page }) => {
       rating: Math.min.apply(Math, selectedRating),
     };
     dispatch(filter(filtersSelected));
+    console.log(filtersSelected);
   };
 
   const commonPriceHander = () => {
