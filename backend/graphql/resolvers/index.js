@@ -21,6 +21,7 @@ import {
 
 import {
   createProduct,
+  getProducts,
   getProductByCategory,
   getProductBySubCategory,
   getProductById,
@@ -73,6 +74,7 @@ export default {
   deleteSubCategory: deleteSubCategory,
   //products
   createProduct: createProduct,
+  getProducts: getProducts,
   getProductByCategory: getProductByCategory,
   getProductBySubCategory: getProductBySubCategory,
   getProductById: getProductById,
