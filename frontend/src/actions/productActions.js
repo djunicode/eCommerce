@@ -106,27 +106,63 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
   }
 };
 
-export const createProduct = () => async (dispatch, getState) => {
+export const createProduct = (query) => async (
+  dispatch,
+  getState,
+) => {
   try {
     dispatch({
       type: PRODUCT_CREATE_REQUEST,
     });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
+    // const {
+    //   userLogin: { userInfo },
+    // } = getState();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
+    // const config = {
+    //   headers: {
+    //     Authorization: `Bearer ${userInfo.token}`,
+    //   },
+    // };
+    // console.log(userInfo.token);
+
+    const request = {
+      method: 'post',
+      url: 'http://localhost:5000/graphql',
+      data: {
+        query,
       },
+      headers: { 'Content-Type': 'application/json' },
     };
 
-    const { data } = await axios.post(`/api/products`, {}, config);
+    const { data } = await axios(request);
+
+    // const { data } = await axios.post(
+    //   `mutation{
+    //   createProduct(productInput: {
+    //     name: "one",
+    //     discount: 20,
+    //     price: 100,
+    //     user: "600e9bf7ab74de2680fa32da",
+    //     image: "one",
+    //     brand: "one",
+    //     category:"6016f6f44d1c3300f0a72dea",
+    //     subcategory: "6016f6f44d1c3300f0a72dea",
+    //     new: true,
+    //     countInStock:11,
+    //     numReviews:1,
+    //     description:"wow"
+    //   }) {
+    //     discountedPrice
+    //   }
+    // }`,
+    //   {},
+    //   config,
+    // );
 
     dispatch({
       type: PRODUCT_CREATE_SUCCESS,
-      payload: data,
+      payload: data.data.createProduct,
     });
   } catch (error) {
     const message =

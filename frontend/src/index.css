@@ -93,6 +93,10 @@ h2 {
   position: static !important;
 }
 
+.form-control {
+  background: rgb(255, 255, 255);
+}
+
 @media screen and (max-width: 600px) {
   main {
     padding: 0 40px;

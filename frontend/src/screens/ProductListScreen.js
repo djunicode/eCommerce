@@ -60,6 +60,15 @@ const ProductListScreen = ({ history, match }) => {
     pageNumber,
   ]);
 
+  const query = `mutation {
+    createProduct(productInput: {name: "one", discount: 20, price: 100, user: "600e9bf7ab74de2680fa32da", image: "one", brand: "one", category: "6016f6f44d1c3300f0a72dea", subcategory: "6016f6f44d1c3300f0a72dea", new: true, countInStock: 11, numReviews: 1, description: "wow"}) {
+      discountedPrice
+      name
+      price
+    }
+  }
+  `;
+
   const deleteHandler = (id) => {
     if (window.confirm('Are you sure')) {
       dispatch(deleteProduct(id));
@@ -67,7 +76,7 @@ const ProductListScreen = ({ history, match }) => {
   };
 
   const createProductHandler = () => {
-    dispatch(createProduct());
+    dispatch(createProduct(query));
   };
 
   return (
