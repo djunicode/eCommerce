@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Row, Col, Button, Card } from 'react-bootstrap';
+import { Row, Col, Button, Card, Container } from 'react-bootstrap';
 import styled from 'styled-components';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
@@ -77,7 +77,7 @@ function HomeScreen() {
   }
 
   return (
-    <>
+    <Container>
       <Meta />
 
       <h1>New Arrivals</h1>
@@ -94,7 +94,7 @@ function HomeScreen() {
           <Chatbot />
         </>
       )}
-    </>
+    </Container>
   );
 }
 
