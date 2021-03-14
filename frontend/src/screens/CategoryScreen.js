@@ -46,6 +46,14 @@ const CategoryScreen = () => {
     renderedProds = [];
   }, [filters, products, id]);
 
+  if (products.length === 0) {
+    return (
+      <Message variant="danger">
+        No Products found in this Category
+      </Message>
+    );
+  }
+
   return (
     <>
       {loading ? (
@@ -59,7 +67,7 @@ const CategoryScreen = () => {
             <StyledBadgeSortDiv>
               <StyledBadge variant="danger">
                 {products[0].category.name.toUpperCase()}{' '}
-                <Link to="/home">
+                <Link to="/">
                   <i
                     className="fas fa-times"
                     style={{ color: DARK_BLUE_2 }}

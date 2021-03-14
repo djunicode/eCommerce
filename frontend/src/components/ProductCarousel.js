@@ -14,6 +14,7 @@ import styled from 'styled-components';
 import Loader from './Loader';
 import Message from './Message';
 import { listTopProducts } from '../actions/productActions';
+import { LIGHT_BLUE } from '../util/colors';
 
 const ProductCarousel = () => {
   const dispatch = useDispatch();
@@ -119,6 +120,7 @@ const NACard = styled(Card)`
   border: none;
   margin: 0;
   height: 100%;
+  background-color: ${LIGHT_BLUE} !important;
 `;
 const NAtitle = styled(Card.Title)`
   font-size: 1.4rem;
@@ -140,7 +142,7 @@ const NAprice = styled(Card.Text)`
   }
 `;
 const NAFooter = styled(Card.Footer)`
-  background-color: none;
+  background-color: ${LIGHT_BLUE} !important;
   padding: 0;
   border: none;
   margin-top: 15px;
