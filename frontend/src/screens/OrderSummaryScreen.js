@@ -18,6 +18,7 @@ import {
 import styled from 'styled-components';
 import axios from 'axios';
 
+// these can be changed
 const orderAmount = 50;
 const myAppName = 'PROSHOP';
 const myDescription = 'Description goes here';

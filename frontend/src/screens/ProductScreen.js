@@ -38,6 +38,7 @@ import Question from '../components/Question';
 const initialValues = {
   question: '',
   review: '',
+  rating: '',
 };
 
 // { history, match }
@@ -53,6 +54,7 @@ const ProductScreen = () => {
   const [questions, setQuestions] = useState([
     { question: 'Is it durable ?', answer: 'Yes' },
   ]);
+  const [war, setWar] = useState(false);
 
   const dispatch = useDispatch();
   const product = useSelector((state) => state.productid);
@@ -648,7 +650,12 @@ const ProductScreen = () => {
           )}
           {rr && (
             <>
-              <span style={{ color: '#30475E' }}>
+              <span
+                style={{ color: '#30475E', cursor: 'pointer' }}
+                onClick={() => {
+                  setWar((t) => !t);
+                }}
+              >
                 <i
                   className="far fa-edit"
                   style={{
@@ -659,9 +666,44 @@ const ProductScreen = () => {
                 />
                 &nbsp;
                 <span style={{ display: 'inline' }}>
-                  WRITE A REVIEW
+                  Write a Review
                 </span>
               </span>
+              {war && (
+                <>
+                  <hr />
+                  <label htmlFor="question">Review</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="question"
+                    placeholder="Enter your Qustion"
+                    name="question"
+                    style={{ backgroundColor: 'white' }}
+                    onChange={(e) => {
+                      handleInputChange(e);
+                    }}
+                    value={values.question}
+                  />
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Button
+                      className="btn btn-success rounded mt-2 px-2 py-1"
+                      style={{ fontWeight: '1000' }}
+                      onClick={() => {
+                        handleDone();
+                      }}
+                    >
+                      Done
+                    </Button>
+                  </div>
+                </>
+              )}
               <Review />
             </>
           )}
@@ -719,7 +761,6 @@ const ProductScreen = () => {
                       Done
                     </Button>
                   </div>
-                  <hr />
                 </>
               )}
               {questions.map((question, index) => {

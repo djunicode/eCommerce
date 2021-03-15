@@ -12,6 +12,7 @@ export const ProductSchema = `
         subcategory: SubCategory!,
         new: Boolean!,
         countInStock: Int!,
+        avgRating: Float!,
         numReviews: Int!,
         reviews: [productReview!],
         questions: [productQ],
