@@ -12,8 +12,10 @@ export const ProductSchema = `
         subcategory: SubCategory!,
         new: Boolean!,
         countInStock: Int!,
+        avgRating: Float!,
         numReviews: Int!,
         reviews: [productReview!],
+        questions: [productQ],
         description: String!
     }
 
@@ -23,6 +25,11 @@ export const ProductSchema = `
         rating: Int!,
         comment: String!,
         user: ID!,
+    }
+
+    type productQ {
+        question: String,
+        answer: String,
     }
 
     input ProductInput {
@@ -56,5 +63,10 @@ export const ProductSchema = `
         rating: Int!,
         comment: String!,
         user: ID!,
+    }
+
+    input ProductQ {
+        question: String,
+        answer: String,
     }
 `;

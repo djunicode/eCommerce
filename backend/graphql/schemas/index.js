@@ -25,7 +25,7 @@ export default buildSchema(`
         orderById(orderId: ID!): Order!
         questions: [Question]
         question(level: String!, index: String!): Question
-
+        
         getCategories: [Category!]!
         
         getSubCategories(categoryId: ID!): [SubCategory!]!
@@ -35,13 +35,15 @@ export default buildSchema(`
         getUsers: [User!]!
         getUserById(userId: ID!): User!
         
+        getProducts: [Product!]!
         getProductByCategory(categoryId: ID!): [Product!]!
         getProductBySubCategory(subCategoryId: ID!): [Product!]!
         getProductById(id: ID!): [Product!]!
         getNewProducts: [Product!]!
         deleteProduct(id: ID!): Product!
         getProductReviews(productId: ID!): [productReview]!
-
+        getProductQnAs(productId: ID!): [productQ]
+        
         isDeliverable(shippingAddressInput: ShippingAddressInput): Boolean!,
         
         searchProduct(searchTerm: String!): [Product!]!
@@ -70,6 +72,8 @@ export default buildSchema(`
         createProduct(productInput: ProductInput):  Product!
         updateProduct(productId: ID!, updateProduct: updateProduct): Product!
         createProductReview(productId: ID!, productReview: ProductReview!): Product!
+        createProductQuestion(productId: ID!, question: String!): Product!
+        createProductAnswer(productId: ID!, answer: String!, Qindex: Int!): Product!
     }
     schema {
         query: rootQuery

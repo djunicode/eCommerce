@@ -21,6 +21,7 @@ import {
 
 import {
   createProduct,
+  getProducts,
   getProductByCategory,
   getProductBySubCategory,
   getProductById,
@@ -29,6 +30,9 @@ import {
   deleteProduct,
   createProductReview,
   getProductReviews,
+  createProductQuestion,
+  createProductAnswer,
+  getProductQnAs,
 } from './products.js';
 
 import {
@@ -70,6 +74,7 @@ export default {
   deleteSubCategory: deleteSubCategory,
   //products
   createProduct: createProduct,
+  getProducts: getProducts,
   getProductByCategory: getProductByCategory,
   getProductBySubCategory: getProductBySubCategory,
   getProductById: getProductById,
@@ -78,6 +83,9 @@ export default {
   deleteProduct: deleteProduct,
   createProductReview: createProductReview,
   getProductReviews: getProductReviews,
+  createProductQuestion: createProductQuestion,
+  createProductAnswer: createProductAnswer,
+  getProductQnAs: getProductQnAs,
   //orders
   orders: getOrders,
   myorders: getMyOrders,
