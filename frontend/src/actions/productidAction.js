@@ -30,7 +30,10 @@ export const getProduct = (query) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: PRODUCTID_CREATE_FAIL,
-      payload: error,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
     });
   }
 };

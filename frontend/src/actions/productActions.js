@@ -233,15 +233,24 @@ export const createProductReview = (productId, review) => async (
   }
 };
 
-export const listTopProducts = () => async (dispatch) => {
+export const listTopProducts = (query) => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_TOP_REQUEST });
 
-    const { data } = await axios.get(`/api/products/top`);
+    const request = {
+      method: 'post',
+      url: 'http://localhost:5000/graphql',
+      data: {
+        query,
+      },
+      headers: { 'Content-Type': 'application/json' },
+    };
+
+    const { data } = await axios(request);
 
     dispatch({
       type: PRODUCT_TOP_SUCCESS,
-      payload: data,
+      payload: data.data.getNewProducts,
     });
   } catch (error) {
     dispatch({
