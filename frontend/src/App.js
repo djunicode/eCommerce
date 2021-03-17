@@ -61,10 +61,7 @@ const App = () => {
             path="/admin/orderlist"
             component={OrderListScreen}
           />
-          <Route 
-            path="/admin/chatbot" 
-            component={ChatbotAdmin}
-          />
+          <Route path="/admin/chatbot" component={ChatbotAdmin} />
           <Route
             path="/search/:keyword"
             component={SearchScreen}

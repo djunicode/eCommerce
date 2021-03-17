@@ -76,7 +76,12 @@ const ProductCarousel = () => {
                           src={topproducts.image}
                           variant="top"
                           alt="new arrival"
-                          style={{ width: '100%', height: 'auto', marginTop: 40, marginBottom: 0 }}
+                          style={{
+                            width: '100%',
+                            height: 'auto',
+                            marginTop: 40,
+                            marginBottom: 0,
+                          }}
                         />
                         <NAtitle className="natitle">
                           {topproducts.name}
