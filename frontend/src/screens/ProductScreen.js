@@ -301,9 +301,12 @@ const ProductScreen = () => {
                         style={{
                           padding: '0px',
                           textAlign: 'center',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
                         }}
                       >
-                        <i
+                        {/* <i
                           className="fas fa-minus-square"
                           style={{
                             fontSize: '2rem',
@@ -312,7 +315,22 @@ const ProductScreen = () => {
                           onClick={() => {
                             setQty((qt) => (qt > 1 ? qt - 1 : qt));
                           }}
-                        />
+                        /> */}
+                        <Button
+                          className="rounded py-1"
+                          style={{
+                            fontSize: '2rem',
+                            backgroundColor: '#5EAAA8',
+                            paddingRight: '0.7rem',
+                            paddingLeft: '0.7rem',
+                          }}
+                          disabled={qty === 1}
+                          onClick={() => {
+                            setQty((qt) => (qt > 1 ? qt - 1 : qt));
+                          }}
+                        >
+                          -
+                        </Button>
                       </span>
                       <span
                         className="mr-1"
@@ -336,7 +354,7 @@ const ProductScreen = () => {
                           textAlign: 'center',
                         }}
                       >
-                        <i
+                        {/* <i
                           className="fas fa-plus-square"
                           style={{
                             fontSize: '2rem',
@@ -347,7 +365,22 @@ const ProductScreen = () => {
                               qt < data.countInStock ? qt + 1 : qt,
                             );
                           }}
-                        />
+                        /> */}
+                        <Button
+                          className="rounded px-2 py-1"
+                          style={{
+                            fontSize: '2rem',
+                            backgroundColor: '#5EAAA8',
+                          }}
+                          disabled={qty === data.countInStock}
+                          onClick={() => {
+                            setQty((qt) =>
+                              qt < data.countInStock ? qt + 1 : qt,
+                            );
+                          }}
+                        >
+                          +
+                        </Button>
                       </span>
                     </Row>
                   </Col>
