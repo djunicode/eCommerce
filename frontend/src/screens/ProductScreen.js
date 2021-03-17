@@ -4,14 +4,11 @@
 /* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useEffect } from 'react';
-// import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Container,
   Row,
   Col,
-  // Image,
-  // ListGroup,
   Card,
   Button,
   Form,
@@ -19,16 +16,9 @@ import {
 } from 'react-bootstrap';
 import ReactImageMagnify from 'react-image-magnify';
 // import { set } from 'mongoose';
-import { set } from 'mongoose';
 import Rating from '../components/Rating';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-// import Meta from '../components/Meta';
-// import {
-//   listProductDetails,
-//   createProductReview,
-// } from '../actions/productActions';
-// import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants';
 import watchImg687 from '../images/wristwatch_687.jpg';
 import watchImg1200 from '../images/wristwatch_1200.jpg';
 import { getProduct } from '../actions/productidAction';
@@ -385,49 +375,7 @@ const ProductScreen = () => {
                     </Row>
                   </Col>
                 </Row>
-                <Row
-                  className="mt-4 pl-3"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
-                >
-                  <span
-                    style={{
-                      color: 'black',
-                      fontWeight: '1000',
-                      fontSize: '1.1rem',
-                      marginRight: '3px',
-                    }}
-                  >
-                    Colour:
-                  </span>
-                  <Col
-                    xs={9}
-                    style={{ textAlign: 'left', paddingLeft: '0px' }}
-                  >
-                    <i
-                      className="fas fa-square-full mx-1"
-                      style={{ fontSize: '2rem' }}
-                    />
-                    <i
-                      className="fas fa-square-full mx-1"
-                      style={{ fontSize: '2rem' }}
-                    />
-                    <i
-                      className="fas fa-square-full mx-1"
-                      style={{ fontSize: '2rem' }}
-                    />
-                    <i
-                      className="fas fa-square-full mx-1"
-                      style={{ fontSize: '2rem' }}
-                    />
-                    <i
-                      className="fas fa-square-full mx-1"
-                      style={{ fontSize: '2rem' }}
-                    />
-                  </Col>
-                </Row>
+
                 <Row
                   className="mt-4 pl-3"
                   style={{

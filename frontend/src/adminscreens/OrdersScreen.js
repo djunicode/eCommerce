@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Form, Nav, Table } from 'react-bootstrap';
+import { Container, Row, Form, Nav } from 'react-bootstrap';
 import { FixedSizeGrid as Grid } from 'react-window';
 
 const Cell = ({ columnIndex, rowIndex, style }) => (
