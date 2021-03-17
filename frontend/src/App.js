@@ -20,6 +20,7 @@ import ProductEditScreen from './screens/ProductEditScreen';
 import OrderListScreen from './screens/OrderListScreen';
 import SearchScreen from './screens/SearchScreen';
 import CategoryScreen from './screens/CategoryScreen';
+import ChatbotAdmin from './screens/ChatbotAdmin';
 
 const App = () => {
   return (
@@ -59,6 +60,10 @@ const App = () => {
           <Route
             path="/admin/orderlist"
             component={OrderListScreen}
+          />
+          <Route 
+            path="/admin/chatbot" 
+            component={ChatbotAdmin}
           />
           <Route
             path="/search/:keyword"
