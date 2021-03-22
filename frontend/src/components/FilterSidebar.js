@@ -497,7 +497,7 @@ const StyledLeftSidebar = styled.div`
 const StyledH1 = styled.h1`
   margin-left: 16px;
   margin-top: 12px;
-  font-weight: 100;
+  font-weight: 400;
 `;
 
 const StyledI = styled.i`
