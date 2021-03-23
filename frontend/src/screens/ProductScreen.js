@@ -13,6 +13,7 @@ import {
   Button,
   Form,
   Nav,
+  Jumbotron,
 } from 'react-bootstrap';
 import ReactImageMagnify from 'react-image-magnify';
 // import { set } from 'mongoose';
@@ -24,6 +25,8 @@ import watchImg1200 from '../images/wristwatch_1200.jpg';
 import { getProduct } from '../actions/productidAction';
 import Review from '../components/Review';
 import Question from '../components/Question';
+import ReactSlickIntegration from '../components/ReactSlickIntegration';
+import ReactSlick from '../components/ReactSlick';
 
 const initialValues = {
   question: '',
@@ -163,7 +166,7 @@ const ProductScreen = () => {
             <Row style={{ height: '100%' }}>
               <Col lg={6}>
                 <div className="img-fluid" style={{ zIndex: '1000' }}>
-                  <ReactImageMagnify
+                  {/* <ReactImageMagnify
                     {...{
                       smallImage: {
                         alt: 'Wristwatch by Ted Baker London',
@@ -180,6 +183,15 @@ const ProductScreen = () => {
                       enlargedImagePosition: 'over',
                     }}
                     style={{ zIndex: '10000' }}
+                  /> */}
+                  <ReactSlick
+                    {...{
+                      rimProps: {
+                        isHintEnabled: true,
+                        shouldHideHintAfterFirstActivation: false,
+                        enlargedImagePosition: 'over',
+                      },
+                    }}
                   />
                 </div>
               </Col>

@@ -1,21 +1,82 @@
 import React from 'react';
-import { Container, Row, Form, Nav } from 'react-bootstrap';
+import { Container, Row, Form, Nav, Table } from 'react-bootstrap';
 import { FixedSizeGrid as Grid } from 'react-window';
+import styled from 'styled-components';
+
+const products = [
+  {
+    id: 1234567892345609,
+    user: 'Palka Dhirawani',
+    date: '08-02-2021',
+    amount: 'Rs 4000',
+  },
+  {
+    id: 1234567892345609,
+    user: 'Palka Dhirawani',
+    date: '08-02-2021',
+    amount: 'Rs 4000',
+  },
+  {
+    id: 1234567892345609,
+    user: 'Palka Dhirawani',
+    date: '08-02-2021',
+    amount: 'Rs 4000',
+  },
+  {
+    id: 1234567892345609,
+    user: 'Palka Dhirawani',
+    date: '08-02-2021',
+    amount: 'Rs 4000',
+  },
+];
 
 const Cell = ({ columnIndex, rowIndex, style }) => (
-  <div
-    className={
-      columnIndex % 2
-        ? rowIndex % 2 === 0
-          ? 'GridItemOdd'
-          : 'GridItemEven'
-        : rowIndex % 2
-        ? 'GridItemEven'
-        : 'GridItemOdd'
-    }
-    style={style}
-  >
-    r{rowIndex}, c{columnIndex}
+  <div style={style}>
+    <Table striped bordered hover responsive className="table-sm">
+      {rowIndex === 0 ? (
+        columnIndex === 0 ? (
+          <GridHeadings>ID</GridHeadings>
+        ) : columnIndex === 1 ? (
+          <GridHeadings>USER</GridHeadings>
+        ) : columnIndex === 2 ? (
+          <GridHeadings>DATE</GridHeadings>
+        ) : (
+          <GridHeadings>AMOUNT</GridHeadings>
+        )
+      ) : columnIndex === 0 ? (
+        <tbody>
+          {products.map((product) => (
+            <tr>
+              <td>{product.id}</td>
+            </tr>
+          ))}
+        </tbody>
+      ) : columnIndex === 1 ? (
+        <tbody>
+          {products.map((product) => (
+            <tr>
+              <td>{product.user}</td>
+            </tr>
+          ))}
+        </tbody>
+      ) : columnIndex === 2 ? (
+        <tbody>
+          {products.map((product) => (
+            <tr>
+              <td>{product.date}</td>
+            </tr>
+          ))}
+        </tbody>
+      ) : (
+        <tbody>
+          {products.map((product) => (
+            <tr>
+              <td>{product.amount}</td>
+            </tr>
+          ))}
+        </tbody>
+      )}
+    </Table>
   </div>
 );
 
@@ -40,7 +101,7 @@ function OrdersScreen() {
             </Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter email"
+              placeholder="Enter date"
               style={{
                 display: 'inline',
                 padding: '0px',
@@ -53,7 +114,7 @@ function OrdersScreen() {
             </Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter email"
+              placeholder="Enter date"
               style={{
                 display: 'inline',
                 padding: '0px',
@@ -119,12 +180,12 @@ function OrdersScreen() {
         </Table> */}
         <Grid
           className="Grid"
-          columnCount={1000}
-          columnWidth={150}
+          columnCount={4}
+          columnWidth={260}
+          rowCount={2}
+          rowHeight={50}
+          width={1300}
           height={400}
-          rowCount={1000}
-          rowHeight={35}
-          width={400}
         >
           {Cell}
         </Grid>
@@ -134,3 +195,9 @@ function OrdersScreen() {
 }
 
 export default OrdersScreen;
+
+const GridHeadings = styled.th`
+  text-transform: uppercase;
+  color: #5eaaa8;
+  font-size: 1rem;
+`;

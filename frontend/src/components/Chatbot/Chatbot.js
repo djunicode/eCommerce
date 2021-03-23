@@ -6,6 +6,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Card, Container } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import ReactDom from 'react-dom';
 import Buttons from './components/Buttons';
 import Message from './components/Message';
 import Robot from './components/Robot';
@@ -98,7 +99,7 @@ export default function Chatbot() {
     scrollToBottom();
   }, [chats]);
 
-  return (
+  return ReactDom.createPortal(
     <>
       <MODAL_STYLES2>
         <CARD_STYLES
@@ -217,7 +218,8 @@ export default function Chatbot() {
           </MESSAGE_ICON>
         </div>
       </MODAL_STYLES>
-    </>
+    </>,
+    document.getElementById('portal'),
   );
 }
 
@@ -270,6 +272,7 @@ const MODAL_STYLES2 = styled.div`
   transform: translate(6.5%, -8.6%);
   background-color: transparent;
   padding: 0px;
+  z-index: 2;
 `;
 
 const FOOTER_STYLES = styled.div`
