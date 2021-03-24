@@ -18,13 +18,16 @@ import UserEditScreen from './screens/UserEditScreen';
 import ProductListScreen from './screens/ProductListScreen';
 import ProductEditScreen from './screens/ProductEditScreen';
 import OrderListScreen from './screens/OrderListScreen';
+import SearchScreen from './screens/SearchScreen';
+import CategoryScreen from './screens/CategoryScreen';
+import ChatbotAdmin from './screens/ChatbotAdmin';
 
 const App = () => {
   return (
     <Router>
       <Header />
-      <main className="py-3">
-        <Container>
+      <main className="pb-3">
+        <Container fluid>
           <Route path="/order/:id" component={OrderScreen} />
           <Route path="/shipping" component={ShippingScreen} />
           <Route path="/payment" component={PaymentScreen} />
@@ -34,6 +37,7 @@ const App = () => {
           <Route path="/profile" component={ProfileScreen} />
           <Route path="/product/:id" component={ProductScreen} />
           <Route path="/cart/:id?" component={CartScreen} />
+          <Route path="/category/:id" component={CategoryScreen} />
           <Route path="/admin/userlist" component={UserListScreen} />
           <Route
             path="/admin/user/:id/edit"
@@ -57,9 +61,10 @@ const App = () => {
             path="/admin/orderlist"
             component={OrderListScreen}
           />
+          <Route path="/admin/chatbot" component={ChatbotAdmin} />
           <Route
             path="/search/:keyword"
-            component={HomeScreen}
+            component={SearchScreen}
             exact
           />
           <Route

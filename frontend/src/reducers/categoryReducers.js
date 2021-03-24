@@ -1,4 +1,12 @@
+/* eslint-disable import/prefer-default-export */
+/* eslint-disable no-unused-vars */
+
 import {
+  PRODCUTS_BY_CATEGORY_ID_LIST_FAIL,
+  PRODCUTS_BY_CATEGORY_ID_LIST_REQUEST,
+  PRODCUTS_BY_CATEGORY_ID_LIST_RESET,
+  PRODCUTS_BY_CATEGORY_ID_LIST_SUCCESS,
+  CATEGORY_LIST_RESET,
   CATEGORY_LIST_REQUEST,
   CATEGORY_LIST_SUCCESS,
   CATEGORY_LIST_FAIL,
@@ -7,7 +15,24 @@ import {
   SUBCATEGORY_LIST_FAIL,
 } from '../constants/categoryConstants';
 
-// eslint-disable-next-line import/prefer-default-export
+export const productsByCategoryIdReducer = (
+  state = { products: [] },
+  action,
+) => {
+  switch (action.type) {
+    case PRODCUTS_BY_CATEGORY_ID_LIST_REQUEST:
+      return { loading: true, products: [] };
+    case PRODCUTS_BY_CATEGORY_ID_LIST_SUCCESS:
+      return { loading: false, products: action.payload };
+    case PRODCUTS_BY_CATEGORY_ID_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    case PRODCUTS_BY_CATEGORY_ID_LIST_RESET:
+      return { products: [] };
+    default:
+      return state;
+  }
+};
+
 export const categoryListReducer = (
   state = { categories: [] },
   action,

@@ -17,6 +17,7 @@ const Header = () => {
   const logoutHandler = () => {
     dispatch(logout());
   };
+
   return (
     <>
       <header>
@@ -97,7 +98,12 @@ export default Header;
 
 const StyledNavbar = styled(Navbar)`
   background-color: ${DARK_BLUE_2};
-  padding: 20px !important;
+  padding: 16px !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000 !important;
 `;
 
 const StyledH1 = styled.h1`

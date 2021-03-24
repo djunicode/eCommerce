@@ -10,6 +10,17 @@
   box-shadow: inset 0 0 10px rgb(231, 231, 231);
 }
 
+/* ::-webkit-scrollbar-thumb {
+  border-radius: 2.5px;
+  background-color: #30475e !important;
+} */
+
+main {
+  min-height: 70vh;
+  margin-top: 110px;
+  z-index: 1000 !important;
+}
+
 ::-webkit-scrollbar-thumb:vertical {
   background-color: #c2c2c2;
 }
@@ -93,6 +104,59 @@ h2 {
   position: static !important;
 }
 
+.carousel img {
+  height: 300px;
+  /* padding: 30px; */
+  margin: 40px;
+  /* border-radius: 50%; */
+  margin-left: auto;
+  margin-right: auto;
+}
+.carousel a {
+  margin: 0 auto;
+}
+body {
+  background-color: #dff2fa;
+}
+.red {
+  border: 1px solid red;
+  border-radius: 6px;
+}
+.dropdown-menu {
+  background-color: #30475e !important;
+  border: none !important;
+}
+.card {
+  border: none !important;
+  padding: -1px;
+}
+.card-header {
+  background-color: #dff2fa;
+  text-transform: uppercase;
+  font-weight: 900 !important;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.card-body {
+  background-color: #dff2fa;
+  padding-bottom: 10px;
+}
+
+.fa-star {
+  color: #30475e !important;
+}
+
+.product-carousel .carousel-control-prev,
+.product-carousel .carousel-control-next {
+  background-color: #DFF2FA;
+}
+
+@media (max-width: 900px) {
+  .carousel-caption h2 {
+    font-size: 2.5vw;
+  }
+}
 @media screen and (max-width: 600px) {
   main {
     padding: 0 40px;
