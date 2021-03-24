@@ -1,5 +1,5 @@
-// import React from 'react';
+import React from 'react';
 
-// export default function SpacedSpan({ className, children }) {
-//   return <span className={className}> {children} </span>;
-// }
+export default function SpacedSpan({ className, children }) {
+  return <span className={className}> {children} </span>;
+}
