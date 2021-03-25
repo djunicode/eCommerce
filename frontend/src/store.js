@@ -28,9 +28,12 @@ import {
   orderListMyReducer,
   orderListReducer,
 } from './reducers/orderReducers';
+import { searchReducer } from './reducers/searchReducers';
+import { filterReducer } from './reducers/filterReducers';
 import { chatbotReducer } from './reducers/chatbotReducers';
 import { productidReducer } from './reducers/productidReducers';
 import {
+  productsByCategoryIdReducer,
   categoryListReducer,
   subCategoryListReducer,
 } from './reducers/categoryReducers';
@@ -57,8 +60,11 @@ const reducer = combineReducers({
   orderDeliver: orderDeliverReducer,
   orderListMy: orderListMyReducer,
   orderList: orderListReducer,
+  search: searchReducer,
+  filter: filterReducer,
   chatbot: chatbotReducer,
   productid: productidReducer,
+  productsByCategory: productsByCategoryIdReducer,
   categoryList: categoryListReducer,
   subCategoryList: subCategoryListReducer,
 });
