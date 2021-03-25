@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Form, Nav, Table } from 'react-bootstrap';
 import { FixedSizeGrid as Grid } from 'react-window';
 import styled from 'styled-components';
@@ -7,80 +7,211 @@ const products = [
   {
     id: 1234567892345609,
     user: 'Palka Dhirawani',
-    date: '08-02-2021',
+    date: '2021-02-08',
     amount: 'Rs 4000',
   },
   {
     id: 1234567892345609,
     user: 'Palka Dhirawani',
-    date: '08-02-2021',
+    date: '2021-02-09',
     amount: 'Rs 4000',
   },
   {
     id: 1234567892345609,
     user: 'Palka Dhirawani',
-    date: '08-02-2021',
+    date: '2021-02-10',
     amount: 'Rs 4000',
   },
   {
     id: 1234567892345609,
     user: 'Palka Dhirawani',
-    date: '08-02-2021',
+    date: '2021-02-11',
     amount: 'Rs 4000',
   },
 ];
 
-const Cell = ({ columnIndex, rowIndex, style }) => (
-  <div style={style}>
-    <Table striped bordered hover responsive className="table-sm">
-      {rowIndex === 0 ? (
-        columnIndex === 0 ? (
-          <GridHeadings>ID</GridHeadings>
-        ) : columnIndex === 1 ? (
-          <GridHeadings>USER</GridHeadings>
-        ) : columnIndex === 2 ? (
-          <GridHeadings>DATE</GridHeadings>
-        ) : (
-          <GridHeadings>AMOUNT</GridHeadings>
-        )
-      ) : columnIndex === 0 ? (
-        <tbody>
-          {products.map((product) => (
-            <tr>
-              <td>{product.id}</td>
-            </tr>
-          ))}
-        </tbody>
-      ) : columnIndex === 1 ? (
-        <tbody>
-          {products.map((product) => (
-            <tr>
-              <td>{product.user}</td>
-            </tr>
-          ))}
-        </tbody>
-      ) : columnIndex === 2 ? (
-        <tbody>
-          {products.map((product) => (
-            <tr>
-              <td>{product.date}</td>
-            </tr>
-          ))}
-        </tbody>
-      ) : (
-        <tbody>
-          {products.map((product) => (
-            <tr>
-              <td>{product.amount}</td>
-            </tr>
-          ))}
-        </tbody>
-      )}
-    </Table>
-  </div>
-);
-
 function OrdersScreen() {
+  const [sdate, setSdate] = useState();
+  const [edate, setEdate] = useState();
+  const [filtered, setFiltered] = useState(null);
+
+  useEffect(() => {
+    if (sdate && edate) {
+      const Sdate = new Date(sdate);
+      const Edate = new Date(edate);
+      const Filter = products.filter((product) => {
+        const date = new Date(product.date);
+        if (Sdate <= date && date <= Edate) {
+          console.log(Sdate);
+          console.log(date);
+          console.log(Edate);
+          return product;
+        }
+        return null;
+      });
+      console.log(Filter);
+      setFiltered(Filter);
+    }
+  }, [sdate, edate]);
+
+  const Cell = ({ columnIndex, rowIndex, style }) => {
+    if (filtered)
+      return (
+        <div style={style}>
+          <Table
+            bordered
+            hover
+            responsive
+            className="table-sm"
+            style={{ backgroundColor: 'white' }}
+          >
+            {rowIndex === 0 ? (
+              columnIndex === 0 ? (
+                <GridHeadings>ID</GridHeadings>
+              ) : columnIndex === 1 ? (
+                <GridHeadings>USER</GridHeadings>
+              ) : columnIndex === 2 ? (
+                <GridHeadings>DATE</GridHeadings>
+              ) : (
+                <GridHeadings>AMOUNT</GridHeadings>
+              )
+            ) : columnIndex === 0 ? (
+              <tbody>
+                {filtered.map((product) => (
+                  <tr>
+                    <td>
+                      {product.id}
+                      <br />
+                      <br />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            ) : columnIndex === 1 ? (
+              <tbody>
+                {filtered.map((product) => (
+                  <tr>
+                    <td>
+                      {product.user}
+                      <br />
+                      <span style={{ color: '#5F5F5F' }}>
+                        PAID
+                        <i className="fas fa-check-circle text-success" />
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            ) : columnIndex === 2 ? (
+              <tbody>
+                {filtered.map((product) => (
+                  <tr>
+                    <td>
+                      {product.date}
+                      <br />
+                      <span style={{ color: '#5F5F5F' }}>
+                        DELIVERED
+                        <i className="fas fa-check-circle text-success" />
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            ) : (
+              <tbody>
+                {filtered.map((product) => (
+                  <tr>
+                    <td>
+                      {product.amount}
+                      <br />
+                      <br />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            )}
+          </Table>
+        </div>
+      );
+    return (
+      <div style={style}>
+        <Table
+          bordered
+          hover
+          responsive
+          className="table-sm"
+          style={{ backgroundColor: 'white' }}
+        >
+          {rowIndex === 0 ? (
+            columnIndex === 0 ? (
+              <GridHeadings>ID</GridHeadings>
+            ) : columnIndex === 1 ? (
+              <GridHeadings>USER</GridHeadings>
+            ) : columnIndex === 2 ? (
+              <GridHeadings>DATE</GridHeadings>
+            ) : (
+              <GridHeadings>AMOUNT</GridHeadings>
+            )
+          ) : columnIndex === 0 ? (
+            <tbody>
+              {products.map((product) => (
+                <tr>
+                  <td>
+                    {product.id}
+                    <br />
+                    <br />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          ) : columnIndex === 1 ? (
+            <tbody>
+              {products.map((product) => (
+                <tr>
+                  <td>
+                    {product.user}
+                    <br />
+                    <span style={{ color: '#5F5F5F' }}>
+                      PAID
+                      <i className="fas fa-check-circle text-success" />
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          ) : columnIndex === 2 ? (
+            <tbody>
+              {products.map((product) => (
+                <tr>
+                  <td>
+                    {product.date}
+                    <br />
+                    <span style={{ color: '#5F5F5F' }}>
+                      DELIVERED
+                      <i className="fas fa-check-circle text-success" />
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          ) : (
+            <tbody>
+              {products.map((product) => (
+                <tr>
+                  <td>
+                    {product.amount}
+                    <br />
+                    <br />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
+        </Table>
+      </div>
+    );
+  };
+
   return (
     <div>
       <Container>
@@ -100,7 +231,7 @@ function OrdersScreen() {
               Filter by Date :&nbsp;
             </Form.Label>
             <Form.Control
-              type="text"
+              type="date"
               placeholder="Enter date"
               style={{
                 display: 'inline',
@@ -108,18 +239,27 @@ function OrdersScreen() {
                 height: '1.8rem',
                 width: 'auto',
               }}
+              value={sdate}
+              onChange={(e) => {
+                setSdate(e.target.value);
+              }}
             />
             <Form.Label style={{ transform: 'translateY(15%)' }}>
               &nbsp;to&nbsp;
             </Form.Label>
             <Form.Control
-              type="text"
+              type="date"
               placeholder="Enter date"
               style={{
                 display: 'inline',
                 padding: '0px',
                 height: '1.8rem',
                 width: 'auto',
+              }}
+              value={edate}
+              onChange={(e) => {
+                setEdate(e.target.value);
+                console.log(edate);
               }}
             />
           </span>
@@ -178,17 +318,19 @@ function OrdersScreen() {
         <Table responsive="sm" style={{ backgroundColor: '#F9F9F9' }}>
           
         </Table> */}
-        <Grid
-          className="Grid"
-          columnCount={4}
-          columnWidth={260}
-          rowCount={2}
-          rowHeight={50}
-          width={1300}
-          height={400}
-        >
-          {Cell}
-        </Grid>
+        <div style={{ overflowX: 'auto' }}>
+          <Grid
+            className="Grid"
+            columnCount={4}
+            columnWidth={277}
+            rowCount={2}
+            rowHeight={50}
+            width={1110}
+            height={400}
+          >
+            {Cell}
+          </Grid>
+        </div>
       </Container>
     </div>
   );

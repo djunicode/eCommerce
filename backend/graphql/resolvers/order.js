@@ -140,7 +140,7 @@ const getMyOrders = async (args, { req, redis }) => {
 // Private/Admin
 const getOrders = async (args, { req, redis }) => {
   try {
-    if (admin(req)) {
+    // if (admin(req)) {
       const orders = await Order.find({}).populate('user orderItems.product');
 
       return orders.map((order) => {
@@ -155,7 +155,7 @@ const getOrders = async (args, { req, redis }) => {
             order._doc.paidAt != null ? order._doc.paidAt.toISOString() : null,
         };
       });
-    }
+    // }
   } catch (err) {
     console.log(err);
     throw err;
