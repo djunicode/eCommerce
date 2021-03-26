@@ -10,7 +10,7 @@ const addOrderItems = async (args, { req, redis }) => {
   try {
     // if (loggedin(req)) {
       const order = new Order({
-        user: req.user._id,
+        user: "605dba3db33b8929180fa082",
         orderItems: args.orderInput.orderItems,
         shippingAddress: args.orderInput.shippingAddress,
         paymentMethod: args.orderInput.paymentMethod,
@@ -43,17 +43,18 @@ const addOrderItems = async (args, { req, redis }) => {
 // Private
 const getOrderById = async (args, { req, redis }) => {
   try {
-    if (loggedin(req)) {
+    // if (loggedin(req)) {
       const order = await Order.findById(args.orderId).populate(
         'user orderItems.product'
       );
 
-      if (order && order._id === req.user._id) {
+      // if (order && order._id === req.user._id) {
+      if (order) {
         return order;
       } else {
         throw new Error('Order not found!!');
       }
-    }
+    // }
   } catch (err) {
     console.log(err);
     throw err;
