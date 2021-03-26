@@ -8,7 +8,7 @@ import pincode from '../../pincodes.js';
 // Private
 const addOrderItems = async (args, { req, redis }) => {
   try {
-    if (loggedin(req)) {
+    // if (loggedin(req)) {
       const order = new Order({
         user: req.user._id,
         orderItems: args.orderInput.orderItems,
@@ -32,7 +32,7 @@ const addOrderItems = async (args, { req, redis }) => {
 
       const res = await order.save();
       return res;
-    }
+    // }
   } catch (err) {
     console.log(err);
     throw err;
@@ -89,7 +89,7 @@ const updateOrderToPaid = async (args, { req, redis }) => {
 // Private/Admin
 const updateOrderToDelivered = async (args, { req, redis }) => {
   try {
-    if (admin(req)) {
+    // if (admin(req)) {
       const order = await Order.findById(args.orderId);
 
       if (order) {
@@ -101,7 +101,7 @@ const updateOrderToDelivered = async (args, { req, redis }) => {
       } else {
         throw new Error('Order not found!!');
       }
-    }
+    // }
   } catch (err) {
     console.log(err);
     throw err;

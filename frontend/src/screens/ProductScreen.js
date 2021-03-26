@@ -155,7 +155,6 @@ const ProductScreen = () => {
       ) : (
         <>
           <Container
-            fluid
             style={{
               backgroundColor: 'white',
               border: '1px solid #D5D5D5',

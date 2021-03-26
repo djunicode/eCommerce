@@ -34,6 +34,7 @@ function OrdersScreen() {
   const [sdate, setSdate] = useState();
   const [edate, setEdate] = useState();
   const [filtered, setFiltered] = useState(null);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     if (sdate && edate) {
@@ -220,9 +221,9 @@ function OrdersScreen() {
           <span
             className="text-right"
             style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
+              // display: 'flex',
+              // justifyContent: 'center',
+              // alignItems: 'center',
               position: 'absolute',
               right: '0',
             }}
@@ -241,7 +242,12 @@ function OrdersScreen() {
               }}
               value={sdate}
               onChange={(e) => {
-                setSdate(e.target.value);
+                const currentTime = new Date();
+                const Sdate = new Date(e.target.value);
+                if (Sdate <= currentTime) {
+                  setSdate(e.target.value);
+                  setMessage('');
+                } else setMessage('Incorrect details');
               }}
             />
             <Form.Label style={{ transform: 'translateY(15%)' }}>
@@ -258,10 +264,19 @@ function OrdersScreen() {
               }}
               value={edate}
               onChange={(e) => {
-                setEdate(e.target.value);
-                console.log(edate);
+                const currentTime = new Date();
+                const Edate = new Date(e.target.value);
+                const Sdate = new Date(sdate);
+                if (sdate) {
+                  if (Sdate <= Edate && Edate <= currentTime) {
+                    setEdate(e.target.value);
+                    setMessage('');
+                  } else setMessage('Incorrect details');
+                } else setMessage('Incorrect details');
               }}
             />
+            <br />
+            <small className="text-danger">{message}&nbsp;</small>
           </span>
         </Row>
         <Nav
