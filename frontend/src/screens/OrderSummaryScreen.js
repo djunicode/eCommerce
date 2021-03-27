@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-useless-escape */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
