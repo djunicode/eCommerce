@@ -46,6 +46,11 @@ import {
   deleteSubCategory,
 } from './category.js';
 
+import {
+  getBrands,
+  createBrand,
+} from './brand.js';
+
 import { questions, question, editQuestions } from './chatbot.js';
 
 import { filterProducts } from './productFilter.js';
@@ -62,6 +67,9 @@ export default {
   deleteUser: deleteUser,
   getUserById: getUserById,
   updateUser: updateUser,
+  //brand
+  createBrand: createBrand,
+  getBrands: getBrands,
   //categories
   createCategory: createCategory,
   getCategories: getCategories,
