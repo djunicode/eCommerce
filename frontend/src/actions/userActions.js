@@ -64,7 +64,10 @@ export const login = (email, password) => async (dispatch) => {
       email: data.data.data.authUser.email,
       phoneNo: data.data.data.authUser.phoneNo,
       isAdmin: data.data.data.authUser.isAdmin,
+      token: data.data.data.authUser.token,
     };
+
+    console.log(reconstructedData);
 
     dispatch({
       type: USER_LOGIN_SUCCESS,

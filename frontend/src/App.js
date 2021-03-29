@@ -21,6 +21,7 @@ import OrderListScreen from './screens/OrderListScreen';
 import SearchScreen from './screens/SearchScreen';
 import CategoryScreen from './screens/CategoryScreen';
 import ChatbotAdmin from './screens/ChatbotAdmin';
+import OrderDetailsAdmin from './screens/OrderDetailsAdmin';
 
 const App = () => {
   return (
@@ -60,6 +61,10 @@ const App = () => {
           <Route
             path="/admin/orderlist"
             component={OrderListScreen}
+          />
+          <Route 
+            path="/admin/orderdetails/:id"
+            component={OrderDetailsAdmin}
           />
           <Route path="/admin/chatbot" component={ChatbotAdmin} />
           <Route

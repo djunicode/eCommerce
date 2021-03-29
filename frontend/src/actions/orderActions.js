@@ -22,6 +22,8 @@ import {
 } from '../constants/orderConstants';
 import { logout } from './userActions';
 
+const url = 'http://localhost:5000/graphql';
+
 export const createOrder = (order) => async (dispatch, getState) => {
   try {
     dispatch({
@@ -71,9 +73,13 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
       type: ORDER_DETAILS_REQUEST,
     });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
+    // const {
+    //   userLogin: { userInfo },
+    // } = getState();
+
+    const userInfo = JSON.parse(window.localStorage.getItem('userInfo'));
+
+    console.log(userInfo.token);
 
     const config = {
       headers: {
@@ -81,11 +87,62 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/orders/${id}`, config);
+    const { data } = await axios.post(url, {
+      query: `
+      query{
+        orderById(orderId: "${id}"){
+          _id
+          user{
+            name
+            email
+            phoneNo
+          }
+          orderItems{
+            name
+            qty
+            image
+            price
+            qty
+            product{
+              _id
+              name
+              image
+            }
+          }
+          shippingAddress{
+            address
+            city
+            postalCode
+            country
+          }
+          paymentMethod
+          paymentResult {
+            id
+          }
+          taxPrice
+          shippingPrice
+          totalPrice
+          isPaid
+          paidAt
+          isDelivered
+          deliveredAt
+        }
+      }
+      `,
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    },
+  ); 
+
+  console.log(data);
 
     dispatch({
       type: ORDER_DETAILS_SUCCESS,
-      payload: data,
+      payload: data.data.orderById,
     });
   } catch (error) {
     const message =
