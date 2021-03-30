@@ -26,6 +26,8 @@ export default buildSchema(`
         questions: [Question]
         question(level: String!, index: String!): Question
         
+        getBrands: [Brand]
+
         getCategories: [Category!]!
         
         getSubCategories(categoryId: ID!): [SubCategory!]!
@@ -55,6 +57,8 @@ export default buildSchema(`
         updateOrderToDelivered(orderId: ID!): Order!
 
         editQuestions(details: [QuestionInput]!): Response!
+
+        createBrand(name: String!): Brand!
 
         createCategory(name: String!): Category!
         updateCategory(name: String!, newName: String!): Response!

@@ -1,5 +1,4 @@
 import Product from '../../models/productModel.js';
-import Brand from '../../models/brandModel.js';
 import { admin, loggedin } from '../../utils/verifyUser.js';
 
 // Create new product
@@ -7,11 +6,6 @@ import { admin, loggedin } from '../../utils/verifyUser.js';
 const createProduct = async (args, req) => {
   try {
     if (admin(req)) {
-      const newBrand = new Brand({
-        name: args.productInput.brand,
-      });
-
-      const resp = await newBrand.save();
 
       const product = new Product({
         name: args.productInput.name,
@@ -21,7 +15,7 @@ const createProduct = async (args, req) => {
           ((100 - args.productInput.discount) * args.productInput.price) / 100,
         user: args.productInput.user,
         image: args.productInput.image,
-        brand: resp._id,
+        brand: args.productInput.brand,
         category: args.productInput.category,
         subcategory: args.productInput.subcategory,
         new: args.productInput.new,
@@ -208,19 +202,11 @@ const updateProduct = async (args, { req, redis }) => {
         throw new Error('Product not found');
       }
 
-      await Brand.deleteOne({ _id: product.brand });
-
-      const newBrand = new Brand({
-        name: args.updateProduct.brand,
-      });
-
-      const resp = await newBrand.save();
-
       const newUpdatedProduct = {
         name: args.updateProduct.name,
         price: args.updateProduct.price,
         image: args.updateProduct.image,
-        brand: resp._id,
+        brand: args.updateProduct.brand,
         category: args.updateProduct.category,
         countInStock: args.updateProduct.countInStock,
         description: args.updateProduct.description,
@@ -246,7 +232,6 @@ const deleteProduct = async (args, { req, redis }) => {
     if (admin(req)) {
       const product = await Product.find({ _id: args.id });
       if (product) {
-        await Brand.deleteOne({ _id: product.brand });
         const deleted = await Product.findByIdAndDelete(args.id);
         // console.log(deleted);
         return { ...deleted._doc };
