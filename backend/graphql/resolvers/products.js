@@ -6,14 +6,12 @@ import { admin, loggedin } from '../../utils/verifyUser.js';
 const createProduct = async (args, req) => {
   try {
     if (admin(req)) {
-
       const product = new Product({
         name: args.productInput.name,
         discount: args.productInput.discount,
         price: args.productInput.price,
-        discountedPrice:
-          ((100 - args.productInput.discount) * args.productInput.price) / 100,
-        user: args.productInput.user,
+        options: args.productInput.options,
+        user: req.user,
         image: args.productInput.image,
         brand: args.productInput.brand,
         category: args.productInput.category,
@@ -204,7 +202,9 @@ const updateProduct = async (args, { req, redis }) => {
 
       const newUpdatedProduct = {
         name: args.updateProduct.name,
+        discount: args.productInput.discount,
         price: args.updateProduct.price,
+        options: args.productInput.options,
         image: args.updateProduct.image,
         brand: args.updateProduct.brand,
         category: args.updateProduct.category,
@@ -262,7 +262,7 @@ const createProductReview = async (args, req) => {
           name: args.productReview.name,
           rating: args.productReview.rating,
           comment: args.productReview.comment,
-          user: args.productReview.user,
+          user: req.user,
         };
         reviews.push(review);
         const updatedProduct = {

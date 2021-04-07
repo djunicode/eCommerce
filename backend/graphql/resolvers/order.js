@@ -1,4 +1,5 @@
 import Order from '../../models/orderModel.js';
+import Product from '../../models/productModel.js';
 import { loggedin, admin } from '../../utils/verifyUser.js';
 import pincode from '../../pincodes.js';
 
@@ -9,6 +10,14 @@ import pincode from '../../pincodes.js';
 const addOrderItems = async (args, { req, redis }) => {
   try {
     if (loggedin(req)) {
+      const tally = 0;
+      args.orderInput.orderItems.forEach(item => {
+        const product =  await Product.findById(item.product);
+        tally+=(((100 - product.discount) * product.price) / 100);
+      });
+      if(Math.abs(tally-args.orderInput.totalPrice)<=0.001) {   //precision upto 3 decimal places
+        throw new Error("Price Mismatch, please update order");
+      }
       const order = new Order({
         user: req.user._id,
         orderItems: args.orderInput.orderItems,
