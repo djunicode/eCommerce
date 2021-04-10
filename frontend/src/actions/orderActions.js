@@ -220,11 +220,20 @@ export const deliverOrder = (order) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.put(
-      `/api/orders/${order._id}/deliver`,
-      {},
+    const { data } = await axios.post(
+      url, {
+        query: `
+          mutation{
+            updateOrderToDelivered(orderId: "${order._id}"){
+              isDelivered
+            }
+          }
+        `,
+      },
       config,
     );
+
+    console.log(data);
 
     dispatch({
       type: ORDER_DELIVER_SUCCESS,

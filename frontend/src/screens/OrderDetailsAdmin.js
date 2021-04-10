@@ -14,6 +14,7 @@ import {
 } from '../util/colors';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
+import { deliverOrder } from '../actions/orderActions';
 
 const OrderDetailsAdmin = () => {
     const { id } = useParams();
@@ -28,7 +29,14 @@ const OrderDetailsAdmin = () => {
     const { loading, error, order } = orderById;
     console.log(order);
 
-    const [checked, setChecked] = useState(false);
+    const orderState = useSelector(
+        (state) => state.orderDeliver,
+    );
+
+    const { isDelivered } = orderState;
+
+    const [checked, setChecked] = useState(isDelivered ? false : true);
+
     useEffect(() => {
         setChecked(order ? order.isDelivered : false);
     }, [order]);
@@ -69,7 +77,12 @@ const OrderDetailsAdmin = () => {
                         <div>
                             <Switch 
                             checked={checked} 
-                            onClick={() => setChecked(!checked)}
+                            onClick={() => {
+                                setChecked(!checked);
+                                if(!checked){
+                                    dispatch(deliverOrder(order));
+                                }
+                            }}
                             onlabel='Yes'
                             offlabel='No'
                             size='sm'
