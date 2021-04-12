@@ -11,19 +11,17 @@ const ChatbotAdmin = () => {
           <StyledSubHeaderText>MESSAGE</StyledSubHeaderText>
         </StyledSubHeader>
         <StyledBox>
-            <InputGroup className="m-2">
-              <FormControl
-                placeholder="Message"
-                aria-describedby="basic-addon2"
-              />
-              <InputGroup.Append>
-                <InputGroup.Text id="basic-addon2">
-                <i
-                  className='fas fa-edit'
-                />
-                </InputGroup.Text>
-              </InputGroup.Append>
-            </InputGroup>
+          <InputGroup className="m-2">
+            <FormControl
+              placeholder="Message"
+              aria-describedby="basic-addon2"
+            />
+            <InputGroup.Append>
+              <InputGroup.Text id="basic-addon2">
+                <i className="fas fa-edit" />
+              </InputGroup.Text>
+            </InputGroup.Append>
+          </InputGroup>
         </StyledBox>
       </StyledRowFlex>
       <StyledRowFlex>

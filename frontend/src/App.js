@@ -62,7 +62,7 @@ const App = () => {
             path="/admin/orderlist"
             component={OrderListScreen}
           />
-          <Route 
+          <Route
             path="/admin/orderdetails/:id"
             component={OrderDetailsAdmin}
           />

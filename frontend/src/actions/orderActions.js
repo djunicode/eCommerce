@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import axios from 'axios';
 import { CART_CLEAR_ITEMS } from '../constants/cartConstants';
 import {
@@ -77,7 +78,9 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
     //   userLogin: { userInfo },
     // } = getState();
 
-    const userInfo = JSON.parse(window.localStorage.getItem('userInfo'));
+    const userInfo = JSON.parse(
+      window.localStorage.getItem('userInfo'),
+    );
 
     console.log(userInfo.token);
 
@@ -87,8 +90,10 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.post(url, {
-      query: `
+    const { data } = await axios.post(
+      url,
+      {
+        query: `
       query{
         orderById(orderId: "${id}"){
           _id
@@ -129,16 +134,16 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
         }
       }
       `,
-    },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
       },
-    },
-  ); 
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      },
+    );
 
-  console.log(data);
+    console.log(data);
 
     dispatch({
       type: ORDER_DETAILS_SUCCESS,
@@ -221,7 +226,8 @@ export const deliverOrder = (order) => async (dispatch, getState) => {
     };
 
     const { data } = await axios.post(
-      url, {
+      url,
+      {
         query: `
           mutation{
             updateOrderToDelivered(orderId: "${order._id}"){
