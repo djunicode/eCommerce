@@ -10,7 +10,7 @@ const addOrderItems = async (args, { req, redis }) => {
   try {
     // if (loggedin(req)) {
       const order = new Order({
-        user: "605dba3db33b8929180fa082",
+        user: "605f5ab6f0e22446c8d0ee06",
         orderItems: args.orderInput.orderItems,
         shippingAddress: args.orderInput.shippingAddress,
         paymentMethod: args.orderInput.paymentMethod,
