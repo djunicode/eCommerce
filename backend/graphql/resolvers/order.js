@@ -11,7 +11,7 @@ const addOrderItems = async (args, { req, redis }) => {
   try {
     if (loggedin(req)) {
       const tally = 0;
-      args.orderInput.orderItems.forEach(item => {
+      args.orderInput.orderItems.forEach(async (item) => {
         const product =  await Product.findById(item.product);
         tally+=(((100 - product.discount) * product.price) / 100);
       });
