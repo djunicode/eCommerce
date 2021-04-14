@@ -152,6 +152,25 @@ body {
   background-color: #DFF2FA;
 }
 
+.switch-handle{
+  border-radius: 50px !important;
+  z-index: 10 !important;
+  background-color: #eee !important;
+}
+
+.switch{
+  border-radius: 100px !important;
+  margin-bottom: 2px !important;
+}
+
+.switch-on{
+  right: 100% !important;
+}
+.switch-off{
+  left: 50% !important;
+  padding-left: 37px !important;
+}
+
 @media (max-width: 900px) {
   .carousel-caption h2 {
     font-size: 2.5vw;
