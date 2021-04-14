@@ -236,14 +236,16 @@ export const deliverOrder = (order) => async (dispatch, getState) => {
           }
         `,
       },
-      config,
+      {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      },
     );
-
-    console.log(data);
 
     dispatch({
       type: ORDER_DELIVER_SUCCESS,
-      payload: data,
+      payload: data.data.updateOrderToDelivered,
     });
   } catch (error) {
     const message =

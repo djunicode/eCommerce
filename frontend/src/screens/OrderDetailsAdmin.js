@@ -27,7 +27,7 @@ const OrderDetailsAdmin = () => {
 
   const { isDelivered } = orderState;
 
-  const [checked, setChecked] = useState(!isDelivered);
+  const [checked, setChecked] = useState(isDelivered);
 
   useEffect(() => {
     setChecked(order ? order.isDelivered : false);
@@ -75,15 +75,16 @@ const OrderDetailsAdmin = () => {
                     {checked ? `DELIVERED` : `NOT DELIVERED`}
                   </StyledBoldSpan>
                 </div>
-                <StyledSwitchContainer>
+                <StyledSwitchContainer
+                  onClick={() => {
+                    if (!checked) {
+                      dispatch(deliverOrder(order));
+                    }
+                    setChecked(!checked);
+                  }}
+                >
                   <Switch
                     checked={checked}
-                    onClick={() => {
-                      setChecked(!checked);
-                      if (!checked) {
-                        dispatch(deliverOrder(order));
-                      }
-                    }}
                     onlabel="Yes"
                     offlabel="No"
                     size="sm"
