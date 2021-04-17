@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 import { Dropdown, Alert } from 'react-bootstrap';
-import { DARK_BLUE_2, LIGHT_BLUE } from './colors';
+import { DARK_BLUE_2, BACKGROUND } from './colors';
 
 export const StyledContainerDiv = styled.div`
   box-shadow: 0 12px 30px -10px rgba(150, 170, 180, 0.5);
   padding: 10px;
   margin: 20px auto;
-  background-color: #fff;
-  borderradius: 5px;
+  background-color: #fff !important;
+  border-radius: 5px;
   width: 50% !important;
 
   @media (max-width: 1000px) {
@@ -48,7 +48,7 @@ export const StyledBadgeSortDiv = styled.div`
 export const StyledBadge = styled.p`
   font-size: 16px;
   border-radius: 8px;
-  background-color: ${LIGHT_BLUE} !important;
+  background-color: ${BACKGROUND} !important;
   color: ${DARK_BLUE_2} !important;
   border: 2px ${DARK_BLUE_2} solid;
   padding: 7px;
@@ -57,7 +57,7 @@ export const StyledBadge = styled.p`
 
 export const StyledDropdownToggle = styled(Dropdown.Toggle)`
   background-color: ${DARK_BLUE_2} !important;
-  color: ${LIGHT_BLUE} !important;
+  color: ${BACKGROUND} !important;
   border-radius: 8px;
   padding: 10px !important;
   font-size: 16px;
@@ -66,12 +66,12 @@ export const StyledDropdownToggle = styled(Dropdown.Toggle)`
 
 export const StyledDropdownItem = styled(Dropdown.Item)`
   background-color: ${DARK_BLUE_2};
-  color: ${LIGHT_BLUE};
+  color: ${BACKGROUND};
   font-size: 16px;
   border: none !important;
 
   &:hover {
-    background-color: ${LIGHT_BLUE};
+    background-color: ${BACKGROUND};
     color: ${DARK_BLUE_2};
   }
 `;
@@ -87,7 +87,7 @@ export const StyledGridDiv = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   overflow-y: auto !important;
   z-index: 1000 !important;
-  background-color: ${LIGHT_BLUE};
+  background-color: ${BACKGROUND};
   text-align: left !important;
   margin: auto 12px auto 330px;
 

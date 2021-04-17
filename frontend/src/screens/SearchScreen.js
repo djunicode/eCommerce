@@ -63,7 +63,7 @@ const SearchScreen = () => {
             <StyledBadgeSortDiv>
               <StyledBadge variant="danger">
                 {keyword.toUpperCase()}{' '}
-                <Link to="/home">
+                <Link to="/">
                   <i
                     className="fas fa-times"
                     style={{ color: DARK_BLUE_2 }}

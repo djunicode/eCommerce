@@ -114,7 +114,7 @@ const OrderDetailsAdmin = () => {
                             {elem.name}
                           </StyledRowElemName>
                           <StyledRowElemSeller>
-                            elem.user.name
+                            {elem.user ? elem.user.name : 'John Doe'}
                           </StyledRowElemSeller>
                           <StyledRowElem>
                             <div>
@@ -286,7 +286,7 @@ const StyledOrangeLine = styled.div`
 
 const StyledRightGridContainer = styled(Col)`
   border: 1px solid #ccc;
-  background-color: #e5f4fb;
+  background-color: #f9f9f9 !important;
   padding: 14px;
   text-align: left !important;
   font-size: 22px;

@@ -51,7 +51,7 @@ const StyledCard = styled(Card)`
 `;
 
 const StyledImg = styled(Card.Img)`
-  width: 250px !important;
+  width: 100% !important;
   height: 250px !important;
   margin-bottom: 4px;
 `;
