@@ -75,10 +75,16 @@ const SearchScreen = () => {
                   SORT BY
                 </StyledDropdownToggle>
                 <Dropdown.Menu>
-                  <StyledDropdownItem as="button" onClick={() => {}}>
+                  <StyledDropdownItem
+                    as="button"
+                    onClick={() => dispatch(search(keyword, 'asc'))}
+                  >
                     Price - Low to High
                   </StyledDropdownItem>
-                  <StyledDropdownItem as="button" onClick={() => {}}>
+                  <StyledDropdownItem
+                    as="button"
+                    onClick={() => dispatch(search(keyword, 'desc'))}
+                  >
                     Price - High to Low
                   </StyledDropdownItem>
                 </Dropdown.Menu>
