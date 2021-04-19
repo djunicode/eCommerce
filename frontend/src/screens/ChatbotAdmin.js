@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable radix */
 import React, { useEffect, useState } from 'react';
 import {
@@ -7,6 +9,7 @@ import {
   Container,
   Accordion,
   Card,
+  Form,
 } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,22 +17,181 @@ import { getChat } from '../actions/chatbotAction';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 
-const Acc = ({ msg, spacemax, spaces, filt }) => {
+const Additem = ({ msg, setMessages, index, filt, messages }) => {
+  const [name, setName] = useState('');
+  const [open, setOpen] = useState(false);
+  const [msgg, setMsgg] = useState('');
+  const [btn, setBtn] = useState('');
+  useEffect(() => {
+    const dispmsgs = msg.filter((dispmsg) => {
+      const l = filt.length;
+      if (
+        dispmsg.index
+          .substring(0, l + 1)
+          .localeCompare(`${filt} `) === 0 &&
+        dispmsg.index.length === l + 2
+      ) {
+        return dispmsg;
+      }
+      return null;
+    });
+    console.log(dispmsgs);
+    if (dispmsgs.length !== 0) {
+      const len = dispmsgs.length;
+      let last = dispmsgs[len - 1];
+      last = last.index;
+      let lastchar = last[last.length - 1];
+      lastchar = parseInt(lastchar);
+      lastchar += 1;
+      const nameTemp = last.substring(0, last.length - 1) + lastchar;
+      console.log('nametemp=', nameTemp);
+      setName(nameTemp);
+    } else if (dispmsgs.length === 0) {
+      const nameTemp = `${filt} 1`;
+      console.log('nametemp=', nameTemp);
+      setName(nameTemp);
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log(messages);
+  }, [messages]);
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    const n = e.target.name;
+    const level = (
+      e.target.name.length -
+      (n.split(' ').length - 1)
+    ).toString();
+    const temp = {
+      level,
+      index: e.target.name,
+      msg: msgg,
+      info: btn,
+    };
+    console.log(temp);
+    console.log(msg);
+    let tempmsg = msg.slice();
+    tempmsg.push(temp);
+    console.log(msg);
+    setMessages((m) => {
+      console.log(m);
+      console.log(m[index]);
+      let tempm = m.slice();
+      console.log(index);
+      tempm[index] = tempmsg;
+      // m[index] = msg;
+      console.log(m);
+      return tempm;
+    });
+    console.log(messages);
+  };
+
+  return (
+    <div>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span
+        style={{ cursor: 'pointer' }}
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
+        Add item
+      </span>
+      {open && (
+        <>
+          <div
+            style={{
+              position: 'fixed',
+              top: '0',
+              left: '0',
+              right: '0',
+              bottom: '0',
+              backgroundColor: 'rgba(0,0,0,.7)',
+              zIndex: '1000',
+            }}
+            onClick={() => {
+              setOpen(false);
+            }}
+          />
+          <div
+            style={{
+              position: 'fixed',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              backgroundColor: '#FFF',
+              padding: '50px',
+              zIndex: 1000,
+              borderRadius: '20px',
+            }}
+          >
+            <Form>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>Msg</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Msg"
+                  name={name}
+                  value={msgg}
+                  onChange={(e) => {
+                    setMsgg(e.target.value);
+                  }}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="formBasicPassword">
+                <Form.Label>Button Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Button Name"
+                  name={name}
+                  onChange={(e) => {
+                    setBtn(e.target.value);
+                  }}
+                />
+              </Form.Group>
+              <StyledButton
+                variant="danger"
+                type="submit"
+                name={name}
+                onClick={(e) => {
+                  handleClick(e);
+                }}
+              >
+                Done
+              </StyledButton>
+            </Form>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+const Acc = ({
+  msg,
+  spacemax,
+  spaces,
+  filt,
+  messages,
+  setMessages,
+  index,
+}) => {
   const l = filt.length;
   const dispmsgs = msg.filter((dispmsg) => {
-    console.log();
     if (
       dispmsg.index.substring(0, l + 1).localeCompare(`${filt} `) ===
         0 &&
       dispmsg.index.length === l + 2
     ) {
-      console.log(dispmsg);
       return dispmsg;
     }
     return null;
   });
   if (spaces === spacemax + 1 || dispmsgs.length === 0) {
-    return <>working</>;
+    return null;
   }
   return (
     <>
@@ -53,11 +215,23 @@ const Acc = ({ msg, spacemax, spaces, filt }) => {
               </Card.Header>
               <Accordion.Collapse eventKey="1">
                 <Card.Body style={{ backgroundColor: 'white' }}>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{dispmsg.info}
+                  <Additem
+                    msg={msg}
+                    setMessages={setMessages}
+                    index={index}
+                    filt={dispmsg.index}
+                    messages={messages}
+                  />
+                  <br />
                   <Acc
                     msg={msg}
                     spacemax={spacemax}
                     spaces={spaces + 1}
                     filt={dispmsg.index}
+                    messages={messages}
+                    setMessages={setMessages}
+                    index={index}
                   />
                 </Card.Body>
               </Accordion.Collapse>
@@ -76,6 +250,7 @@ const ChatbotAdmin = () => {
   );
   // const [level1, setLevel1] = useState([]);
   const dispatch = useDispatch();
+  // const [edit, setEdit] = useState({});
 
   const query = `query{
     questions{
@@ -85,6 +260,14 @@ const ChatbotAdmin = () => {
       info
     }
   }`;
+
+  useEffect(()=>{
+    console.log("rerender");
+  })
+
+  useEffect(() => {
+    console.log(messages);
+  }, [messages]);
 
   useEffect(() => {
     dispatch(getChat(query));
@@ -159,7 +342,7 @@ const ChatbotAdmin = () => {
                   <StyledSubHeaderText>ANSWERS</StyledSubHeaderText>
                 </StyledSubHeader>
                 <StyledBox>
-                  {messages.map((msg) => {
+                  {messages.map((msg, index) => {
                     let spacemax = msg[msg.length - 1].index;
                     spacemax = spacemax.split(' ').length - 1;
                     console.log(spacemax);
@@ -187,11 +370,19 @@ const ChatbotAdmin = () => {
                             <Card.Body
                               style={{ backgroundColor: 'white' }}
                             >
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                              {msg[0].info}
+                              <br />
                               <Acc
                                 msg={msg}
                                 spacemax={spacemax}
                                 spaces={1}
                                 filt={msg[0].index}
+                                messages={messages}
+                                setMessages={setMessages}
+                                index={index}
+                                // edit={edit}
+                                // setEdit={setEdit}
                               />
                             </Card.Body>
                           </Accordion.Collapse>
