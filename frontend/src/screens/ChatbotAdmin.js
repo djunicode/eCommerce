@@ -501,7 +501,7 @@ const ChatbotAdmin = () => {
 
   useEffect(() => {
     console.log(typeof name);
-  },[name])
+  }, [name]);
 
   return (
     <>
@@ -538,7 +538,7 @@ const ChatbotAdmin = () => {
                 </StyledSubHeader>
                 <StyledBox>
                   {messages.map((msg, index) => {
-                    if(msg.length === 0){
+                    if (msg.length === 0) {
                       return null;
                     }
                     let spacemax = msg[msg.length - 1].index;
