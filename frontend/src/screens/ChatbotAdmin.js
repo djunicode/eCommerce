@@ -72,13 +72,13 @@ const Additem = ({ msg, setMessages, index, filt, messages }) => {
     };
     console.log(temp);
     console.log(msg);
-    let tempmsg = msg.slice();
+    const tempmsg = msg.slice();
     tempmsg.push(temp);
     console.log(msg);
     setMessages((m) => {
       console.log(m);
       console.log(m[index]);
-      let tempm = m.slice();
+      const tempm = m.slice();
       console.log(index);
       tempm[index] = tempmsg;
       // m[index] = msg;
@@ -147,6 +147,7 @@ const Additem = ({ msg, setMessages, index, filt, messages }) => {
                   type="text"
                   placeholder="Enter Button Name"
                   name={name}
+                  value={btn}
                   onChange={(e) => {
                     setBtn(e.target.value);
                   }}
@@ -180,6 +181,53 @@ const Acc = ({
   index,
 }) => {
   const l = filt.length;
+  const [name, setName] = useState('');
+  const [open, setOpen] = useState(false);
+  const [msgg, setMsgg] = useState('');
+  const [btn, setBtn] = useState('');
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    setMessages((m) => {
+      const tempm = m.slice();
+      const tempa = tempm[index];
+      const tempo = tempa.filter((a) => {
+        if (a.index.localeCompare(name) === 0) {
+          return a;
+        }
+        return null;
+      });
+      console.log(tempo);
+      tempo[0].msg = btn;
+      tempo[0].info = msgg;
+      console.log(tempm);
+      return tempm;
+    });
+    console.log('msgg=', msgg);
+    console.log('btn=', btn);
+    console.log('name=', name);
+  };
+
+  const handleDelete = (d) => {
+    setMessages((m) => {
+      const tempm = m.slice();
+      const tempa = tempm[index];
+      const tempa1 = tempa.filter((a) => {
+        if (a.index.substring(0, d.length).localeCompare(d) === 0) {
+          console.log(d);
+          console.log(a.index);
+          console.log(a.index.substring(0, d.length));
+          return null;
+        }
+        return a;
+      });
+      tempm[index] = tempa1;
+      console.log(tempm);
+      console.log(tempa);
+      return tempm;
+    });
+  };
+
   const dispmsgs = msg.filter((dispmsg) => {
     if (
       dispmsg.index.substring(0, l + 1).localeCompare(`${filt} `) ===
@@ -216,6 +264,29 @@ const Acc = ({
               <Accordion.Collapse eventKey="1">
                 <Card.Body style={{ backgroundColor: 'white' }}>
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{dispmsg.info}
+                  <span
+                    onClick={() => {
+                      setOpen(true);
+                      setName(dispmsg.index);
+                      setBtn(dispmsg.msg);
+                      setMsgg(dispmsg.info);
+                    }}
+                    style={{
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Edit
+                  </span>
+                  <span
+                    onClick={() => {
+                      handleDelete(dispmsg.index);
+                    }}
+                    style={{
+                      cursor: 'pointer',
+                    }}
+                  >
+                    delete
+                  </span>
                   <Additem
                     msg={msg}
                     setMessages={setMessages}
@@ -239,11 +310,84 @@ const Acc = ({
           </Accordion>
         );
       })}
+      {open && (
+        <>
+          <div
+            style={{
+              position: 'fixed',
+              top: '0',
+              left: '0',
+              right: '0',
+              bottom: '0',
+              backgroundColor: 'rgba(0,0,0,.7)',
+              zIndex: '1000',
+            }}
+            onClick={() => {
+              setOpen(false);
+            }}
+          />
+          <div
+            style={{
+              position: 'fixed',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              backgroundColor: '#FFF',
+              padding: '50px',
+              zIndex: 1000,
+              borderRadius: '20px',
+            }}
+          >
+            <Form>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>Msg</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Msg"
+                  name={name}
+                  value={msgg}
+                  onChange={(e) => {
+                    setMsgg(e.target.value);
+                  }}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="formBasicPassword">
+                <Form.Label>Button Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Button Name"
+                  name={name}
+                  value={btn}
+                  onChange={(e) => {
+                    setBtn(e.target.value);
+                  }}
+                />
+              </Form.Group>
+              <StyledButton
+                variant="danger"
+                type="submit"
+                name={name}
+                onClick={(e) => {
+                  handleClick(e);
+                }}
+              >
+                Done
+              </StyledButton>
+            </Form>
+          </div>
+        </>
+      )}
     </>
   );
 };
 
 const ChatbotAdmin = () => {
+  const [name, setName] = useState('');
+  const [ind, setInd] = useState('');
+  const [open, setOpen] = useState(false);
+  const [msgg, setMsgg] = useState('');
+  const [btn, setBtn] = useState('');
   const [messages, setMessages] = useState([]);
   const { loading, data, error } = useSelector(
     (state) => state.chatbot,
@@ -261,9 +405,9 @@ const ChatbotAdmin = () => {
     }
   }`;
 
-  useEffect(()=>{
-    console.log("rerender");
-  })
+  useEffect(() => {
+    console.log('rerender');
+  });
 
   useEffect(() => {
     console.log(messages);
@@ -308,6 +452,57 @@ const ChatbotAdmin = () => {
     console.log(messages);
   }, [messages]);
 
+  const handleClick = (e, index) => {
+    e.preventDefault();
+    setMessages((m) => {
+      console.log(name);
+      console.log(index);
+      const tempm = m.slice();
+      console.log(tempm);
+      const tempa = tempm[index];
+      console.log(tempa);
+      const tempo = tempa.filter((a) => {
+        if (a.index.localeCompare(name) === 0) {
+          return a;
+        }
+        return null;
+      });
+      console.log(tempo);
+      tempo[0].msg = btn;
+      tempo[0].info = msgg;
+      console.log(tempm);
+      return tempm;
+    });
+    console.log('msgg=', msgg);
+    console.log('btn=', btn);
+    console.log('name=', name);
+  };
+
+  const handleDelete = (d, index) => {
+    setMessages((m) => {
+      console.log(index);
+      const tempm = m.slice();
+      const tempa = tempm[index];
+      const tempa1 = tempa.filter((a) => {
+        if (a.index.substring(0, d.length).localeCompare(d) === 0) {
+          console.log(d);
+          console.log(a.index);
+          console.log(a.index.substring(0, d.length));
+          return null;
+        }
+        return a;
+      });
+      tempm[index] = tempa1;
+      console.log(tempm);
+      console.log(tempa);
+      return tempm;
+    });
+  };
+
+  useEffect(() => {
+    console.log(typeof name);
+  },[name])
+
   return (
     <>
       {loading ? (
@@ -343,6 +538,9 @@ const ChatbotAdmin = () => {
                 </StyledSubHeader>
                 <StyledBox>
                   {messages.map((msg, index) => {
+                    if(msg.length === 0){
+                      return null;
+                    }
                     let spacemax = msg[msg.length - 1].index;
                     spacemax = spacemax.split(' ').length - 1;
                     console.log(spacemax);
@@ -372,6 +570,30 @@ const ChatbotAdmin = () => {
                             >
                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                               {msg[0].info}
+                              <span
+                                onClick={() => {
+                                  setOpen(true);
+                                  setInd(index);
+                                  setName(msg[0].index);
+                                  setBtn(msg[0].msg);
+                                  setMsgg(msg[0].info);
+                                }}
+                                style={{
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                Edit
+                              </span>
+                              <span
+                                onClick={() => {
+                                  handleDelete(msg[0].index, index);
+                                }}
+                                style={{
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                delete
+                              </span>
                               <br />
                               <Acc
                                 msg={msg}
@@ -396,6 +618,74 @@ const ChatbotAdmin = () => {
                 Save Changes
               </StyledButton>
             </Container>
+          </div>
+        </>
+      )}
+      {open && (
+        <>
+          <div
+            style={{
+              position: 'fixed',
+              top: '0',
+              left: '0',
+              right: '0',
+              bottom: '0',
+              backgroundColor: 'rgba(0,0,0,.7)',
+              zIndex: '1000',
+            }}
+            onClick={() => {
+              setOpen(false);
+            }}
+          />
+          <div
+            style={{
+              position: 'fixed',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              backgroundColor: '#FFF',
+              padding: '50px',
+              zIndex: 1000,
+              borderRadius: '20px',
+            }}
+          >
+            <Form>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>Msg</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Msg"
+                  name={name}
+                  value={msgg}
+                  onChange={(e) => {
+                    setMsgg(e.target.value);
+                  }}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="formBasicPassword">
+                <Form.Label>Button Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Button Name"
+                  name={name}
+                  value={btn}
+                  onChange={(e) => {
+                    setBtn(e.target.value);
+                  }}
+                />
+              </Form.Group>
+              <StyledButton
+                variant="danger"
+                type="submit"
+                name={name}
+                onClick={(e) => {
+                  handleClick(e, ind);
+                }}
+              >
+                Done
+              </StyledButton>
+            </Form>
           </div>
         </>
       )}
