@@ -22,34 +22,39 @@ const Additem = ({ msg, setMessages, index, filt, messages }) => {
   const [open, setOpen] = useState(false);
   const [msgg, setMsgg] = useState('');
   const [btn, setBtn] = useState('');
+  const [error, setError] = useState(false);
   useEffect(() => {
-    const dispmsgs = msg.filter((dispmsg) => {
-      const l = filt.length;
-      if (
-        dispmsg.index
-          .substring(0, l + 1)
-          .localeCompare(`${filt} `) === 0 &&
-        dispmsg.index.length === l + 2
-      ) {
-        return dispmsg;
+    console.log(filt);
+    if (msg) {
+      const dispmsgs = msg.filter((dispmsg) => {
+        const l = filt.length;
+        if (
+          dispmsg.index
+            .substring(0, l + 1)
+            .localeCompare(`${filt} `) === 0 &&
+          dispmsg.index.length === l + 2
+        ) {
+          return dispmsg;
+        }
+        return null;
+      });
+      console.log(dispmsgs);
+      if (dispmsgs.length !== 0) {
+        const len = dispmsgs.length;
+        let last = dispmsgs[len - 1];
+        last = last.index;
+        let lastchar = last[last.length - 1];
+        lastchar = parseInt(lastchar);
+        lastchar += 1;
+        const nameTemp =
+          last.substring(0, last.length - 1) + lastchar;
+        console.log('nametemp=', nameTemp);
+        setName(nameTemp);
+      } else if (dispmsgs.length === 0) {
+        const nameTemp = `${filt} 1`;
+        console.log('nametemp=', nameTemp);
+        setName(nameTemp);
       }
-      return null;
-    });
-    console.log(dispmsgs);
-    if (dispmsgs.length !== 0) {
-      const len = dispmsgs.length;
-      let last = dispmsgs[len - 1];
-      last = last.index;
-      let lastchar = last[last.length - 1];
-      lastchar = parseInt(lastchar);
-      lastchar += 1;
-      const nameTemp = last.substring(0, last.length - 1) + lastchar;
-      console.log('nametemp=', nameTemp);
-      setName(nameTemp);
-    } else if (dispmsgs.length === 0) {
-      const nameTemp = `${filt} 1`;
-      console.log('nametemp=', nameTemp);
-      setName(nameTemp);
     }
   }, []);
 
@@ -59,45 +64,83 @@ const Additem = ({ msg, setMessages, index, filt, messages }) => {
 
   const handleClick = (e) => {
     e.preventDefault();
-    const n = e.target.name;
-    const level = (
-      e.target.name.length -
-      (n.split(' ').length - 1)
-    ).toString();
-    const temp = {
-      level,
-      index: e.target.name,
-      msg: msgg,
-      info: btn,
-    };
-    console.log(temp);
-    console.log(msg);
-    const tempmsg = msg.slice();
-    tempmsg.push(temp);
-    console.log(msg);
-    setMessages((m) => {
-      console.log(m);
-      console.log(m[index]);
-      const tempm = m.slice();
-      console.log(index);
-      tempm[index] = tempmsg;
-      // m[index] = msg;
-      console.log(m);
-      return tempm;
-    });
-    console.log(messages);
+    if (msg) {
+      if (msgg === '' || btn === '') {
+        setError(true);
+        return;
+      }
+      if (msgg && btn) {
+        setError(false);
+      }
+      const n = e.target.name;
+      const level = (
+        e.target.name.length -
+        (n.split(' ').length - 1)
+      ).toString();
+      const temp = {
+        level,
+        index: e.target.name,
+        msg: msgg,
+        info: btn,
+      };
+      console.log(temp);
+      console.log(msg);
+      const tempmsg = msg.slice();
+      tempmsg.push(temp);
+      console.log(msg);
+      setMessages((m) => {
+        console.log(m);
+        console.log(m[index]);
+        const tempm = m.slice();
+        console.log(index);
+        tempm[index] = tempmsg;
+        // m[index] = msg;
+        console.log(m);
+        return tempm;
+      });
+      setOpen(false);
+      setBtn('');
+      setMsgg('');
+      console.log(messages);
+    } else {
+      setMessages((m) => {
+        const tempm = m.slice();
+        const tempa = [
+          {
+            level: '1',
+            index: `${m.length + 1}`,
+            msg: msgg,
+            info: btn,
+          },
+        ];
+        tempm.push(tempa);
+        console.log(tempm);
+        setOpen(false);
+        setBtn('');
+        setMsgg('');
+        return tempm;
+      });
+    }
   };
 
   return (
     <div>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <span
-        style={{ cursor: 'pointer' }}
+        style={{
+          cursor: 'pointer',
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          color: 'green',
+        }}
         onClick={() => {
           setOpen(true);
         }}
       >
-        Add item
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <i className="fas fa-plus-circle" />
+        &nbsp; Add Button
       </span>
       {open && (
         <>
@@ -134,9 +177,9 @@ const Additem = ({ msg, setMessages, index, filt, messages }) => {
                   type="text"
                   placeholder="Enter Msg"
                   name={name}
-                  value={msgg}
+                  value={btn}
                   onChange={(e) => {
-                    setMsgg(e.target.value);
+                    setBtn(e.target.value);
                   }}
                 />
               </Form.Group>
@@ -147,12 +190,23 @@ const Additem = ({ msg, setMessages, index, filt, messages }) => {
                   type="text"
                   placeholder="Enter Button Name"
                   name={name}
-                  value={btn}
+                  value={msgg}
                   onChange={(e) => {
-                    setBtn(e.target.value);
+                    setMsgg(e.target.value);
                   }}
                 />
               </Form.Group>
+              <small
+                className="text-danger"
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                &nbsp;{error && `Info and Message are required`}
+              </small>
               <StyledButton
                 variant="danger"
                 type="submit"
@@ -185,6 +239,7 @@ const Acc = ({
   const [open, setOpen] = useState(false);
   const [msgg, setMsgg] = useState('');
   const [btn, setBtn] = useState('');
+  const [arrow, setArrow] = useState('');
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -257,12 +312,34 @@ const Acc = ({
                   as={Button}
                   variant="link"
                   eventKey="1"
+                  onClick={() => {
+                    setArrow(!arrow);
+                  }}
                 >
-                  {dispmsg.msg}
+                  <span style={{ fontWeight: '100' }}>
+                    {dispmsg.msg}&nbsp;&nbsp;&nbsp;
+                    {arrow ? (
+                      <i
+                        style={{ color: '#222831' }}
+                        className="fas fa-chevron-up"
+                      />
+                    ) : (
+                      <i
+                        style={{ color: '#222831' }}
+                        className="fas fa-chevron-down"
+                      />
+                    )}
+                  </span>
                 </Accordion.Toggle>
               </Card.Header>
               <Accordion.Collapse eventKey="1">
-                <Card.Body style={{ backgroundColor: 'white' }}>
+                <Card.Body
+                  style={{
+                    backgroundColor: 'white',
+                    paddingRight: '0px',
+                    paddingLeft: '1rem',
+                  }}
+                >
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{dispmsg.info}
                   <span
                     onClick={() => {
@@ -273,9 +350,12 @@ const Acc = ({
                     }}
                     style={{
                       cursor: 'pointer',
+                      position: 'absolute',
+                      right: '10px',
+                      color: '#929293',
                     }}
                   >
-                    Edit
+                    <i className="fas fa-edit" />
                   </span>
                   <span
                     onClick={() => {
@@ -283,9 +363,12 @@ const Acc = ({
                     }}
                     style={{
                       cursor: 'pointer',
+                      position: 'absolute',
+                      right: '50px',
+                      color: '#929293',
                     }}
                   >
-                    delete
+                    <i className="fas fa-trash-alt" />
                   </span>
                   <Additem
                     msg={msg}
@@ -383,6 +466,7 @@ const Acc = ({
 };
 
 const ChatbotAdmin = () => {
+  const [arrow, setArrow] = useState(false);
   const [name, setName] = useState('');
   const [ind, setInd] = useState('');
   const [open, setOpen] = useState(false);
@@ -560,16 +644,37 @@ const ChatbotAdmin = () => {
                               as={Button}
                               variant="link"
                               eventKey="1"
+                              onClick={() => {
+                                setArrow(!arrow);
+                              }}
                             >
-                              {msg[0].msg}
+                              <span style={{ fontWeight: '100' }}>
+                                {msg[0].msg}&nbsp;&nbsp;&nbsp;
+                                {arrow ? (
+                                  <i
+                                    style={{ color: '#222831' }}
+                                    className="fas fa-chevron-up"
+                                  />
+                                ) : (
+                                  <i
+                                    style={{ color: '#222831' }}
+                                    className="fas fa-chevron-down"
+                                  />
+                                )}
+                              </span>
                             </Accordion.Toggle>
                           </Card.Header>
                           <Accordion.Collapse eventKey="1">
                             <Card.Body
-                              style={{ backgroundColor: 'white' }}
+                              style={{
+                                backgroundColor: 'white',
+                                position: 'relative',
+                                paddingRight: '0px',
+                                paddingLeft: '1rem',
+                              }}
                             >
                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                              {msg[0].info}
+                              <span>{msg[0].info}</span>
                               <span
                                 onClick={() => {
                                   setOpen(true);
@@ -580,9 +685,12 @@ const ChatbotAdmin = () => {
                                 }}
                                 style={{
                                   cursor: 'pointer',
+                                  position: 'absolute',
+                                  right: '10px',
+                                  color: '#929293',
                                 }}
                               >
-                                Edit
+                                <i className="fas fa-edit" />
                               </span>
                               <span
                                 onClick={() => {
@@ -590,10 +698,20 @@ const ChatbotAdmin = () => {
                                 }}
                                 style={{
                                   cursor: 'pointer',
+                                  position: 'absolute',
+                                  right: '50px',
+                                  color: '#929293',
                                 }}
                               >
-                                delete
+                                <i className="fas fa-trash-alt" />
                               </span>
+                              <Additem
+                                msg={msg}
+                                setMessages={setMessages}
+                                index={index}
+                                filt={msg[0].index}
+                                messages={messages}
+                              />
                               <br />
                               <Acc
                                 msg={msg}
@@ -612,6 +730,13 @@ const ChatbotAdmin = () => {
                       </Accordion>
                     );
                   })}
+                  <Additem
+                    msg={null}
+                    setMessages={setMessages}
+                    index={null}
+                    filt={null}
+                    messages={messages}
+                  />
                 </StyledBox>
               </StyledRowFlex>
               <StyledButton variant="danger">
