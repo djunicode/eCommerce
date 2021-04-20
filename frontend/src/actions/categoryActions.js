@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable no-unused-vars */
+/* eslint-disable no-empty */
 
 import axios from 'axios';
 import {
@@ -89,6 +90,14 @@ export const getProductByCategory = (id, sort = 'none') => async (
     } else {
       sortedData = data.data.getProductByCategory;
     }
+
+    try {
+      const brands = sortedData.map((elem) => elem.brand.name);
+      sessionStorage.setItem(
+        'proshop_brand_length',
+        JSON.stringify([...new Set(brands)].length),
+      );
+    } catch (err) {}
 
     dispatch({
       type: PRODCUTS_BY_CATEGORY_ID_LIST_SUCCESS,

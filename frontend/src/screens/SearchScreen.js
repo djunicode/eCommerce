@@ -9,6 +9,7 @@ import Message from '../components/Message';
 import Product from '../components/Product';
 import FilterSidebar from '../components/FilterSidebar';
 import { search } from '../actions/searchActions';
+import { filter } from '../actions/filterActions';
 
 import {
   StyledBadgeSortDiv,
@@ -39,7 +40,7 @@ const SearchScreen = () => {
   const { filters } = filtersApplied;
   console.log(filters);
 
-  if (products.length === 0) {
+  if (products.length === 0 && !loading) {
     return (
       <Message variant="danger">
         No Products Matched the Search criteria!
@@ -77,13 +78,35 @@ const SearchScreen = () => {
                 <Dropdown.Menu>
                   <StyledDropdownItem
                     as="button"
-                    onClick={() => dispatch(search(keyword, 'asc'))}
+                    onClick={() => {
+                      dispatch(search(keyword, 'asc'));
+                      if (
+                        JSON.parse(
+                          sessionStorage.getItem(
+                            'proshop_brand_length',
+                          ),
+                        ) === filters.brands.length
+                      ) {
+                        dispatch(filter({}));
+                      }
+                    }}
                   >
                     Price - Low to High
                   </StyledDropdownItem>
                   <StyledDropdownItem
                     as="button"
-                    onClick={() => dispatch(search(keyword, 'desc'))}
+                    onClick={() => {
+                      dispatch(search(keyword, 'desc'));
+                      if (
+                        JSON.parse(
+                          sessionStorage.getItem(
+                            'proshop_brand_length',
+                          ),
+                        ) === filters.brands.length
+                      ) {
+                        dispatch(filter({}));
+                      }
+                    }}
                   >
                     Price - High to Low
                   </StyledDropdownItem>
@@ -92,13 +115,15 @@ const SearchScreen = () => {
             </StyledBadgeSortDiv>
           )}
           <StyledGridDiv>
-            {products.length > 0 &&
+            {products &&
+              products.length > 0 &&
               Object.keys(filters).length === 0 &&
               products.map((product) => (
                 <Product product={product} key={product._id} />
               ))}
 
-            {products.length > 0 &&
+            {products &&
+              products.length > 0 &&
               Object.keys(filters).length > 0 &&
               products.map(
                 (product) =>

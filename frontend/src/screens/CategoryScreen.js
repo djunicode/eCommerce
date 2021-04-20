@@ -9,6 +9,7 @@ import Message from '../components/Message';
 import Product from '../components/Product';
 import FilterSidebar from '../components/FilterSidebar';
 import { getProductByCategory } from '../actions/categoryActions';
+import { filter } from '../actions/filterActions';
 
 import { DARK_BLUE_2 } from '../util/colors';
 
@@ -28,6 +29,7 @@ const CategoryScreen = () => {
 
   useEffect(() => {
     dispatch(getProductByCategory(id));
+    dispatch(filter({}));
   }, [dispatch, id]);
 
   const searchedCategory = useSelector(
@@ -46,7 +48,7 @@ const CategoryScreen = () => {
     renderedProds = [];
   }, [filters, products, id]);
 
-  if (products.length === 0) {
+  if (products.length === 0 && !loading) {
     return (
       <Message variant="danger">
         No Products found in this Category
@@ -81,17 +83,35 @@ const CategoryScreen = () => {
                 <Dropdown.Menu>
                   <StyledDropdownItem
                     as="button"
-                    onClick={() =>
-                      dispatch(getProductByCategory(id, 'asc'))
-                    }
+                    onClick={() => {
+                      dispatch(getProductByCategory(id, 'asc'));
+                      if (
+                        JSON.parse(
+                          sessionStorage.getItem(
+                            'proshop_brand_length',
+                          ),
+                        ) === filters.brands.length
+                      ) {
+                        dispatch(filter({}));
+                      }
+                    }}
                   >
                     Price - Low to High
                   </StyledDropdownItem>
                   <StyledDropdownItem
                     as="button"
-                    onClick={() =>
-                      dispatch(getProductByCategory(id, 'desc'))
-                    }
+                    onClick={() => {
+                      dispatch(getProductByCategory(id, 'desc'));
+                      if (
+                        JSON.parse(
+                          sessionStorage.getItem(
+                            'proshop_brand_length',
+                          ),
+                        ) === filters.brands.length
+                      ) {
+                        dispatch(filter({}));
+                      }
+                    }}
                   >
                     Price - High to Low
                   </StyledDropdownItem>
