@@ -21,22 +21,37 @@ import {
   PRODUCT_TOP_REQUEST,
   PRODUCT_TOP_SUCCESS,
   PRODUCT_TOP_FAIL,
+  PRODUCT_SEARCH_REQUEST,
+  PRODUCT_SEARCH_SUCCESS,
+  PRODUCT_SEARCH_FAIL,
+  PRODUCT_BY_CATEGORY_REQUEST,
+  PRODUCT_BY_CATEGORY_SUCCESS,
+  PRODUCT_BY_CATEGORY_FAIL,
+  PRODUCT_BY_SUBCATEGORY_REQUEST,
+  PRODUCT_BY_SUBCATEGORY_SUCCESS,
+  PRODUCT_BY_SUBCATEGORY_FAIL,
 } from '../constants/productConstants';
 import { logout } from './userActions';
 
-export const listProducts = (keyword = '', pageNumber = '') => async (
+export const listProducts = (query) => async (
   dispatch,
 ) => {
   try {
     dispatch({ type: PRODUCT_LIST_REQUEST });
 
-    const { data } = await axios.get(
-      `/api/products?keyword=${keyword}&pageNumber=${pageNumber}`,
-    );
+    const request = {
+      method: 'post',
+      url: 'http://localhost:5000/graphql',
+      data: {
+        query,
+      },
+    };
+
+    const { data } = await axios(request);
 
     dispatch({
       type: PRODUCT_LIST_SUCCESS,
-      payload: data,
+      payload: data.data.getProducts,
     });
   } catch (error) {
     dispatch({
@@ -119,46 +134,15 @@ export const createProduct = (query) => async (
     //   userLogin: { userInfo },
     // } = getState();
 
-    // const config = {
-    //   headers: {
-    //     Authorization: `Bearer ${userInfo.token}`,
-    //   },
-    // };
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        // Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
     // console.log(userInfo.token);
 
-    const request = {
-      method: 'post',
-      url: 'http://localhost:5000/graphql',
-      data: {
-        query,
-      },
-      headers: { 'Content-Type': 'application/json' },
-    };
-
-    const { data } = await axios(request);
-
-    // const { data } = await axios.post(
-    //   `mutation{
-    //   createProduct(productInput: {
-    //     name: "one",
-    //     discount: 20,
-    //     price: 100,
-    //     user: "600e9bf7ab74de2680fa32da",
-    //     image: "one",
-    //     brand: "one",
-    //     category:"6016f6f44d1c3300f0a72dea",
-    //     subcategory: "6016f6f44d1c3300f0a72dea",
-    //     new: true,
-    //     countInStock:11,
-    //     numReviews:1,
-    //     description:"wow"
-    //   }) {
-    //     discountedPrice
-    //   }
-    // }`,
-    //   {},
-    //   config,
-    // );
+    const { data } = await axios.post('http://localhost:5000/graphql', {query}, config);
 
     dispatch({
       type: PRODUCT_CREATE_SUCCESS,
@@ -179,7 +163,7 @@ export const createProduct = (query) => async (
   }
 };
 
-export const updateProduct = (product) => async (
+export const updateProduct = (query) => async (
   dispatch,
   getState,
 ) => {
@@ -188,26 +172,22 @@ export const updateProduct = (product) => async (
       type: PRODUCT_UPDATE_REQUEST,
     });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
+    // const {
+    //   userLogin: { userInfo },
+    // } = getState();
 
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
+        // Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
-    const { data } = await axios.put(
-      `/api/products/${product._id}`,
-      product,
-      config,
-    );
+    const { data } = await axios.post('http://localhost:5000/graphql', {query}, config);
 
     dispatch({
       type: PRODUCT_UPDATE_SUCCESS,
-      payload: data,
+      payload: data.data.updateProduct,
     });
     dispatch({ type: PRODUCT_DETAILS_SUCCESS, payload: data });
   } catch (error) {
@@ -291,6 +271,96 @@ export const listTopProducts = (query) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: PRODUCT_TOP_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const searchProducts = (query) => async (dispatch) => {
+  try {
+    dispatch({ type: PRODUCT_SEARCH_REQUEST });
+
+    const request = {
+      method: 'post',
+      url: 'http://localhost:5000/graphql',
+      data: {
+        query,
+      },
+      headers: { 'Content-Type': 'application/json' },
+    };
+
+    const { data } = await axios(request);
+
+    dispatch({
+      type: PRODUCT_SEARCH_SUCCESS,
+      payload: data.data.searchProduct,
+    });
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_SEARCH_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const listProductByCategory = (query) => async (dispatch) => {
+  try {
+    dispatch({ type: PRODUCT_BY_CATEGORY_REQUEST });
+
+    const request = {
+      method: 'post',
+      url: 'http://localhost:5000/graphql',
+      data: {
+        query,
+      },
+      headers: { 'Content-Type': 'application/json' },
+    };
+
+    const { data } = await axios(request);
+
+    dispatch({
+      type: PRODUCT_BY_CATEGORY_SUCCESS,
+      payload: data.data.getProductByCategory,
+    });
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_BY_CATEGORY_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const listProductBySubCategory = (query) => async (dispatch) => {
+  try {
+    dispatch({ type: PRODUCT_BY_SUBCATEGORY_REQUEST });
+
+    const request = {
+      method: 'post',
+      url: 'http://localhost:5000/graphql',
+      data: {
+        query,
+      },
+      headers: { 'Content-Type': 'application/json' },
+    };
+
+    const { data } = await axios(request);
+
+    dispatch({
+      type: PRODUCT_BY_SUBCATEGORY_SUCCESS,
+      payload: data.data.getProductBySubCategory,
+    });
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_BY_SUBCATEGORY_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

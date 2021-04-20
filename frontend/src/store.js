@@ -9,6 +9,9 @@ import {
   productUpdateReducer,
   productReviewCreateReducer,
   productTopRatedReducer,
+  productSearchReducer,
+  productByCategoryReducer,
+  productBySubCategoryReducer
 } from './reducers/productReducers';
 import cartReducer from './reducers/cartReducers';
 import {
@@ -30,7 +33,13 @@ import {
 } from './reducers/orderReducers';
 import { chatbotReducer } from './reducers/chatbotReducers';
 import {
+  categoryCreateReducer,
+  categoryDeleteReducer,
+  categoryEditReducer,
   categoryListReducer,
+  subCategoryCreateReducer,
+  subCategoryDeleteReducer,
+  subCategoryEditReducer,
   subCategoryListReducer,
 } from './reducers/categoryReducers';
 
@@ -59,6 +68,15 @@ const reducer = combineReducers({
   chatbot: chatbotReducer,
   categoryList: categoryListReducer,
   subCategoryList: subCategoryListReducer,
+  productSearch: productSearchReducer,
+  productByCategory: productByCategoryReducer,
+  productBySubCategory: productBySubCategoryReducer,
+  categoryCreate: categoryCreateReducer,
+  categoryEdit: categoryEditReducer,
+  categoryDelete: categoryDeleteReducer,
+  subCategoryCreate: subCategoryCreateReducer,
+  subCategoryEdit: subCategoryEditReducer,
+  subCategoryDelete: subCategoryDeleteReducer
 });
 
 const cartItemsFromStorage = localStorage.getItem('cartItems')

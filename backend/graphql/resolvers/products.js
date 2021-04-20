@@ -43,7 +43,7 @@ const createProduct = async (args, req) => {
 // cached
 const getProducts = async (args, { req, redis }) => {
   try {
-    if (admin(req)) {
+    // if (admin(req)) {
       const products = await redis.get('products:all');
 
       if (products) {
@@ -64,7 +64,7 @@ const getProducts = async (args, { req, redis }) => {
           throw new Error('No Products found');
         }
       }
-    }
+    // }
   } catch (err) {
     throw err;
   }
@@ -200,7 +200,7 @@ const getNewProducts = async (args, { req, redis }) => {
 // private/admin
 const updateProduct = async (args, { req, redis }) => {
   try {
-    if (admin(req)) {
+    // if (admin(req)) {
       // console.log(args.productId);
       // console.log(args);
       const product = await Product.findById(args.productId);
@@ -232,7 +232,7 @@ const updateProduct = async (args, { req, redis }) => {
       const updatedProduct = await Product.findById(args.productId);
       console.log(updatedProduct);
       return updatedProduct;
-    }
+    // }
   } catch (err) {
     console.log(err);
     throw err;
@@ -243,7 +243,7 @@ const updateProduct = async (args, { req, redis }) => {
 // private/admin
 const deleteProduct = async (args, { req, redis }) => {
   try {
-    if (admin(req)) {
+    // if (admin(req)) {
       const product = await Product.find({ _id: args.id });
       if (product) {
         await Brand.deleteOne({ _id: product.brand });
@@ -253,7 +253,7 @@ const deleteProduct = async (args, { req, redis }) => {
       } else {
         throw new Error('Product not found');
       }
-    }
+    // }
   } catch (err) {
     console.log(err);
     throw err;

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Button, Col, Row, Table } from 'react-bootstrap';
@@ -7,144 +6,168 @@ import styled from 'styled-components';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { updateProduct } from '../actions/productActions';
-import { listCategories, listSubCategories } from '../actions/categoryActions';
 import SizeModal from '../components/Modals';
-import { PRODUCT_UPDATE_RESET } from '../constants/productConstants';
+import { createProduct } from '../actions/productActions';
+import { listCategories, listSubCategories } from '../actions/categoryActions';
+import { PRODUCT_CREATE_RESET } from '../constants/productConstants';
+import { printSchema } from 'graphql';
+// import { PRODUCT_UPDATE_RESET } from '../constants/productConstants';
+import { CatDropdown, SubCatDropdown } from '../components/Dropdowns';
 
-const ProductEditScreen = ({ match, history }) => {
-  const prodId = match.params._id;
+const ProductCreateScreen = ({ match, history }) => {
+//   const productId = match.params.id;
 
   const [name, setName] = useState('');
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState('one');
   const [brand, setBrand] = useState('');
-  const [price, setPrice] = useState('');
-  const [discount, setDiscount] = useState('');
+  const [price, setPrice] = useState(0.0);
+  const [discount, setDiscount] = useState(0.0);
   const [categ, setCateg] = useState('6033f160eb01e64a1ccf7046');
   const [subCateg, setSubCateg] = useState('6033f161eb01e64a1ccf7055');
   const [countInStock, setCountInStock] = useState(0);
-  const [size, setSize] = useState('');
+  const [size, setSize] = useState(0);
   const [description, setDescription] = useState('');
-  const [newArrival, setNewArrival] = useState(false);
   // const [uploading, setUploading] = useState(false);
+  const [newArrival, setNewArrival] = useState(false);
 
   const dispatch = useDispatch();
 
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
 
-  const productUpdate = useSelector((state) => state.productUpdate);
+  // const categoryList = useSelector((state) => state.categoryList);
+  // const { catloading, caterror, categories } = categoryList;
+
+  const productCreate = useSelector((state) => state.productCreate);
   const {
-    loading: loadingUpdate,
-    error: errorUpdate,
-    success: successUpdate,
-  } = productUpdate;
+    loading: loadingCreate,
+    error: errorCreate,
+    success: successCreate,
+    product: createdProduct,
+  } = productCreate;
+  
+  // const subCategoryList = useSelector((state) => state.subCategoryList);
+  // const { subloading, suberror, subcategories } = subCategoryList;
 
-  const categoryList = useSelector((state) => state.categoryList);
-  const { catloading, caterror, categories } = categoryList;
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
-  const queryCategories = `query {
-    getCategories {
-      name,
-      _id
+  const query = `mutation {
+    createProduct(productInput: {name: "${name}", discount: ${discount}, price: ${price}, user: "${userInfo._id}", image: "${image}", brand: "${brand}", category: "${categ}", subcategory: "${subCateg}", new: ${newArrival}, countInStock: ${countInStock}, numReviews: 0, description: "${description}"}) {
+        name
+        _id
     }
-  }`;
+  }
+  `;
 
-  useEffect(() => {
-    dispatch(listCategories(queryCategories));
-  }, [dispatch]);
-
-  const subCategoryList = useSelector((state) => state.subCategoryList);
-  const { subloading, suberror, subcategories } = subCategoryList;
-
-  const querySub = `query{
-    getSubCategories (categoryId: "${categ}") {
-      name
-      _id
-    }
-  }`;
-
-  useEffect(() => {
-    if(categ != "") {
-        dispatch(listSubCategories(querySub));
-      }
-  }, [categ]);
-
-  const updateQuery = `mutation {
-    updateProduct (productId:"6033f161eb01e64a1ccf705f", updateProduct:{name:"iphone", price: 100, image: "one", brand: "some brand", category:"6033f160eb01e64a1ccf7046", subcategory: "6033f161eb01e64a1ccf7055", countInStock: 2, description: "something"}) {
-      name
-      price
-    }
-  }`;
-
-  useEffect(() => {
-    if (successUpdate) {
-      dispatch({ type: PRODUCT_UPDATE_RESET });
-      history.push('/admin/productlist');
-      } 
-    //   else if (!product.name || product._id !== prodId) {
-    //     dispatch(listProductDetails(prodId));
-    //   } else {
-    //     setName(product.name);
-    //     setPrice(product.price);
-    //     setImage(product.image);
-    //     setBrand(product.brand);
-    //     setCategory(product.category);
-    //     setCountInStock(product.countInStock);
-    //     setDescription(product.description);
-    // }
-  }, [dispatch, history, prodId, product, successUpdate]);
-
-  // const uploadFileHandler = async (e) => {
-  //   const file = e.target.files[0];
-  //   const formData = new FormData();
-  //   formData.append('image', file);
-  //   setUploading(true);
-
-  //   try {
-  //     const config = {
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //     };
-
-  //     const { data } = await axios.post(
-  //       '/api/upload',
-  //       formData,
-  //       config,
-  //     );
-
-  //     setImage(data);
-  //     setUploading(false);
-  //   } catch (err) {
-  //     console.error(err);
-  //     setUploading(false);
+  // const query = `mutation {
+  //   createProduct(productInput: { name: "one",
+  //   discount: 20,
+  //   price: 100,
+  //   user: "600e9bf7ab74de2680fa32da",
+  //   image: "one",
+  //   brand: "one",
+  //   category:"6033f160eb01e64a1ccf7046",
+  //   subcategory: "6033f161eb01e64a1ccf7055",
+  //   new: true,
+  //   countInStock:11,
+  //   numReviews:1,
+  //   description:"wow"}) {
+  //       name
+  //       _id
   //   }
-  // };
+  // }
+  // `;
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    dispatch(
-      updateProduct(updateQuery),
-    );
+  // const queryCategories = `query {
+  //   getCategories {
+  //     name,
+  //     _id
+  //   }
+  // }`;
+
+  // const querySub = `query{
+  //   getSubCategories (categoryId: "${categ}") {
+  //     name
+  //     _id
+  //   }
+  // }`;
+
+  // useEffect(() => {
+  //   dispatch(listCategories(queryCategories));
+  // }, [dispatch]);
+
+  // useEffect(() => {
+  //   if(categ != "") {
+  //       dispatch(listSubCategories(querySub));
+  //     }
+  // }, [categ]);
+
+  useEffect(() => {
+      if (successCreate) {
+        // dispatch({ type: PRODUCT_CREATE_RESET });
+        history.push('/admin/productlist');
+        } 
+  }, [successCreate, createdProduct]);
+
+  const createProductHandler = () => {
+      // if(userInfo) {
+        dispatch(createProduct(query));
+        console.log("product created");
+        console.log(query);
+        // history.push('/admin/productlist');
+      // }
   };
 
-  // const [modalShow, setModalShow] = React.useState(false);
+//   const productUpdate = useSelector((state) => state.productUpdate);
+//   const {
+//     loading: loadingUpdate,
+//     error: errorUpdate,
+//     success: successUpdate,
+//   } = productUpdate;
+
+  // useEffect(() => {
+  //   if (successUpdate) {
+  //     dispatch({ type: PRODUCT_UPDATE_RESET });
+  //     history.push('/admin/productlist');
+  //     } 
+  //     else if (!product.name || product._id !== productId) {
+  //       dispatch(listProductDetails(productId));
+  //     } else {
+  //       setName(product.name);
+  //       setPrice(product.price);
+  //       setImage(product.image);
+  //       setBrand(product.brand);
+  //       setCategory(product.category);
+  //       setCountInStock(product.countInStock);
+  //       setDescription(product.description);
+  //   }
+  // }, [dispatch, history, productId, product, successUpdate]);
+
+//   const submitHandler = (e) => {
+//     e.preventDefault();
+//     dispatch(
+//       updateProduct({
+//         _id: productId,
+//         name,
+//         image,
+//         brand,
+//         category,
+//         description,
+//         countInStock,
+//       }),
+//     );
+//   };
+
+  const [modalShow, setModalShow] = React.useState(false);
   // const [sizes, setSizes] = useState([
   //   {
   //     value: '',
   //   },
   // ]);
-  // const [prices, setPrices] = useState([
-  //   {
-  //     value: 0,
-  //   },
-  // ]);
 
   // const addSize = (size) => {
-  //   setSizes([...sizes, { size }]);
-  // };
-  // const addPrice = (price) => {
-  //   setPrices([...prices, { price }]);
+  //   setSizes([{ size }]);
   // };
 
   return (
@@ -152,11 +175,7 @@ const ProductEditScreen = ({ match, history }) => {
       <Link to="/admin/productlist" className="btn btn-light my-3">
         Go Back
       </Link>
-      <h1>Edit Product</h1>
-      {loadingUpdate && <Loader />}
-      {errorUpdate && (
-        <Message variant="danger">{errorUpdate}</Message>
-      )}
+      <h1>Create Product</h1>
       {loading ? (
         <Loader />
       ) : error ? (
@@ -165,7 +184,7 @@ const ProductEditScreen = ({ match, history }) => {
         <>
           {/* <SizeModal
             addSize={addSize}
-            addPrice={addPrice}
+            // addPrice={addPrice}
             show={modalShow}
             onHide={() => setModalShow(false)}
           /> */}
@@ -196,7 +215,7 @@ const ProductEditScreen = ({ match, history }) => {
                   <Col controlId="price">
                     <Form.Label>Price</Form.Label>
                     <Form.Control
-                      type="text"
+                      type="number"
                       placeholder="Enter price"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
@@ -205,7 +224,7 @@ const ProductEditScreen = ({ match, history }) => {
                 </Row>
 
                 <Row style={{ marginBottom: '1rem' }}>
-                  <Col controlId="categ">
+                  {/* <Col controlId="categ">
                     <Form.Label>Category</Form.Label>
                     <Form.Control
                         as="select"
@@ -215,11 +234,11 @@ const ProductEditScreen = ({ match, history }) => {
                     {categories.map((cat) => (
                         <option value={cat._id}>{cat.name}</option>
                     ))}
-                    {/* <option onClick={() => {setModalShow(true)}}>+ Add Category</option> */}
                     </Form.Control>
-                  </Col>
+                  </Col> */}
+                  <CatDropdown categ={categ} setCateg={setCateg}/>
 
-                  <Col controlId="subCateg">
+                  {/* <Col controlId="subCateg">
                     <Form.Label>Sub Category</Form.Label>
                     <Form.Control
                       as="select"
@@ -229,13 +248,14 @@ const ProductEditScreen = ({ match, history }) => {
                     {subcategories.map((sub) => (
                       <option value={sub._id}>{sub.name}</option>
                     ))}
-                    {/* <option>+ Add Sub Category</option> */}
                     </Form.Control>
-                  </Col>
+                  </Col> */}
+                  <SubCatDropdown categ={categ} subCateg={subCateg} setSubCateg={setSubCateg}/>
 
                   <Col controlId="discount">
                     <Form.Label>Discount</Form.Label>
                     <Form.Control
+                      type="number"
                       placeholder="Enter discount"
                       value={discount}
                       onChange={(e) => setDiscount(e.target.value)}
@@ -330,17 +350,8 @@ const ProductEditScreen = ({ match, history }) => {
               style={{marginTop: '2rem', fontWeight: '600'}}
               onClick={() => {setNewArrival(!newArrival); console.log(newArrival);}}
             />
-            {/* 
-            <Form.Group controlId="price">
-              <Form.Label>Price</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Enter price"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-              />
-            </Form.Group>
 
+            {/* 
             <Form.Group controlId="image">
               <Form.Label>Image</Form.Label>
               <Form.Control
@@ -357,55 +368,17 @@ const ProductEditScreen = ({ match, history }) => {
               />
               {uploading && <Loader />}
             </Form.Group>
+            */}
 
-            <Form.Group controlId="brand">
-              <Form.Label>Brand</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter brand"
-                value={brand}
-                onChange={(e) => setBrand(e.target.value)}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="countInStock">
-              <Form.Label>Count In Stock</Form.Label>
-              <Form.Control
-                type="number"
-                placeholder="Enter countInStock"
-                value={countInStock}
-                onChange={(e) => setCountInStock(e.target.value)}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="category">
-              <Form.Label>Category</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="description">
-              <Form.Label>Description</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </Form.Group> */}
           </Form>
-          </>
+        </>
       )}
-      <Button onClick={submitHandler}>Save Changes</Button>
+      <Button onClick={createProductHandler}>Save Changes</Button>
     </>
   );
 };
 
-export default ProductEditScreen;
+export default ProductCreateScreen;
 
 const SizeCol = styled.td`
   border: 1px solid rgb(0, 0, 0, 0.05);

@@ -1,28 +1,51 @@
-/* eslint-disable react/destructuring-assignment */
 import React, { useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Alert } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { editCategories } from '../actions/categoryActions';
 
-function SizeModal(props) {
-  const [size, setSize] = useState('');
-  const [price, setPrice] = useState(0);
+export function CategoryModal(props) {
+
+  const [newCat, setNewCat] = useState('');
+  const [show, setShow] = useState(true);
+  // const alertDisplay = [];
+
+  const dispatch = useDispatch();
+
+  const categoryEdit = useSelector((state) => state.categoryEdit);
+  const { error, editCategory } = categoryEdit;
+
+  const queryEditCategories = `mutation {
+    updateCategory (name: "${props.selectedCategory}", newName: "${newCat}") {
+      msg
+    }
+  }`;
+
 
   function SubmitForm(e) {
     e.preventDefault();
-    props.addSize(size);
-    props.addPrice(price);
+    props.editCat(newCat);
+    console.log(newCat);
+    dispatch(editCategories(queryEditCategories));
+    console.log(editCategory.msg);
+    // if(editCategory.msg==="success") {
+    //   if (show) {
+    //     alertDisplay.push (
+    //       <Alert variant="info" onClose={() => setShow(false)} dismissible>
+    //         <p>Category name has been successfully changed.</p>
+    //       </Alert>
+    //     );
+    //   }
+    // }
   }
 
-  function changeSize(e) {
-    setSize(e.target.value);
-    props.addSize(size);
-  }
-
-  function changePrice(e) {
-    setPrice(e.target.value);
-    props.addPrice(size);
+  function changeCat(e) {
+    console.log(e.target.value);
+    setNewCat(e.target.value);
+    props.editCat(newCat);
   }
 
   return (
+    <>
     <Modal
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...props}
@@ -34,38 +57,107 @@ function SizeModal(props) {
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          Add size and price
+          Edit Category : {props.selectedCategory}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form onSubmit={SubmitForm} className="size-form">
-          <Form.Label htmlFor={size}>Add Size: </Form.Label>
+        <Form onSubmit={SubmitForm} className="category-form">
+          <Form.Label>New category name: </Form.Label>
           <Form.Control
-            id={size}
             type="text"
-            placeholder="Enter size"
-            value={size}
-            onChange={changeSize}
-          />
-          <Form.Label htmlFor={price}>Add Price: </Form.Label>
-          <Form.Control
-            id={price}
-            type="number"
-            placeholder="Enter price"
-            value={price}
-            onChange={changePrice}
+            placeholder="Enter value"
+            value={newCat}
+            onChange={changeCat}
           />
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={SubmitForm}>Add</Button>
+        <Button onClick={SubmitForm}>Save Changes</Button>
         <Button onClick={props.onHide}>Close</Button>
       </Modal.Footer>
     </Modal>
+    {/* <div>{alertDisplay}</div> */}
+    </>
   );
 }
 
-export default SizeModal;
+export function SubCategoryModal(props) {
+
+  const [newSubCat, setNewSubCat] = useState('');
+  const [show, setShow] = useState(true);
+  // const alertDisplay = [];
+
+  const dispatch = useDispatch();
+
+  const subCategoryEdit = useSelector((state) => state.subCategoryEdit);
+  const { error, editSubCategory } = subCategoryEdit;
+
+  const queryEditSub = `mutation {
+    updateSubCategory (subCategoryId: "${props.subCateg}", name: "${newSubCat}") {
+      msg
+    }
+  }`;
+
+
+  function SubmitForm(e) {
+    e.preventDefault();
+    props.editCat(newSubCat);
+    console.log(newSubCat);
+    dispatch(editCategories(queryEditSub));
+    console.log(editSubCategory.msg);
+    // if(editSubCategory.msg==="success") {
+    //   if (show) {
+    //     alertDisplay.push (
+    //       <Alert variant="info" onClose={() => setShow(false)} dismissible>
+    //         <p>Category name has been successfully changed.</p>
+    //       </Alert>
+    //     );
+    //   }
+    // }
+  }
+
+  function changeSubCat(e) {
+    console.log(e.target.value);
+    setNewSubCat(e.target.value);
+    props.editCat(newSubCat);
+  }
+
+  return (
+    <>
+    <Modal
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      {...props}
+      size="md"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      backdrop="static"
+      keyboard={false}
+    >
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Edit Sub Category : {props.selectedSubCategory}
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form onSubmit={SubmitForm} className="category-form">
+          <Form.Label>New sub category name: </Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter value"
+            value={newSubCat}
+            onChange={changeSubCat}
+          />
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={SubmitForm}>Save Changes</Button>
+        <Button onClick={props.onHide}>Close</Button>
+      </Modal.Footer>
+    </Modal>
+    {/* <div>{alertDisplay}</div> */}
+    </>
+  );
+}
 
 //   function App() {
 //     const [modalShow, setModalShow] = React.useState(false);

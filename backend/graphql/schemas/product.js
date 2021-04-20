@@ -8,7 +8,7 @@ export const ProductSchema = `
         user: User!,
         image: String!,
         brand: Brand!,
-        category: Category!,
+        category: Category,
         subcategory: SubCategory!,
         new: Boolean!,
         countInStock: Int!,
