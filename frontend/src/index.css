@@ -97,12 +97,12 @@ h2 {
 .navbar-light .navbar-nav .nav-link {
   color: #30475e;
 }
-.dropdown {
+/* .dropdown {
   position: static;
 }
 .navbar-nav .dropdown-menu {
   position: static !important;
-}
+} */
 
 .carousel img {
   height: 300px;
@@ -175,6 +175,19 @@ body {
 .switch-off{
   left: 50% !important;
   padding-left: 37px !important;
+}
+
+@media(max-width: 990px){
+  .fcISXU{
+    width: 90% !important;
+    margin: 12px auto !important;
+  }
+  .lnUEPL{
+    border: none !important;
+    text-align: left !important;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+  }
 }
 
 @media (max-width: 900px) {
