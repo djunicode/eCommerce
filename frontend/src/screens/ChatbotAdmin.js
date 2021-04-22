@@ -131,10 +131,7 @@ const ChatbotAdmin = () => {
       });
     });
     console.log(details);
-    const mutation = `mutation {
-      editQuestions(details: ${details})
-    }`;
-    dispatch(updateChat(mutation));
+    dispatch(updateChat(details));
   };
 
   return (

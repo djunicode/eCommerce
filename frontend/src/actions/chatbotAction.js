@@ -48,20 +48,29 @@ export const updateChat = (mutation) => async (dispatch) => {
       type: CHATBOT_UPDATE_REQUEST,
     });
 
-    const request = {
+    const userinfo = JSON.parse(localStorage.getItem('userInfo'));
+    console.log(mutation);
+
+    const Data = JSON.stringify({
+      query: `mutation {
+      editQuestions(details: ${mutation}) {
+        msg
+      }
+    }`,
+      variables: {},
+    });
+
+    const config = {
       method: 'post',
       url: 'http://localhost:5000/graphql',
       headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMzIyNjcxNTIxYWVmNjNmOGUxNjhhNiIsImlhdCI6MTYxMzg5OTM3NywiZXhwIjoxNjEzOTAyOTc3fQ.U7b-lHDM41TLBDaDb2MW9c2G8I4HxEWbgK2wi30mVSI',
+        Authorization: `Bearer ${userinfo.token}`,
         'Content-Type': 'application/json',
       },
-      data: {
-        mutation,
-      },
+      data: Data,
     };
 
-    const { data } = await axios(request);
+    const { data } = await axios(config);
     console.log(data.data.questions);
 
     dispatch({
