@@ -1,27 +1,19 @@
 import Product from '../../models/productModel.js';
-import Brand from '../../models/brandModel.js';
 import { admin, loggedin } from '../../utils/verifyUser.js';
 
 // Create new product
 // private/admin
 const createProduct = async (args, req) => {
   try {
-    // if (admin(req)) {
-      const newBrand = new Brand({
-        name: args.productInput.brand,
-      });
-
-      const resp = await newBrand.save();
-
+    if (admin(req)) {
       const product = new Product({
         name: args.productInput.name,
         discount: args.productInput.discount,
         price: args.productInput.price,
-        discountedPrice:
-          ((100 - args.productInput.discount) * args.productInput.price) / 100,
-        user: args.productInput.user,
+        options: args.productInput.options,
+        user: req.user,
         image: args.productInput.image,
-        brand: resp._id,
+        brand: args.productInput.brand,
         category: args.productInput.category,
         subcategory: args.productInput.subcategory,
         new: args.productInput.new,
@@ -31,7 +23,7 @@ const createProduct = async (args, req) => {
       });
       const res = await product.save();
       return res;
-    // }
+    }
   } catch (err) {
     console.log(err);
     throw err;
@@ -208,19 +200,13 @@ const updateProduct = async (args, { req, redis }) => {
         throw new Error('Product not found');
       }
 
-      await Brand.deleteOne({ _id: product.brand });
-
-      const newBrand = new Brand({
-        name: args.updateProduct.brand,
-      });
-
-      const resp = await newBrand.save();
-
       const newUpdatedProduct = {
         name: args.updateProduct.name,
+        discount: args.productInput.discount,
         price: args.updateProduct.price,
+        options: args.productInput.options,
         image: args.updateProduct.image,
-        brand: resp._id,
+        brand: args.updateProduct.brand,
         category: args.updateProduct.category,
         countInStock: args.updateProduct.countInStock,
         description: args.updateProduct.description,
@@ -246,7 +232,6 @@ const deleteProduct = async (args, { req, redis }) => {
     // if (admin(req)) {
       const product = await Product.find({ _id: args.id });
       if (product) {
-        await Brand.deleteOne({ _id: product.brand });
         const deleted = await Product.findByIdAndDelete(args.id);
         // console.log(deleted);
         return { ...deleted._doc };
@@ -277,7 +262,7 @@ const createProductReview = async (args, req) => {
           name: args.productReview.name,
           rating: args.productReview.rating,
           comment: args.productReview.comment,
-          user: args.productReview.user,
+          user: req.user,
         };
         reviews.push(review);
         const updatedProduct = {

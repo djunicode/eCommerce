@@ -23,6 +23,10 @@ import {
   SUBCATEGORY_DELETE_REQUEST,
   SUBCATEGORY_DELETE_SUCCESS,
   SUBCATEGORY_DELETE_FAIL,
+  PRODCUTS_BY_CATEGORY_ID_LIST_FAIL,
+  PRODCUTS_BY_CATEGORY_ID_LIST_REQUEST,
+  PRODCUTS_BY_CATEGORY_ID_LIST_RESET,
+  PRODCUTS_BY_CATEGORY_ID_LIST_SUCCESS,
 } from '../constants/categoryConstants';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -166,6 +170,26 @@ export const subCategoryCreateReducer = (
       };
     case SUBCATEGORY_CREATE_FAIL:
       return { error: action.payload };
+    default:
+      return state;
+  }
+};
+/* eslint-disable import/prefer-default-export */
+/* eslint-disable no-unused-vars */
+
+export const productsByCategoryIdReducer = (
+  state = { products: [] },
+  action,
+) => {
+  switch (action.type) {
+    case PRODCUTS_BY_CATEGORY_ID_LIST_REQUEST:
+      return { loading: true, products: [] };
+    case PRODCUTS_BY_CATEGORY_ID_LIST_SUCCESS:
+      return { loading: false, products: action.payload };
+    case PRODCUTS_BY_CATEGORY_ID_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    case PRODCUTS_BY_CATEGORY_ID_LIST_RESET:
+      return { products: [] };
     default:
       return state;
   }

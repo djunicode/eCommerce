@@ -2,14 +2,17 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Row, Col, Button, Card } from 'react-bootstrap';
+import { Row, Col, Button, Card, Container } from 'react-bootstrap';
 import styled from 'styled-components';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import Paginate from '../components/Paginate';
 import ProductCarousel from '../components/ProductCarousel';
 import Meta from '../components/Meta';
-import { listCategories } from '../actions/categoryActions';
+import {
+  getProductByCategory,
+  listCategories,
+} from '../actions/categoryActions';
 import Chatbot from '../components/Chatbot/Chatbot';
 
 function HomeScreen() {
@@ -50,7 +53,14 @@ function HomeScreen() {
                 <Ctitle className="ctitle">
                   {homecategories.name}
                 </Ctitle>
-                <Link to={`/category/${homecategories._id}`}>
+                <Link
+                  to={`/category/${homecategories._id}`}
+                  onClick={() => {
+                    dispatch(
+                      getProductByCategory(homecategories._id),
+                    );
+                  }}
+                >
                   <Cbutton
                     className="cbutton"
                     variant="outline-primary"
@@ -67,7 +77,7 @@ function HomeScreen() {
   }
 
   return (
-    <>
+    <Container>
       <Meta />
 
       <h1>New Arrivals</h1>
@@ -84,7 +94,7 @@ function HomeScreen() {
           <Chatbot />
         </>
       )}
-    </>
+    </Container>
   );
 }
 

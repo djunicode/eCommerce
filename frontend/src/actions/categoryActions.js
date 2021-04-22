@@ -1,7 +1,12 @@
 import axios from 'axios';
 import {
+  PRODCUTS_BY_CATEGORY_ID_LIST_FAIL,
+  PRODCUTS_BY_CATEGORY_ID_LIST_REQUEST,
+  PRODCUTS_BY_CATEGORY_ID_LIST_RESET,
+  PRODCUTS_BY_CATEGORY_ID_LIST_SUCCESS,
   CATEGORY_LIST_REQUEST,
   CATEGORY_LIST_SUCCESS,
+  CATEGORY_LIST_RESET,
   CATEGORY_LIST_FAIL,
   SUBCATEGORY_LIST_REQUEST,
   SUBCATEGORY_LIST_SUCCESS,
@@ -25,6 +30,8 @@ import {
   SUBCATEGORY_DELETE_SUCCESS,
   SUBCATEGORY_DELETE_FAIL,
 } from '../constants/categoryConstants';
+
+const url = 'http://localhost:5000/graphql';
 
 // eslint-disable-next-line import/prefer-default-export
 export const listCategories = (query) => async (dispatch) => {
@@ -260,6 +267,101 @@ export const deleteSubCategories = (query) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: SUBCATEGORY_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getProductByCategory = (id, sort = 'none') => async (
+  dispatch,
+) => {
+  try {
+    dispatch({
+      type: PRODCUTS_BY_CATEGORY_ID_LIST_REQUEST,
+    });
+
+    const { data } = await axios.post(
+      url,
+      {
+        query: `
+            query{
+                getProductByCategory(categoryId: "${id}"){
+                    _id
+                    name
+                    discount
+                    price
+                    discountedPrice
+                    user{
+                        _id
+                    }
+                    image
+                    brand{
+                        _id
+                        name
+                    }
+                    category{
+                        _id
+                        name
+                    }
+                    subcategory{
+                        _id
+                        name
+                    }
+                    new
+                    countInStock
+                    numReviews
+                    reviews{
+                        name
+                        rating
+                        comment
+                        user
+                    }
+                    description
+                    avgRating
+                }
+            }
+        `,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    // console.log('categoryActions.js');
+    // console.log(data);
+
+    let sortedData;
+    if (sort === 'asc') {
+      sortedData = data.data.getProductByCategory.sort(
+        (a, b) => a.price - b.price,
+      );
+    } else if (sort === 'desc') {
+      sortedData = data.data.getProductByCategory.sort(
+        (a, b) => b.price - a.price,
+      );
+    } else {
+      sortedData = data.data.getProductByCategory;
+    }
+
+    try {
+      const brands = sortedData.map((elem) => elem.brand.name);
+      sessionStorage.setItem(
+        'proshop_brand_length',
+        JSON.stringify([...new Set(brands)].length),
+      );
+    } catch (err) {}
+
+    dispatch({
+      type: PRODCUTS_BY_CATEGORY_ID_LIST_SUCCESS,
+      payload: sortedData,
+    });
+  } catch (error) {
+    dispatch({
+      type: PRODCUTS_BY_CATEGORY_ID_LIST_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

@@ -31,8 +31,11 @@ import {
   orderListMyReducer,
   orderListReducer,
 } from './reducers/orderReducers';
+import { searchReducer } from './reducers/searchReducers';
+import { filterReducer } from './reducers/filterReducers';
 import { chatbotReducer } from './reducers/chatbotReducers';
 import {
+  productsByCategoryIdReducer,
   categoryCreateReducer,
   categoryDeleteReducer,
   categoryEditReducer,
@@ -65,7 +68,10 @@ const reducer = combineReducers({
   orderDeliver: orderDeliverReducer,
   orderListMy: orderListMyReducer,
   orderList: orderListReducer,
+  search: searchReducer,
+  filter: filterReducer,
   chatbot: chatbotReducer,
+  productsByCategory: productsByCategoryIdReducer,
   categoryList: categoryListReducer,
   subCategoryList: subCategoryListReducer,
   productSearch: productSearchReducer,
