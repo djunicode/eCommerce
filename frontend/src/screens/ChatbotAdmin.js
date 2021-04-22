@@ -1,3 +1,5 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable no-use-before-define */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable radix */
@@ -13,460 +15,14 @@ import {
 } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { getChat } from '../actions/chatbotAction';
+import { getChat, updateChat } from '../actions/chatbotAction';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-
-const Additem = ({ msg, setMessages, index, filt, messages }) => {
-  const [name, setName] = useState('');
-  const [open, setOpen] = useState(false);
-  const [msgg, setMsgg] = useState('');
-  const [btn, setBtn] = useState('');
-  const [error, setError] = useState(false);
-  useEffect(() => {
-    console.log(filt);
-    if (msg) {
-      const dispmsgs = msg.filter((dispmsg) => {
-        const l = filt.length;
-        if (
-          dispmsg.index
-            .substring(0, l + 1)
-            .localeCompare(`${filt} `) === 0 &&
-          dispmsg.index.length === l + 2
-        ) {
-          return dispmsg;
-        }
-        return null;
-      });
-      console.log(dispmsgs);
-      if (dispmsgs.length !== 0) {
-        const len = dispmsgs.length;
-        let last = dispmsgs[len - 1];
-        last = last.index;
-        let lastchar = last[last.length - 1];
-        lastchar = parseInt(lastchar);
-        lastchar += 1;
-        const nameTemp =
-          last.substring(0, last.length - 1) + lastchar;
-        console.log('nametemp=', nameTemp);
-        setName(nameTemp);
-      } else if (dispmsgs.length === 0) {
-        const nameTemp = `${filt} 1`;
-        console.log('nametemp=', nameTemp);
-        setName(nameTemp);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    console.log(messages);
-  }, [messages]);
-
-  const handleClick = (e) => {
-    e.preventDefault();
-    if (msg) {
-      if (msgg === '' || btn === '') {
-        setError(true);
-        return;
-      }
-      if (msgg && btn) {
-        setError(false);
-      }
-      const n = e.target.name;
-      const level = (
-        e.target.name.length -
-        (n.split(' ').length - 1)
-      ).toString();
-      const temp = {
-        level,
-        index: e.target.name,
-        msg: msgg,
-        info: btn,
-      };
-      console.log(temp);
-      console.log(msg);
-      const tempmsg = msg.slice();
-      tempmsg.push(temp);
-      console.log(msg);
-      setMessages((m) => {
-        console.log(m);
-        console.log(m[index]);
-        const tempm = m.slice();
-        console.log(index);
-        tempm[index] = tempmsg;
-        // m[index] = msg;
-        console.log(m);
-        return tempm;
-      });
-      setOpen(false);
-      setBtn('');
-      setMsgg('');
-      console.log(messages);
-    } else {
-      setMessages((m) => {
-        const tempm = m.slice();
-        const tempa = [
-          {
-            level: '1',
-            index: `${m.length + 1}`,
-            msg: msgg,
-            info: btn,
-          },
-        ];
-        tempm.push(tempa);
-        console.log(tempm);
-        setOpen(false);
-        setBtn('');
-        setMsgg('');
-        return tempm;
-      });
-    }
-  };
-
-  return (
-    <div>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <span
-        style={{
-          cursor: 'pointer',
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          color: 'green',
-        }}
-        onClick={() => {
-          setOpen(true);
-        }}
-      >
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <i className="fas fa-plus-circle" />
-        &nbsp; Add Button
-      </span>
-      {open && (
-        <>
-          <div
-            style={{
-              position: 'fixed',
-              top: '0',
-              left: '0',
-              right: '0',
-              bottom: '0',
-              backgroundColor: 'rgba(0,0,0,.7)',
-              zIndex: '1000',
-            }}
-            onClick={() => {
-              setOpen(false);
-            }}
-          />
-          <div
-            style={{
-              position: 'fixed',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              backgroundColor: '#FFF',
-              padding: '50px',
-              zIndex: 1000,
-              borderRadius: '20px',
-            }}
-          >
-            <Form>
-              <Form.Group controlId="formBasicEmail">
-                <Form.Label>Msg</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter Msg"
-                  name={name}
-                  value={btn}
-                  onChange={(e) => {
-                    setBtn(e.target.value);
-                  }}
-                />
-              </Form.Group>
-
-              <Form.Group controlId="formBasicPassword">
-                <Form.Label>Button Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter Button Name"
-                  name={name}
-                  value={msgg}
-                  onChange={(e) => {
-                    setMsgg(e.target.value);
-                  }}
-                />
-              </Form.Group>
-              <small
-                className="text-danger"
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                &nbsp;{error && `Info and Message are required`}
-              </small>
-              <StyledButton
-                variant="danger"
-                type="submit"
-                name={name}
-                onClick={(e) => {
-                  handleClick(e);
-                }}
-              >
-                Done
-              </StyledButton>
-            </Form>
-          </div>
-        </>
-      )}
-    </div>
-  );
-};
-
-const Acc = ({
-  msg,
-  spacemax,
-  spaces,
-  filt,
-  messages,
-  setMessages,
-  index,
-}) => {
-  const l = filt.length;
-  const [name, setName] = useState('');
-  const [open, setOpen] = useState(false);
-  const [msgg, setMsgg] = useState('');
-  const [btn, setBtn] = useState('');
-  const [arrow, setArrow] = useState('');
-
-  const handleClick = (e) => {
-    e.preventDefault();
-    setMessages((m) => {
-      const tempm = m.slice();
-      const tempa = tempm[index];
-      const tempo = tempa.filter((a) => {
-        if (a.index.localeCompare(name) === 0) {
-          return a;
-        }
-        return null;
-      });
-      console.log(tempo);
-      tempo[0].msg = btn;
-      tempo[0].info = msgg;
-      console.log(tempm);
-      return tempm;
-    });
-    console.log('msgg=', msgg);
-    console.log('btn=', btn);
-    console.log('name=', name);
-  };
-
-  const handleDelete = (d) => {
-    setMessages((m) => {
-      const tempm = m.slice();
-      const tempa = tempm[index];
-      const tempa1 = tempa.filter((a) => {
-        if (a.index.substring(0, d.length).localeCompare(d) === 0) {
-          console.log(d);
-          console.log(a.index);
-          console.log(a.index.substring(0, d.length));
-          return null;
-        }
-        return a;
-      });
-      tempm[index] = tempa1;
-      console.log(tempm);
-      console.log(tempa);
-      return tempm;
-    });
-  };
-
-  const dispmsgs = msg.filter((dispmsg) => {
-    if (
-      dispmsg.index.substring(0, l + 1).localeCompare(`${filt} `) ===
-        0 &&
-      dispmsg.index.length === l + 2
-    ) {
-      return dispmsg;
-    }
-    return null;
-  });
-  if (spaces === spacemax + 1 || dispmsgs.length === 0) {
-    return null;
-  }
-  return (
-    <>
-      {dispmsgs.map((dispmsg) => {
-        return (
-          <Accordion defaultActiveKey="0" key={dispmsg.index}>
-            <Card style={{ backgroundColor: 'white' }}>
-              <Card.Header
-                style={{
-                  backgroundColor: 'white',
-                  padding: '0',
-                }}
-              >
-                <Accordion.Toggle
-                  as={Button}
-                  variant="link"
-                  eventKey="1"
-                  onClick={() => {
-                    setArrow(!arrow);
-                  }}
-                >
-                  <span style={{ fontWeight: '100' }}>
-                    {dispmsg.msg}&nbsp;&nbsp;&nbsp;
-                    {arrow ? (
-                      <i
-                        style={{ color: '#222831' }}
-                        className="fas fa-chevron-up"
-                      />
-                    ) : (
-                      <i
-                        style={{ color: '#222831' }}
-                        className="fas fa-chevron-down"
-                      />
-                    )}
-                  </span>
-                </Accordion.Toggle>
-              </Card.Header>
-              <Accordion.Collapse eventKey="1">
-                <Card.Body
-                  style={{
-                    backgroundColor: 'white',
-                    paddingRight: '0px',
-                    paddingLeft: '1rem',
-                  }}
-                >
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{dispmsg.info}
-                  <span
-                    onClick={() => {
-                      setOpen(true);
-                      setName(dispmsg.index);
-                      setBtn(dispmsg.msg);
-                      setMsgg(dispmsg.info);
-                    }}
-                    style={{
-                      cursor: 'pointer',
-                      position: 'absolute',
-                      right: '10px',
-                      color: '#929293',
-                    }}
-                  >
-                    <i className="fas fa-edit" />
-                  </span>
-                  <span
-                    onClick={() => {
-                      handleDelete(dispmsg.index);
-                    }}
-                    style={{
-                      cursor: 'pointer',
-                      position: 'absolute',
-                      right: '50px',
-                      color: '#929293',
-                    }}
-                  >
-                    <i className="fas fa-trash-alt" />
-                  </span>
-                  <Additem
-                    msg={msg}
-                    setMessages={setMessages}
-                    index={index}
-                    filt={dispmsg.index}
-                    messages={messages}
-                  />
-                  <br />
-                  <Acc
-                    msg={msg}
-                    spacemax={spacemax}
-                    spaces={spaces + 1}
-                    filt={dispmsg.index}
-                    messages={messages}
-                    setMessages={setMessages}
-                    index={index}
-                  />
-                </Card.Body>
-              </Accordion.Collapse>
-            </Card>
-          </Accordion>
-        );
-      })}
-      {open && (
-        <>
-          <div
-            style={{
-              position: 'fixed',
-              top: '0',
-              left: '0',
-              right: '0',
-              bottom: '0',
-              backgroundColor: 'rgba(0,0,0,.7)',
-              zIndex: '1000',
-            }}
-            onClick={() => {
-              setOpen(false);
-            }}
-          />
-          <div
-            style={{
-              position: 'fixed',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              backgroundColor: '#FFF',
-              padding: '50px',
-              zIndex: 1000,
-              borderRadius: '20px',
-            }}
-          >
-            <Form>
-              <Form.Group controlId="formBasicEmail">
-                <Form.Label>Msg</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter Msg"
-                  name={name}
-                  value={msgg}
-                  onChange={(e) => {
-                    setMsgg(e.target.value);
-                  }}
-                />
-              </Form.Group>
-
-              <Form.Group controlId="formBasicPassword">
-                <Form.Label>Button Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter Button Name"
-                  name={name}
-                  value={btn}
-                  onChange={(e) => {
-                    setBtn(e.target.value);
-                  }}
-                />
-              </Form.Group>
-              <StyledButton
-                variant="danger"
-                type="submit"
-                name={name}
-                onClick={(e) => {
-                  handleClick(e);
-                }}
-              >
-                Done
-              </StyledButton>
-            </Form>
-          </div>
-        </>
-      )}
-    </>
-  );
-};
+import Additem from '../components/Additem';
+import Acc from '../components/Acc';
 
 const ChatbotAdmin = () => {
-  const [arrow, setArrow] = useState(false);
+  const [arrow, setArrow] = useState({});
   const [name, setName] = useState('');
   const [ind, setInd] = useState('');
   const [open, setOpen] = useState(false);
@@ -476,9 +32,10 @@ const ChatbotAdmin = () => {
   const { loading, data, error } = useSelector(
     (state) => state.chatbot,
   );
-  // const [level1, setLevel1] = useState([]);
+  const { Loading, Data, Error } = useSelector(
+    (state) => state.updateChatbot,
+  );
   const dispatch = useDispatch();
-  // const [edit, setEdit] = useState({});
 
   const query = `query{
     questions{
@@ -488,10 +45,6 @@ const ChatbotAdmin = () => {
       info
     }
   }`;
-
-  useEffect(() => {
-    console.log('rerender');
-  });
 
   useEffect(() => {
     console.log(messages);
@@ -509,7 +62,6 @@ const ChatbotAdmin = () => {
         }
         return null;
       });
-      // setLevel1(levl1);
       const n = levl1[levl1.length - 1].index;
       const N = parseInt(n);
       let i = 1;
@@ -517,7 +69,6 @@ const ChatbotAdmin = () => {
       while (i <= N) {
         const I = i.toString();
         const message = data.filter((value) => {
-          // console.log(value.index.substring(0, 1));
           if (
             value.index.substring(0, 1).localeCompare(`${I}`) === 0
           ) {
@@ -532,19 +83,12 @@ const ChatbotAdmin = () => {
     }
   }, [data]);
 
-  useEffect(() => {
-    console.log(messages);
-  }, [messages]);
-
   const handleClick = (e, index) => {
     e.preventDefault();
+    console.log("index=", index);
     setMessages((m) => {
-      console.log(name);
-      console.log(index);
       const tempm = m.slice();
-      console.log(tempm);
       const tempa = tempm[index];
-      console.log(tempa);
       const tempo = tempa.filter((a) => {
         if (a.index.localeCompare(name) === 0) {
           return a;
@@ -552,40 +96,46 @@ const ChatbotAdmin = () => {
         return null;
       });
       console.log(tempo);
+      console.log(tempa);
+      console.log(tempm);
       tempo[0].msg = btn;
       tempo[0].info = msgg;
+      console.log(tempo);
+      console.log(tempa);
       console.log(tempm);
       return tempm;
     });
-    console.log('msgg=', msgg);
-    console.log('btn=', btn);
-    console.log('name=', name);
+    setOpen(false);
   };
 
   const handleDelete = (d, index) => {
     setMessages((m) => {
-      console.log(index);
       const tempm = m.slice();
       const tempa = tempm[index];
       const tempa1 = tempa.filter((a) => {
         if (a.index.substring(0, d.length).localeCompare(d) === 0) {
-          console.log(d);
-          console.log(a.index);
-          console.log(a.index.substring(0, d.length));
           return null;
         }
         return a;
       });
       tempm[index] = tempa1;
-      console.log(tempm);
-      console.log(tempa);
       return tempm;
     });
   };
 
-  useEffect(() => {
-    console.log(typeof name);
-  }, [name]);
+  const handleSave = () => {
+    const details = [];
+    messages.map((m) => {
+      m.map((m1) => {
+        details.push(m1);
+      });
+    });
+    console.log(details);
+    const mutation = `mutation {
+      editQuestions(details: ${details})
+    }`;
+    dispatch(updateChat(mutation));
+  };
 
   return (
     <>
@@ -627,30 +177,39 @@ const ChatbotAdmin = () => {
                     }
                     let spacemax = msg[msg.length - 1].index;
                     spacemax = spacemax.split(' ').length - 1;
-                    console.log(spacemax);
                     return (
                       <Accordion
                         defaultActiveKey="0"
-                        key={msg[0].info}
+                        key={msg[0].index}
                       >
                         <Card style={{ backgroundColor: 'white' }}>
                           <Card.Header
                             style={{
                               backgroundColor: 'white',
                               padding: '0',
+                              borderBottom:
+                                '2px solid rgba(0,0,0,0.125)',
                             }}
                           >
                             <Accordion.Toggle
-                              as={Button}
+                              as={StyledBtn}
                               variant="link"
                               eventKey="1"
                               onClick={() => {
-                                setArrow(!arrow);
+                                setArrow((a) => {
+                                  const tempa = { ...a };
+                                  if (tempa[`${index}`]) {
+                                    tempa[`${index}`] = false;
+                                  } else {
+                                    tempa[`${index}`] = true;
+                                  }
+                                  return tempa;
+                                });
                               }}
                             >
                               <span style={{ fontWeight: '100' }}>
                                 {msg[0].msg}&nbsp;&nbsp;&nbsp;
-                                {arrow ? (
+                                {arrow[`${index}`] ? (
                                   <i
                                     style={{ color: '#222831' }}
                                     className="fas fa-chevron-up"
@@ -671,6 +230,7 @@ const ChatbotAdmin = () => {
                                 position: 'relative',
                                 paddingRight: '0px',
                                 paddingLeft: '1rem',
+                                paddingBottom: '0px',
                               }}
                             >
                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -721,8 +281,6 @@ const ChatbotAdmin = () => {
                                 messages={messages}
                                 setMessages={setMessages}
                                 index={index}
-                                // edit={edit}
-                                // setEdit={setEdit}
                               />
                             </Card.Body>
                           </Accordion.Collapse>
@@ -739,7 +297,12 @@ const ChatbotAdmin = () => {
                   />
                 </StyledBox>
               </StyledRowFlex>
-              <StyledButton variant="danger">
+              <StyledButton
+                variant="danger"
+                onClick={() => {
+                  handleSave();
+                }}
+              >
                 Save Changes
               </StyledButton>
             </Container>
@@ -836,6 +399,9 @@ const StyledSubHeader = styled.div`
 const StyledSubHeaderText = styled.p`
   text-transform: uppercase;
   font-size: 20px;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const StyledBox = styled.div`
@@ -843,10 +409,12 @@ const StyledBox = styled.div`
   border-radius: 6px;
   vertical-align: middle !important;
   margin: auto;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 // const StyledBoxText = styled.p`
@@ -860,6 +428,21 @@ const StyledButton = styled(Button)`
   float: right;
   border-radius: 4px;
   margin-top: 12px;
+`;
+
+const StyledBtn = styled(Button)`
+  text-transform: none;
+  font-size: 1rem;
+  &:hover {
+    text-decoration: none;
+    border-right: 0px;
+  }
+  &:focus {
+    text-decoration: none;
+    border-right: none;
+    border-right-color: transparent;
+    border-right: 0px;
+  }
 `;
 
 // const Saccordion = styled(Accordion)`

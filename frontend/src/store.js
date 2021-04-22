@@ -30,7 +30,10 @@ import {
 } from './reducers/orderReducers';
 import { searchReducer } from './reducers/searchReducers';
 import { filterReducer } from './reducers/filterReducers';
-import { chatbotReducer } from './reducers/chatbotReducers';
+import {
+  chatbotReducer,
+  updateChatbot,
+} from './reducers/chatbotReducers';
 import { productidReducer } from './reducers/productidReducers';
 import {
   productsByCategoryIdReducer,
@@ -67,6 +70,7 @@ const reducer = combineReducers({
   productsByCategory: productsByCategoryIdReducer,
   categoryList: categoryListReducer,
   subCategoryList: subCategoryListReducer,
+  updateChatbot,
 });
 
 const cartItemsFromStorage = localStorage.getItem('cartItems')
