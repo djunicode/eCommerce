@@ -10,7 +10,7 @@ import pincode from '../../pincodes.js';
 const addOrderItems = async (args, { req, redis }) => {
   try {
     if (loggedin(req)) {
-      const tally = 0;
+      let tally = 0;
       args.orderInput.orderItems.forEach(async (item) => {
         const product =  await Product.findById(item.product);
         tally+=(((100 - product.discount) * product.price) / 100);

@@ -13,6 +13,10 @@ const Additem = ({ msg, setMessages, index, filt, messages }) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    console.log(messages);
+  }, [messages]);
+
+  useEffect(() => {
     if (msg) {
       const dispmsgs = msg.filter((dispmsg) => {
         const l = filt.length;

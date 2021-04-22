@@ -32,9 +32,9 @@ const ChatbotAdmin = () => {
   const { loading, data, error } = useSelector(
     (state) => state.chatbot,
   );
-  const { Loading, Data, Error } = useSelector(
-    (state) => state.updateChatbot,
-  );
+  // const { Loading, Data, Error } = useSelector(
+  //   (state) => state.updateChatbot,
+  // );
   const dispatch = useDispatch();
 
   const query = `query{
@@ -85,7 +85,7 @@ const ChatbotAdmin = () => {
 
   const handleClick = (e, index) => {
     e.preventDefault();
-    console.log("index=", index);
+    console.log('index=', index);
     setMessages((m) => {
       const tempm = m.slice();
       const tempa = tempm[index];
