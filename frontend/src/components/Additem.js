@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable radix */
@@ -11,10 +12,6 @@ const Additem = ({ msg, setMessages, index, filt, messages }) => {
   const [msgg, setMsgg] = useState('');
   const [btn, setBtn] = useState('');
   const [error, setError] = useState(false);
-
-  useEffect(() => {
-    console.log(messages);
-  }, [messages]);
 
   useEffect(() => {
     if (msg) {
@@ -115,7 +112,7 @@ const Additem = ({ msg, setMessages, index, filt, messages }) => {
       >
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <i className="fas fa-plus-circle" />
-        &nbsp; Add Button
+        &nbsp; Add Option
       </span>
       {open && (
         <>
@@ -160,10 +157,10 @@ const Additem = ({ msg, setMessages, index, filt, messages }) => {
               </Form.Group>
 
               <Form.Group controlId="formBasicPassword">
-                <Form.Label>Button Name</Form.Label>
+                <Form.Label>Option Name</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter Button Name"
+                  placeholder="Enter Option Name"
                   name={name}
                   value={msgg}
                   onChange={(e) => {

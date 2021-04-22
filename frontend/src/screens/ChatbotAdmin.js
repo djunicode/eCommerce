@@ -29,12 +29,25 @@ const ChatbotAdmin = () => {
   const [msgg, setMsgg] = useState('');
   const [btn, setBtn] = useState('');
   const [messages, setMessages] = useState([]);
+  const [delt, setDelt] = useState(false); // to show the delete pop up box
+  const [di, setDi] = useState(); // to save index on clicking delete icon
+  const [dmsg, setDmsg] = useState(); // to save index to be delted on clicking delete icon
+  const [tmessages, setTmessages] = useState([]);
+  const [flag, setFlag] = useState(true);
+
+  useEffect(() => {
+    if (messages.length !== 0 && flag) {
+      setFlag(false);
+      setTmessages(messages.slice());
+    }
+  }, [messages]);
+
   const { loading, data, error } = useSelector(
     (state) => state.chatbot,
   );
-  // const { Loading, Data, Error } = useSelector(
-  //   (state) => state.updateChatbot,
-  // );
+  const { Loading, Data, Error } = useSelector(
+    (state) => state.updateChatbot,
+  );
   const dispatch = useDispatch();
 
   const query = `query{
@@ -45,10 +58,6 @@ const ChatbotAdmin = () => {
       info
     }
   }`;
-
-  useEffect(() => {
-    console.log(messages);
-  }, [messages]);
 
   useEffect(() => {
     dispatch(getChat(query));
@@ -85,7 +94,6 @@ const ChatbotAdmin = () => {
 
   const handleClick = (e, index) => {
     e.preventDefault();
-    console.log('index=', index);
     setMessages((m) => {
       const tempm = m.slice();
       const tempa = tempm[index];
@@ -95,14 +103,8 @@ const ChatbotAdmin = () => {
         }
         return null;
       });
-      console.log(tempo);
-      console.log(tempa);
-      console.log(tempm);
       tempo[0].msg = btn;
       tempo[0].info = msgg;
-      console.log(tempo);
-      console.log(tempa);
-      console.log(tempm);
       return tempm;
     });
     setOpen(false);
@@ -127,10 +129,11 @@ const ChatbotAdmin = () => {
     const details = [];
     messages.map((m) => {
       m.map((m1) => {
-        details.push(JSON.stringify(m1));
+        details.push(
+          `{level:"${m1.level}",index:"${m1.index}",msg:"${m1.msg}",info:"${m1.info}"}`,
+        );
       });
     });
-    console.log(details);
     dispatch(updateChat(details));
   };
 
@@ -251,7 +254,9 @@ const ChatbotAdmin = () => {
                               </span>
                               <span
                                 onClick={() => {
-                                  handleDelete(msg[0].index, index);
+                                  setDi(index);
+                                  setDmsg(msg[0].index);
+                                  setDelt(true);
                                 }}
                                 style={{
                                   cursor: 'pointer',
@@ -294,14 +299,54 @@ const ChatbotAdmin = () => {
                   />
                 </StyledBox>
               </StyledRowFlex>
-              <StyledButton
-                variant="danger"
-                onClick={() => {
-                  handleSave();
-                }}
-              >
-                Save Changes
-              </StyledButton>
+              <Stylediv>
+                <StyledButtn
+                  variant="danger"
+                  onClick={() => {
+                    setMessages(tmessages);
+                  }}
+                >
+                  Undo Changes
+                </StyledButtn>
+                <StyledButtn
+                  variant="danger"
+                  onClick={() => {
+                    handleSave();
+                    setTmessages(messages);
+                  }}
+                >
+                  Save Changes
+                </StyledButtn>
+              </Stylediv>
+              {Loading && (
+                <>
+                  <div style={{ marginTop: '100px' }}>
+                    <Loader />
+                  </div>
+                </>
+              )}
+              {Error && (
+                <>
+                  <div style={{ marginTop: '100px' }}>
+                    <Message>{Error}</Message>
+                  </div>
+                </>
+              )}
+              {Data === 'success' && (
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    marginTop: '100px',
+                  }}
+                >
+                  <span className="text-success">
+                    Your changes have been saved
+                  </span>
+                </div>
+              )}
             </Container>
           </div>
         </>
@@ -349,10 +394,10 @@ const ChatbotAdmin = () => {
               </Form.Group>
 
               <Form.Group controlId="formBasicPassword">
-                <Form.Label>Button Name</Form.Label>
+                <Form.Label>Option Name</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter Button Name"
+                  placeholder="Enter Option Name"
                   name={name}
                   value={btn}
                   onChange={(e) => {
@@ -371,6 +416,57 @@ const ChatbotAdmin = () => {
                 Done
               </StyledButton>
             </Form>
+          </div>
+        </>
+      )}
+      {delt && (
+        <>
+          <div
+            style={{
+              position: 'fixed',
+              top: '0',
+              left: '0',
+              right: '0',
+              bottom: '0',
+              backgroundColor: 'rgba(0,0,0,.7)',
+              zIndex: '1000',
+            }}
+            onClick={() => {
+              setDelt(false);
+            }}
+          />
+          <div
+            style={{
+              position: 'fixed',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              backgroundColor: '#FFF',
+              padding: '50px',
+              zIndex: 1000,
+              borderRadius: '20px',
+            }}
+          >
+            Are you sure you want to delete this?
+            <StyledDiv>
+              <StyledButtn
+                variant="danger"
+                onClick={() => {
+                  handleDelete(dmsg, di);
+                  setDelt(false);
+                }}
+              >
+                Yes
+              </StyledButtn>
+              <StyledButtn
+                variant="danger"
+                onClick={() => {
+                  setDelt(false);
+                }}
+              >
+                No
+              </StyledButtn>
+            </StyledDiv>
           </div>
         </>
       )}
@@ -427,6 +523,11 @@ const StyledButton = styled(Button)`
   margin-top: 12px;
 `;
 
+const StyledButtn = styled(Button)`
+  border-radius: 4px;
+  margin-top: 12px;
+`;
+
 const StyledBtn = styled(Button)`
   text-transform: none;
   font-size: 1rem;
@@ -445,3 +546,18 @@ const StyledBtn = styled(Button)`
 // const Saccordion = styled(Accordion)`
 //   background-color: white;
 // `;
+
+const StyledDiv = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+`;
+
+const Stylediv = styled.div`
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+`;

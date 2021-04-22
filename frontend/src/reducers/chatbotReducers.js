@@ -16,10 +16,8 @@ export const chatbotReducer = (
     case CHATBOT_CREATE_REQUEST:
       return { ...state, loading: true };
     case CHATBOT_CREATE_SUCCESS:
-      console.log(action.payload);
       return { ...state, loading: false, data: action.payload };
     case CHATBOT_CREATE_FAIL:
-      console.log(action.payload);
       return { ...state, loading: false, error: action.payload };
     default:
       return state;
@@ -27,18 +25,16 @@ export const chatbotReducer = (
 };
 
 export const updateChatbot = (
-  state = { loading: false, data: [], error: '' },
+  state = { Loading: false, Data: [], Error: '' },
   action,
 ) => {
   switch (action.type) {
     case CHATBOT_UPDATE_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, Loading: true };
     case CHATBOT_UPDATE_SUCCESS:
-      console.log(action.payload);
-      return { ...state, loading: false, data: action.payload };
+      return { ...state, Loading: false, Data: action.payload };
     case CHATBOT_UPDATE_FAIL:
-      console.log(action.payload);
-      return { ...state, loading: false, error: action.payload };
+      return { ...state, Loading: false, Error: action.payload };
     default:
       return state;
   }

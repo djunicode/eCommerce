@@ -25,8 +25,6 @@ export const getChat = (query) => async (dispatch) => {
     };
 
     const { data } = await axios(request);
-    console.log(data.data.questions);
-
     dispatch({
       type: CHATBOT_CREATE_SUCCESS,
       payload: data.data.questions,
@@ -72,11 +70,11 @@ export const updateChat = (mutation) => async (dispatch) => {
     };
 
     const { data } = await axios(config);
-    console.log(data.editQuestions.msg);
+    console.log(data.data.editQuestions.msg);
 
     dispatch({
       type: CHATBOT_UPDATE_SUCCESS,
-      payload: data,
+      payload: data.data.editQuestions.msg,
     });
   } catch (error) {
     dispatch({

@@ -16,13 +16,14 @@ const Acc = ({
   setMessages,
   index,
 }) => {
-  console.log(index);
   const l = filt.length;
   const [name, setName] = useState('');
   const [open, setOpen] = useState(false);
   const [msgg, setMsgg] = useState('');
   const [btn, setBtn] = useState('');
   const [arrow, setArrow] = useState({});
+  const [delt, setDelt] = useState(false); // to show the delete pop up box
+  const [dmsg, setDmsg] = useState(); // to save index to be delted on clicking delete icon
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -142,7 +143,8 @@ const Acc = ({
                   </span>
                   <span
                     onClick={() => {
-                      handleDelete(dispmsg.index);
+                      setDmsg(msg[0].index);
+                      setDelt(true);
                     }}
                     style={{
                       cursor: 'pointer',
@@ -244,6 +246,57 @@ const Acc = ({
           </div>
         </>
       )}
+      {delt && (
+        <>
+          <div
+            style={{
+              position: 'fixed',
+              top: '0',
+              left: '0',
+              right: '0',
+              bottom: '0',
+              backgroundColor: 'rgba(0,0,0,.7)',
+              zIndex: '1000',
+            }}
+            onClick={() => {
+              setDelt(false);
+            }}
+          />
+          <div
+            style={{
+              position: 'fixed',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              backgroundColor: '#FFF',
+              padding: '50px',
+              zIndex: 1000,
+              borderRadius: '20px',
+            }}
+          >
+            Are you sure you want to delete this?
+            <StyledDiv>
+              <StyledButtn
+                variant="danger"
+                onClick={() => {
+                  handleDelete(dmsg);
+                  setDelt(false);
+                }}
+              >
+                Yes
+              </StyledButtn>
+              <StyledButtn
+                variant="danger"
+                onClick={() => {
+                  setDelt(false);
+                }}
+              >
+                No
+              </StyledButtn>
+            </StyledDiv>
+          </div>
+        </>
+      )}
     </>
   );
 };
@@ -269,4 +322,16 @@ const StyledBtn = styled(Button)`
     border-right-color: transparent;
     border-right: 0px;
   }
+`;
+
+const StyledButtn = styled(Button)`
+  border-radius: 4px;
+  margin-top: 12px;
+`;
+
+const StyledDiv = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
 `;
