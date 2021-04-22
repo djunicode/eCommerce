@@ -14,7 +14,7 @@ import styled from 'styled-components';
 import Loader from './Loader';
 import Message from './Message';
 import { listTopProducts } from '../actions/productActions';
-import { LIGHT_BLUE } from '../util/colors';
+import { BACKGROUND } from '../util/colors';
 
 const ProductCarousel = () => {
   const dispatch = useDispatch();
@@ -71,7 +71,12 @@ const ProductCarousel = () => {
                 .map((topproducts) => (
                   <Col key={topproducts._id}>
                     <NACard>
-                      <Card.Body style={{ padding: '0' }}>
+                      <Card.Body
+                        style={{
+                          padding: '0',
+                          background: BACKGROUND,
+                        }}
+                      >
                         <img
                           src={topproducts.image}
                           variant="top"
@@ -125,7 +130,7 @@ const NACard = styled(Card)`
   border: none;
   margin: 0;
   height: 100%;
-  background-color: ${LIGHT_BLUE} !important;
+  background-color: ${BACKGROUND} !important;
 `;
 const NAtitle = styled(Card.Title)`
   font-size: 1.4rem;
@@ -147,7 +152,7 @@ const NAprice = styled(Card.Text)`
   }
 `;
 const NAFooter = styled(Card.Footer)`
-  background-color: ${LIGHT_BLUE} !important;
+  background-color: ${BACKGROUND} !important;
   padding: 0;
   border: none;
   margin-top: 15px;

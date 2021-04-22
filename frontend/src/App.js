@@ -23,6 +23,7 @@ import OrdersScreen from './adminscreens/OrdersScreen';
 import SearchScreen from './screens/SearchScreen';
 import CategoryScreen from './screens/CategoryScreen';
 import ChatbotAdmin from './screens/ChatbotAdmin';
+import OrderDetailsAdmin from './screens/OrderDetailsAdmin';
 
 const App = () => {
   return (
@@ -78,6 +79,10 @@ const App = () => {
             path="/search/:keyword/page/:pageNumber"
             component={HomeScreen}
             exact
+          />
+          <Route
+            path="/admin/orderdetails/:id"
+            component={OrderDetailsAdmin}
           />
           <Route
             path="/OrderSummaryScreen"

@@ -42,7 +42,7 @@ export default Product;
 const StyledCard = styled(Card)`
   background-color: ${LIGHT_BLUE};
   border-bottom: 1px solid gray !important;
-  margin: auto;
+  margin: auto 12px;
 
   &:hover {
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2),
@@ -51,7 +51,7 @@ const StyledCard = styled(Card)`
 `;
 
 const StyledImg = styled(Card.Img)`
-  width: 250px !important;
+  width: 100% !important;
   height: 250px !important;
   margin-bottom: 4px;
 `;
