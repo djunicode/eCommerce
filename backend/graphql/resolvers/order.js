@@ -57,10 +57,6 @@ const getOrderById = async (args, { req, redis }) => {
         'user orderItems.product'
       );
 
-<<<<<<< HEAD
-      // if (order && order._id === req.user._id) {
-=======
->>>>>>> 9559dfb505c67dbe8174a74256cffb3a5f9acbfb
       if (order) {
         return order;
       } else {
