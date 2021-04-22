@@ -63,6 +63,29 @@ const productSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    options: [
+      {
+        name: {
+          type: String,
+          required: true,
+        },
+        discount: {
+          type: Number,
+          required: true,
+          default: 0,
+        },
+        price: {
+          type: Number,
+          required: true,
+          default: 0,
+        },
+        countInStock: {
+          type: Number,
+          required: true,
+          default: 0,
+        },
+      },
+    ],
     reviews: [reviewSchema],
     questions: [questionSchema],
     rating: {
@@ -85,20 +108,15 @@ const productSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
-    discountedPrice: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
     countInStock: {
       type: Number,
       required: true,
       default: 0,
     },
-    avgRating : {
+    avgRating: {
       type: Number,
       default: 0,
-    }
+    },
   },
   {
     timestamps: true,

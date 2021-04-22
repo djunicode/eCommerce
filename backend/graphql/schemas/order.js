@@ -1,8 +1,6 @@
 export const OrderSchema = `
     type OrderItems {
-        name: String!
         qty: Float!
-        image: String!
         price: Float!
         product: Product!
     }
@@ -39,9 +37,7 @@ export const OrderSchema = `
 
             
     input OrderItemsInput {
-        name: String!
         qty: Float!
-        image: String!
         price: Float!
         product: ID!
     }
