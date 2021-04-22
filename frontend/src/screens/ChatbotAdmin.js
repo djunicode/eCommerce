@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, InputGroup, FormControl } from 'react-bootstrap';
 import styled from 'styled-components';
 
 const ChatbotAdmin = () => {
@@ -11,7 +11,17 @@ const ChatbotAdmin = () => {
           <StyledSubHeaderText>MESSAGE</StyledSubHeaderText>
         </StyledSubHeader>
         <StyledBox>
-          <StyledBoxText>Hi how may I Help you?</StyledBoxText>
+          <InputGroup className="m-2">
+            <FormControl
+              placeholder="Message"
+              aria-describedby="basic-addon2"
+            />
+            <InputGroup.Append>
+              <InputGroup.Text id="basic-addon2">
+                <i className="fas fa-edit" />
+              </InputGroup.Text>
+            </InputGroup.Append>
+          </InputGroup>
         </StyledBox>
       </StyledRowFlex>
       <StyledRowFlex>
@@ -40,18 +50,19 @@ const StyledRowFlex = styled.div`
 `;
 
 const StyledSubHeader = styled.div`
-  margin-top: 12px;
+  margin-top: 14px;
 `;
 
 const StyledSubHeaderText = styled.p`
-  text-tranform: uppercase;
+  text-transform: uppercase;
   font-size: 20px;
 `;
 
 const StyledBox = styled.div`
-  background-color: #eee;
   flex: 1;
   border-radius: 6px;
+  vertical-align: middle !important;
+  margin: auto;
 
   display: flex;
   flex-direction: column;

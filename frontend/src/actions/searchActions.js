@@ -1,5 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint no-shadow: "error" */
+/* eslint-disable no-empty */
+
 import axios from 'axios';
 import {
   SEARCH_LIST_FAIL,
@@ -78,6 +80,14 @@ export const search = (searchTerm, sort = 'none') => async (
     } else {
       sortedData = data.data.searchProduct;
     }
+
+    try {
+      const brands = sortedData.map((elem) => elem.brand.name);
+      sessionStorage.setItem(
+        'proshop_brand_length',
+        JSON.stringify([...new Set(brands)].length),
+      );
+    } catch (err) {}
 
     console.log('searchActions.js');
     console.log(sortedData);

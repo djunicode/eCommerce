@@ -16,7 +16,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { filter } from '../actions/filterActions';
-import { LIGHT_BLUE, DARK_BLUE_2 } from '../util/colors';
+import { BACKGROUND, DARK_BLUE_2 } from '../util/colors';
 
 let selectedBrands = [];
 let selectedRating = [];
@@ -457,7 +457,7 @@ const StyledTabToggleBtn = styled.button`
   border-radius: 8px;
   z-index: 5000 !important;
   background-color: ${DARK_BLUE_2};
-  color: ${LIGHT_BLUE};
+  color: ${BACKGROUND};
   visibility: ${(props) =>
     props.display.display && props.display.tab
       ? 'hidden'
@@ -480,7 +480,7 @@ const StyledLeftSidebar = styled.div`
   margin-right: 10px;
   margin-left: 10px;
   height: 100vh;
-  background-color: ${LIGHT_BLUE};
+  background-color: ${BACKGROUND};
 
   &::-webkit-scrollbar {
     width: 0px;
