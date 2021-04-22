@@ -53,12 +53,13 @@ export const updateChat = (mutation) => async (dispatch) => {
 
     const Data = JSON.stringify({
       query: `mutation {
-      editQuestions(details: ${mutation}) {
+      editQuestions(details: [${mutation}]) {
         msg
       }
     }`,
       variables: {},
     });
+    console.log(Data);
 
     const config = {
       method: 'post',
@@ -71,11 +72,11 @@ export const updateChat = (mutation) => async (dispatch) => {
     };
 
     const { data } = await axios(config);
-    console.log(data.data.questions);
+    console.log(data.editQuestions.msg);
 
     dispatch({
       type: CHATBOT_UPDATE_SUCCESS,
-      payload: data.data.questions,
+      payload: data,
     });
   } catch (error) {
     dispatch({

@@ -127,7 +127,7 @@ const ChatbotAdmin = () => {
     const details = [];
     messages.map((m) => {
       m.map((m1) => {
-        details.push(m1);
+        details.push(JSON.stringify(m1));
       });
     });
     console.log(details);
