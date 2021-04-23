@@ -47,7 +47,6 @@ export const updateChat = (mutation) => async (dispatch) => {
     });
 
     const userinfo = JSON.parse(localStorage.getItem('userInfo'));
-    console.log(mutation);
 
     const Data = JSON.stringify({
       query: `mutation {
@@ -57,7 +56,6 @@ export const updateChat = (mutation) => async (dispatch) => {
     }`,
       variables: {},
     });
-    console.log(Data);
 
     const config = {
       method: 'post',
@@ -70,7 +68,6 @@ export const updateChat = (mutation) => async (dispatch) => {
     };
 
     const { data } = await axios(config);
-    console.log(data.data.editQuestions.msg);
 
     dispatch({
       type: CHATBOT_UPDATE_SUCCESS,
