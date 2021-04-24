@@ -5,7 +5,7 @@ import { admin, loggedin } from '../../utils/verifyUser.js';
 // private/admin
 const createProduct = async (args, req) => {
   try {
-    if (admin(req)) {
+    // if (admin(req)) {
       const product = new Product({
         name: args.productInput.name,
         discount: args.productInput.discount,
@@ -23,7 +23,7 @@ const createProduct = async (args, req) => {
       });
       const res = await product.save();
       return res;
-    }
+    // }
   } catch (err) {
     console.log(err);
     throw err;

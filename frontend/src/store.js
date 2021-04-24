@@ -45,6 +45,7 @@ import {
   subCategoryEditReducer,
   subCategoryListReducer,
 } from './reducers/categoryReducers';
+import { brandCreateReducer, brandListReducer } from './reducers/brandReducers';
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -82,7 +83,9 @@ const reducer = combineReducers({
   categoryDelete: categoryDeleteReducer,
   subCategoryCreate: subCategoryCreateReducer,
   subCategoryEdit: subCategoryEditReducer,
-  subCategoryDelete: subCategoryDeleteReducer
+  subCategoryDelete: subCategoryDeleteReducer,
+  brandList: brandListReducer,
+  brandCreate: brandCreateReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem('cartItems')

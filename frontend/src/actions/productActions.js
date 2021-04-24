@@ -85,26 +85,29 @@ export const listProductDetails = (id) => async (dispatch) => {
   }
 };
 
-export const deleteProduct = (id) => async (dispatch, getState) => {
+export const deleteProduct = (query) => async (dispatch, getState) => {
   try {
     dispatch({
       type: PRODUCT_DELETE_REQUEST,
     });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
+    // const {
+    //   userLogin: { userInfo },
+    // } = getState();
 
     const config = {
       headers: {
-        Authorization: `Bearer ${userInfo.token}`,
+        'Content-Type': 'application/json',
+        // Authorization: `Bearer ${userInfo.token}`,
       },
     };
+    // console.log(userInfo.token);
 
-    await axios.delete(`/api/products/${id}`, config);
+    const { data } = await axios.post('http://localhost:5000/graphql', {query}, config);
 
     dispatch({
       type: PRODUCT_DELETE_SUCCESS,
+      payload: data.data.deleteProduct,
     });
   } catch (error) {
     const message =

@@ -12,7 +12,7 @@ import { listCategories, listSubCategories } from '../actions/categoryActions';
 import { PRODUCT_CREATE_RESET } from '../constants/productConstants';
 import { printSchema } from 'graphql';
 // import { PRODUCT_UPDATE_RESET } from '../constants/productConstants';
-import { CatDropdown, SubCatDropdown } from '../components/Dropdowns';
+import { BrandDropdown, CatDropdown, SubCatDropdown } from '../components/Dropdowns';
 
 const ProductCreateScreen = ({ match, history }) => {
 //   const productId = match.params.id;
@@ -35,9 +35,6 @@ const ProductCreateScreen = ({ match, history }) => {
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
 
-  // const categoryList = useSelector((state) => state.categoryList);
-  // const { catloading, caterror, categories } = categoryList;
-
   const productCreate = useSelector((state) => state.productCreate);
   const {
     loading: loadingCreate,
@@ -45,9 +42,6 @@ const ProductCreateScreen = ({ match, history }) => {
     success: successCreate,
     product: createdProduct,
   } = productCreate;
-  
-  // const subCategoryList = useSelector((state) => state.subCategoryList);
-  // const { subloading, suberror, subcategories } = subCategoryList;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -59,53 +53,9 @@ const ProductCreateScreen = ({ match, history }) => {
     }
   }
   `;
-
-  // const query = `mutation {
-  //   createProduct(productInput: { name: "one",
-  //   discount: 20,
-  //   price: 100,
-  //   user: "600e9bf7ab74de2680fa32da",
-  //   image: "one",
-  //   brand: "one",
-  //   category:"6033f160eb01e64a1ccf7046",
-  //   subcategory: "6033f161eb01e64a1ccf7055",
-  //   new: true,
-  //   countInStock:11,
-  //   numReviews:1,
-  //   description:"wow"}) {
-  //       name
-  //       _id
-  //   }
-  // }
-  // `;
-
-  // const queryCategories = `query {
-  //   getCategories {
-  //     name,
-  //     _id
-  //   }
-  // }`;
-
-  // const querySub = `query{
-  //   getSubCategories (categoryId: "${categ}") {
-  //     name
-  //     _id
-  //   }
-  // }`;
-
-  // useEffect(() => {
-  //   dispatch(listCategories(queryCategories));
-  // }, [dispatch]);
-
-  // useEffect(() => {
-  //   if(categ != "") {
-  //       dispatch(listSubCategories(querySub));
-  //     }
-  // }, [categ]);
-
+  
   useEffect(() => {
       if (successCreate) {
-        // dispatch({ type: PRODUCT_CREATE_RESET });
         history.push('/admin/productlist');
         } 
   }, [successCreate, createdProduct]);
@@ -159,20 +109,10 @@ const ProductCreateScreen = ({ match, history }) => {
 //     );
 //   };
 
-  const [modalShow, setModalShow] = React.useState(false);
-  // const [sizes, setSizes] = useState([
-  //   {
-  //     value: '',
-  //   },
-  // ]);
-
-  // const addSize = (size) => {
-  //   setSizes([{ size }]);
-  // };
 
   return (
-    <>
-      <Link to="/admin/productlist" className="btn btn-light my-3">
+    <div style={{padding: '120px 4rem'}}>
+      <Link to="/admin/productlist" className="btn btn-light my-3" style={{border: '1px solid #D4D4D4'}}>
         Go Back
       </Link>
       <h1>Create Product</h1>
@@ -182,13 +122,7 @@ const ProductCreateScreen = ({ match, history }) => {
         <Message variant="danger">{error}</Message>
       ) : (
         <>
-          {/* <SizeModal
-            addSize={addSize}
-            // addPrice={addPrice}
-            show={modalShow}
-            onHide={() => setModalShow(false)}
-          /> */}
-          <Form style={{ background: '#F9F9F9', padding: '3rem' }}>
+          <Form style={{ background: '#F9F9F9', padding: '3rem', marginBottom: '40px' }}>
             <Row>
               <Col>
                 <Row style={{ marginBottom: '1rem' }}>
@@ -203,13 +137,7 @@ const ProductCreateScreen = ({ match, history }) => {
                   </Col>
 
                   <Col controlId="brand">
-                    <Form.Label>Brand</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter brand"
-                      value={brand}
-                      onChange={(e) => setBrand(e.target.value)}
-                    />
+                    <BrandDropdown brand={brand} setBrand = {setBrand} />
                   </Col>
 
                   <Col controlId="price">
@@ -224,34 +152,14 @@ const ProductCreateScreen = ({ match, history }) => {
                 </Row>
 
                 <Row style={{ marginBottom: '1rem' }}>
-                  {/* <Col controlId="categ">
-                    <Form.Label>Category</Form.Label>
-                    <Form.Control
-                        as="select"
-                        // value={category}
-                        onChange={(e) => {setCateg(e.target.value);}}
-                    >
-                    {categories.map((cat) => (
-                        <option value={cat._id}>{cat.name}</option>
-                    ))}
-                    </Form.Control>
-                  </Col> */}
-                  <CatDropdown categ={categ} setCateg={setCateg}/>
+                  <Col controlId="categ">
+                    <CatDropdown categ={categ} setCateg={setCateg}/>
+                  </Col>
 
-                  {/* <Col controlId="subCateg">
-                    <Form.Label>Sub Category</Form.Label>
-                    <Form.Control
-                      as="select"
-                      // value={subCategory}
-                      onChange={(e) => {setSubCateg(e.target.value);}}
-                    >
-                    {subcategories.map((sub) => (
-                      <option value={sub._id}>{sub.name}</option>
-                    ))}
-                    </Form.Control>
-                  </Col> */}
-                  <SubCatDropdown categ={categ} subCateg={subCateg} setSubCateg={setSubCateg}/>
-
+                  <Col controlId="subCateg">
+                      <SubCatDropdown categ={categ} subCateg={subCateg} setSubCateg={setSubCateg}/>
+                    </Col>
+                  
                   <Col controlId="discount">
                     <Form.Label>Discount</Form.Label>
                     <Form.Control
@@ -374,7 +282,7 @@ const ProductCreateScreen = ({ match, history }) => {
         </>
       )}
       <Button onClick={createProductHandler}>Save Changes</Button>
-    </>
+    </div>
   );
 };
 

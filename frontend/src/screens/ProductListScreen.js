@@ -13,7 +13,7 @@ import {
   createProduct,
   searchProducts,
   listProductByCategory,
-  listProductBySubCategory
+  listProductBySubCategory,
 } from '../actions/productActions';
 import { listCategories, listSubCategories } from '../actions/categoryActions';
 import { PRODUCT_CREATE_RESET } from '../constants/productConstants';
@@ -162,8 +162,16 @@ const subCatProd = `query {
 
   //********** CRUD FUNCTIONS **********
   const deleteHandler = (id) => {
-    if (window.confirm('Are you sure')) {
-      dispatch(deleteProduct(id));
+    const queryDeleteProduct = `query {
+      deleteProduct(id: "${id}") {
+        name
+      }
+    }`;
+
+    if (window.confirm('Are you sure you want to delete this product?')) {
+      dispatch(deleteProduct(queryDeleteProduct));  
+      console.log(successDelete);
+      console.log("product is deleted");
     }
   };
 
@@ -172,7 +180,7 @@ const subCatProd = `query {
   //   console.log("hi");
   // };
 
-  const columnWidths = [338, 205, 205, 245, 105];
+  const columnWidths = [338, 215, 215, 245, 105];
   const rowHeights = [48, 320];
 
   const Cell = ({ columnIndex, rowIndex, style }) => (
@@ -270,8 +278,8 @@ const subCatProd = `query {
   );
 
   return (
-    <>
-      <Row style={{marginBottom: '2.5rem', marginTop: '1.5rem'}}>
+    <div style={{ padding: '120px 4rem'}}>
+      <Row>
         <Col>
         <Form.Label>Search Products</Form.Label>
           <Form style={{border: '1px solid #929293', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -328,14 +336,14 @@ const subCatProd = `query {
         <Message variant="danger">{error}</Message>
       ) : (
         <>
-        <div style={{overflowX: 'scroll'}}>
+        <div style={{overflowX: 'scroll', marginTop: '35px'}}>
             <Grid
               className="Grid"
               columnCount={5}
               columnWidth={index => columnWidths[index]}
               rowCount={2}
               rowHeight={index => rowHeights[index]}
-              width={1110}
+              width={1120}
               height={400}
             >
               {Cell}
@@ -371,7 +379,7 @@ const subCatProd = `query {
           {/* </Table>  */}
         </>
       )}
-    </>
+    </div>
   );
 };
 

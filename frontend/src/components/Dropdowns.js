@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Form, Button, Col } from 'react-bootstrap';
+import { Form, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { createCategories, listCategories, listSubCategories, deleteCategories, createSubCategories, deleteSubCategories } from '../actions/categoryActions';
-import ReactDOM from "react-dom";
 import CreatableSelect from 'react-select/creatable';
 import { components } from 'react-select';
 import {CategoryModal, SubCategoryModal} from './Modals';
+import { listBrands, createNewBrand } from '../actions/brandActions';
 
 
 const Option = (props) => {
@@ -144,18 +143,6 @@ export const CatDropdown = ({categ, setCateg}) => {
 
     return(
         <>
-            {/* <Col controlId="categ">
-                <Form.Label>Category</Form.Label>
-                <Form.Control
-                    as="select"
-                    onChange={(e) => {setCateg(e.target.value);}}
-                >
-                {categories.map((cat) => (
-                    <option value={cat._id}>{cat.name}</option>
-                ))}
-                </Form.Control>
-            </Col> */}
-
             <CategoryModal 
                 selectedCategory={selectedCategory}
                 editCat={editCat}
@@ -163,30 +150,20 @@ export const CatDropdown = ({categ, setCateg}) => {
                 onHide={() => setModalShow(false)}
             />
 
-            <Col>
-                <Form.Label>Category</Form.Label>
-                <CreatableSelect
-                handleModal={handleModal}
-                isClearable
-                onChange={handleChange}
-                onInputChange={handleInputChange}
-                options={optionList}
-                components={{ Option }}
-                onCreateOption={handleCreateCategory}
-                handleDelete={handleDelete}
-                />
-            </Col>
+            <Form.Label>Category</Form.Label>
+            <CreatableSelect
+            handleModal={handleModal}
+            isClearable
+            onChange={handleChange}
+            onInputChange={handleInputChange}
+            options={optionList}
+            components={{ Option }}
+            onCreateOption={handleCreateCategory}
+            handleDelete={handleDelete}
+            />
         </>
     )
 }
-
-
-
-
-
-
-
-
 
 
 export const SubCatDropdown = ({categ, subCateg, setSubCateg}) => {
@@ -250,7 +227,7 @@ export const SubCatDropdown = ({categ, subCateg, setSubCateg}) => {
 
     const createOption = (label) => ({
         label,
-        value: createSubcategory._id,
+        value: label
     });
     
     const handleCreateSubCategory = (inputValue) => {
@@ -328,7 +305,6 @@ export const SubCatDropdown = ({categ, subCateg, setSubCateg}) => {
             onHide={() => setModalShow(false)}
             />
 
-            <Col>
             <Form.Label>Sub Category</Form.Label>
             <CreatableSelect
             handleModal={handleModal}
@@ -340,6 +316,126 @@ export const SubCatDropdown = ({categ, subCateg, setSubCateg}) => {
             onCreateOption={handleCreateSubCategory}
             handleDelete={handleDelete}
             />
+        </>
+    )
+}
+
+
+export const BrandDropdown = ({brand, setBrand}) => {
+
+    const dispatch = useDispatch();
+
+    const brandList = useSelector((state) => state.brandList);
+    const { error, brands } = brandList;
+
+    const brandCreate = useSelector((state) => state.brandCreate);
+    const { createBrand } = brandCreate;
+
+    const queryBrands = `query {
+        getBrands {
+          name,
+          _id
+        }
+      }`;
+    
+    useEffect(() => {
+        dispatch(listBrands(queryBrands));
+    }, [dispatch]);
+
+
+    const [optionList, setOptionList] = useState([]);
+    const [selectedBrand, setSelectedBrand] = useState('');
+
+    useEffect(() => {
+        if(brands) {
+            let optionsTwo = [];
+            brands.map((br) => {
+                let optionsTemp = {label: br.name, value: br._id}  
+                optionsTwo.push(optionsTemp);
+            })
+            setOptionList(optionsTwo);
+        }
+        console.log(optionList);
+    }, [brands, createBrand])
+    
+    const handleChange = (newValue, actionMeta) => {
+        if(newValue != null) {
+            setSelectedBrand(newValue.label);
+            setBrand(newValue.value);
+        }
+        console.group("Value Changed");
+        console.log(selectedBrand);
+        // console.log(`action: ${actionMeta.action}`);
+        console.groupEnd();
+
+    };
+    const handleInputChange = (inputValue, actionMeta) => {
+        console.group("Input Changed");
+        console.log(inputValue);
+        // console.log(`action: ${actionMeta.action}`);
+        console.groupEnd();
+    };
+
+    const createOption = (label) => ({
+        label,
+        value: createBrand._id,
+    });
+    
+    const handleCreateBrand = (inputValue) => {
+        const newOption = createOption(inputValue);
+        console.log(newOption);
+        console.groupEnd();
+        console.log("new option created");
+
+        const queryCreateBrand = `mutation {
+            createBrand (name: "${newOption.label}") {
+                name
+                _id
+            }
+        }`;
+
+        dispatch(createNewBrand(queryCreateBrand));
+    }
+
+    // const [modalShow, setModalShow] = React.useState(false);
+    // const [newBrand, setNewBrand] = useState([
+    //     {
+    //     value: '',
+    //     },
+    // ]);
+    // const editBrand = (br) => {
+    //     setNewBrand([{ br }]);
+    // };
+
+    // const handleModal = (event) => {
+    //     event.preventDefault();
+    //     console.log("Open Modal");
+    //     setModalShow(true);
+    //     console.log(modalShow);
+    // };
+    
+
+    return(
+        <>
+            {/* <BrandModal 
+                selectedBrand={selectedBrand}
+                editBrand={editBrand}
+                show={modalShow}
+                onHide={() => setModalShow(false)}
+            /> */}
+
+            <Col>
+                <Form.Label>Brand</Form.Label>
+                <CreatableSelect
+                // handleModal={handleModal}
+                isClearable
+                onChange={handleChange}
+                onInputChange={handleInputChange}
+                options={optionList}
+                // components={{ Option }}
+                onCreateOption={handleCreateBrand}
+                // handleDelete={handleDelete}
+                />
             </Col>
         </>
     )
