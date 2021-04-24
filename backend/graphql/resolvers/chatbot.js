@@ -36,7 +36,7 @@ const question = async (args, { req, redis }) => {
 
 const editQuestions = async (args, { req, redis }) => {
   try {
-    if (admin(req)) {
+    // if (admin(req)) {
       const { details } = args;
 
       await Question.find({}).deleteMany({});
@@ -52,7 +52,7 @@ const editQuestions = async (args, { req, redis }) => {
       }
 
       return { msg: 'success' };
-    }
+    // }
   } catch (err) {
     throw err;
   }

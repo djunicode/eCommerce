@@ -35,7 +35,7 @@ const createProduct = async (args, req) => {
 // cached
 const getProducts = async (args, { req, redis }) => {
   try {
-    if (admin(req)) {
+    // if (admin(req)) {
       const products = await redis.get('products:all');
 
       if (products) {
@@ -55,7 +55,7 @@ const getProducts = async (args, { req, redis }) => {
         } else {
           throw new Error('No Products found');
         }
-      }
+      // }
     }
   } catch (err) {
     throw err;
