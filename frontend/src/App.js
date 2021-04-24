@@ -19,6 +19,8 @@ import ProductListScreen from './screens/ProductListScreen';
 import ProductEditScreen from './screens/ProductEditScreen';
 import ProductCreateScreen from './screens/ProductCreateScreen';
 import OrderListScreen from './screens/OrderListScreen';
+import OrderSummaryScreen from './screens/OrderSummaryScreen';
+import OrdersScreen from './adminscreens/OrdersScreen';
 import SearchScreen from './screens/SearchScreen';
 import CategoryScreen from './screens/CategoryScreen';
 import ChatbotAdmin from './screens/ChatbotAdmin';
@@ -90,6 +92,16 @@ const App = () => {
             exact
           />
           <Route path="/" component={HomeScreen} exact />
+          <Route
+            path="/admin/orderdetails/:id"
+            component={OrderDetailsAdmin}
+          />
+          <Route
+            path="/OrderSummaryScreen"
+            component={OrderSummaryScreen}
+          />
+          <Route path="/" component={HomeScreen} exact />
+          <Route path="/orderscreen" component={OrdersScreen} />
         </Container>
       </main>
       <Footer />

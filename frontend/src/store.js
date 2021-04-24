@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -33,7 +34,11 @@ import {
 } from './reducers/orderReducers';
 import { searchReducer } from './reducers/searchReducers';
 import { filterReducer } from './reducers/filterReducers';
-import { chatbotReducer } from './reducers/chatbotReducers';
+import {
+  chatbotReducer,
+  updateChatbot,
+} from './reducers/chatbotReducers';
+import { productidReducer } from './reducers/productidReducers';
 import {
   productsByCategoryIdReducer,
   categoryCreateReducer,
@@ -72,6 +77,7 @@ const reducer = combineReducers({
   search: searchReducer,
   filter: filterReducer,
   chatbot: chatbotReducer,
+  productid: productidReducer,  
   productsByCategory: productsByCategoryIdReducer,
   categoryList: categoryListReducer,
   subCategoryList: subCategoryListReducer,
@@ -86,6 +92,7 @@ const reducer = combineReducers({
   subCategoryDelete: subCategoryDeleteReducer,
   brandList: brandListReducer,
   brandCreate: brandCreateReducer,
+  updateChatbot,
 });
 
 const cartItemsFromStorage = localStorage.getItem('cartItems')

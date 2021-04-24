@@ -1,12 +1,21 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
+import styled from 'styled-components';
 
 function Robot({ message, bottom }) {
   if (bottom) {
     return (
       <>
         <Row className="my-3">
-          <Col xs={2}>
+          <Col
+            xs={2}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '0',
+            }}
+          >
             <div
               style={{
                 display: 'flex',
@@ -21,7 +30,7 @@ function Robot({ message, bottom }) {
               <i className="fas fa-robot" />
             </div>
           </Col>
-          <Col xs={9}>
+          <Col xs={9} style={{ padding: '0px' }}>
             <div
               className="p-2 rounded"
               style={{
@@ -30,7 +39,7 @@ function Robot({ message, bottom }) {
                 maxWidth: '100%',
               }}
             >
-              {message}
+              <Font>{message}</Font>
             </div>
           </Col>
         </Row>
@@ -41,7 +50,15 @@ function Robot({ message, bottom }) {
 
   return (
     <Row className="my-3">
-      <Col xs={2}>
+      <Col
+        xs={2}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '0',
+        }}
+      >
         <div
           style={{
             display: 'flex',
@@ -56,7 +73,7 @@ function Robot({ message, bottom }) {
           <i className="fas fa-robot" />
         </div>
       </Col>
-      <Col xs={9}>
+      <Col xs={9} style={{ padding: '0px' }}>
         <div
           className="p-2 rounded"
           style={{
@@ -65,7 +82,7 @@ function Robot({ message, bottom }) {
             maxWidth: '100%',
           }}
         >
-          {message}
+          <Font>{message}</Font>
         </div>
       </Col>
     </Row>
@@ -73,3 +90,8 @@ function Robot({ message, bottom }) {
 }
 
 export default Robot;
+
+const Font = styled.span`
+  line-height: 30px;
+  letter-spacing: 0.03em;
+`;

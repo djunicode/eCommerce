@@ -34,42 +34,42 @@ const getBrands = async (args, { req, redis }) => {
   }
 };
 
-// const updateBrand = async (args, { req, redis }) => {
-//   try {
-//     if (admin(req)) {
-//       const { name, newName } = args;
+const updateBrand = async (args, { req, redis }) => {
+  try {
+    if (admin(req)) {
+      const { name, newName } = args;
 
-//       let updatedBrand = {
-//         name: newName,
-//       };
-//       updatedBrand = { $set: updatedBrand };
+      let updatedBrand = {
+        name: newName,
+      };
+      updatedBrand = { $set: updatedBrand };
 
-//       await Brand.updateOne({ name: name }, updatedBrand).exec();
+      await Brand.updateOne({ name: name }, updatedBrand).exec();
 
-//       return { msg: 'success' };
-//     }
-//   } catch (err) {
-//     throw err;
-//   }
-// };
+      return { msg: 'success' };
+    }
+  } catch (err) {
+    throw err;
+  }
+};
 
-// const deleteBrand = async (args, { req, redis }) => {
-//   try {
-//     if (admin(req)) {
-//       const { name } = args;
+const deleteBrand = async (args, { req, redis }) => {
+  try {
+    if (admin(req)) {
+      const { name } = args;
 
-//       await Brand.deleteOne({ name: name });
+      await Brand.deleteOne({ name: name });
 
-//       return { msg: 'success' };
-//     }
-//   } catch (err) {
-//     throw err;
-//   }
-// };
+      return { msg: 'success' };
+    }
+  } catch (err) {
+    throw err;
+  }
+};
 
 export {
   getBrands,
   createBrand,
-  // updateBrand,
-  // deleteBrand,
+  updateBrand,
+  deleteBrand,
 };
