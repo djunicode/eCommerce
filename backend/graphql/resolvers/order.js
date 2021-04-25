@@ -1,4 +1,5 @@
 import Order from '../../models/orderModel.js';
+import Product from '../../models/productModel.js';
 import { loggedin, admin } from '../../utils/verifyUser.js';
 import pincode from '../../pincodes.js';
 
@@ -9,8 +10,16 @@ import pincode from '../../pincodes.js';
 const addOrderItems = async (args, { req, redis }) => {
   try {
     if (loggedin(req)) {
+      const tally = 0;
+      args.orderInput.orderItems.forEach(async (item) => {
+        const product =  await Product.findById(item.product);
+        tally+=(((100 - product.discount) * product.price) / 100);
+      });
+      if(Math.abs(tally-args.orderInput.totalPrice)<=0.001) {   //precision upto 3 decimal places
+        throw new Error("Price Mismatch, please update order");
+      }
       const order = new Order({
-        user: '605db95d4429c827d4bc1881',
+        user: req.user._id,
         orderItems: args.orderInput.orderItems,
         shippingAddress: args.orderInput.shippingAddress,
         paymentMethod: args.orderInput.paymentMethod,
@@ -43,17 +52,17 @@ const addOrderItems = async (args, { req, redis }) => {
 // Private
 const getOrderById = async (args, { req, redis }) => {
   try {
-    // if (loggedin(req)) {
+    if (loggedin(req)) {
       const order = await Order.findById(args.orderId).populate(
         'user orderItems.product'
       );
 
-      if (order) {
+      if (order && order._id === req.user._id) {
         return order;
       } else {
         throw new Error('Order not found!!');
       }
-    // }
+    }
   } catch (err) {
     console.log(err);
     throw err;

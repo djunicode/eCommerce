@@ -25,6 +25,8 @@ export default buildSchema(`
         orderById(orderId: ID!): Order!
         questions: [Question]
         question(level: String!, index: String!): Question
+        
+        getBrands: [Brand]
 
         getCategories: [Category!]!
         
@@ -35,6 +37,7 @@ export default buildSchema(`
         getUsers: [User!]!
         getUserById(userId: ID!): User!
         
+        getProducts: [Product!]!
         getProductByCategory(categoryId: ID!): [Product!]!
         getProductBySubCategory(subCategoryId: ID!): [Product!]!
         getProductById(id: ID!): [Product!]!
@@ -42,7 +45,7 @@ export default buildSchema(`
         deleteProduct(id: ID!): Product!
         getProductReviews(productId: ID!): [productReview]!
         getProductQnAs(productId: ID!): [productQ]
-
+        
         isDeliverable(shippingAddressInput: ShippingAddressInput): Boolean!,
         
         searchProduct(searchTerm: String!): [Product!]!
@@ -54,6 +57,10 @@ export default buildSchema(`
         updateOrderToDelivered(orderId: ID!): Order!
 
         editQuestions(details: [QuestionInput]!): Response!
+
+        createBrand(name: String!): Brand!
+        updateBrand(name: String!, newName: String!): Response!
+        deleteBrand(name: String!): Response!
 
         createCategory(name: String!): Category!
         updateCategory(name: String!, newName: String!): Response!
