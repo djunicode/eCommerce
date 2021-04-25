@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Rating from './Rating';
 
 import { LIGHT_BLUE } from '../util/colors';
-import styles from '../css/card.module.css'; 
+import styles from '../css/card.module.css';
 
 const Product = ({ product }) => {
   return (
