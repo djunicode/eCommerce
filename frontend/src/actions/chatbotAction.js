@@ -1,6 +1,7 @@
 /* eslint-disable import/named */
 /* eslint-disable import/prefer-default-export */
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 import {
   CHATBOT_CREATE_FAIL,
   CHATBOT_CREATE_SUCCESS,
@@ -81,5 +82,9 @@ export const updateChat = (mutation) => async (dispatch) => {
           ? error.response.data.message
           : error.message,
     });
+    if (error.response.status === 401) {
+      const history = useHistory();
+      history.push('/login');
+    }
   }
 };

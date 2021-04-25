@@ -23,7 +23,7 @@ import axios from 'axios';
 const orderAmount = 50;
 const myAppName = 'PROSHOP';
 const myDescription = 'Description goes here';
-const myColor = '#686CFD';
+const myColor = '#30475E';
 
 const paymentHandler = async (e) => {
   const API_URL = 'http://localhost:5000/';
@@ -647,7 +647,20 @@ function OrderSummaryScreen() {
         )}
         {p === 'on' && (
           <>
-            <Button onClick={paymentHandler} />
+            <h1
+              style={{
+                letterSpacing: '0',
+                textTransform: 'none',
+              }}
+            >
+              Payment Options
+            </h1>
+            <Stylediv>
+              <StyledButtn variant="danger">COD</StyledButtn>
+              <StyledButtn variant="danger" onClick={paymentHandler}>
+                Others
+              </StyledButtn>
+            </Stylediv>
           </>
         )}
       </Container>
@@ -684,4 +697,16 @@ const Back = styled(Button)`
   position: absolute;
   top: -45px;
   left: 0px;
+`;
+
+const StyledButtn = styled(Button)`
+  border-radius: 4px;
+  margin-top: 12px;
+`;
+
+const Stylediv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 `;
