@@ -103,7 +103,7 @@ const StyledNavbar = styled(Navbar)`
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1000 !important;
+  z-index: 7000 !important;
 `;
 
 const StyledH1 = styled.h1`

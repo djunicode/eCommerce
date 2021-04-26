@@ -443,6 +443,13 @@ const FilterSidebar = ({ page }) => {
             </Card>
           </StyledAccordian>
         </Row>
+        {/* <Row>
+          <Button onClick={() => {
+            dispatch(filter({}));
+          }}>
+            Clear Filters
+          </Button>
+        </Row> */}
       </StyledLeftSidebar>
     </>
   );

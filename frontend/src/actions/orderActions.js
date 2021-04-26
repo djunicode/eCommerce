@@ -103,11 +103,8 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
             phoneNo
           }
           orderItems{
-            name
             qty
-            image
             price
-            qty
             product{
               _id
               name
