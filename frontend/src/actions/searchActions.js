@@ -29,7 +29,6 @@ export const search = (searchTerm, sort = 'none') => async (
                       name
                       discount
                       price
-                      discountedPrice
                       user{
                           _id
                       }

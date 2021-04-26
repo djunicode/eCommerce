@@ -37,7 +37,6 @@ export const getProductByCategory = (id, sort = 'none') => async (
                     name
                     discount
                     price
-                    discountedPrice
                     user{
                         _id
                     }

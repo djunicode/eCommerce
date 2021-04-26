@@ -126,23 +126,6 @@ body {
   background-color: #30475e !important;
   border: none !important;
 }
-.card {
-  border: none !important;
-  padding: -1px;
-  background-color: #F9F9F9 !important;
-}
-.card-header {
-  background-color: #F9F9F9;
-  text-transform: uppercase;
-  font-weight: 900 !important;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-.card-body {
-  background-color: #F9F9F9;
-  padding-bottom: 10px;
-}
 
 .fa-star {
   color: #30475e !important;

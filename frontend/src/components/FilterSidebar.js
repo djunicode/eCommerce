@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { filter } from '../actions/filterActions';
 import { BACKGROUND, DARK_BLUE_2 } from '../util/colors';
+import styles from '../css/card.module.css';
 
 let selectedBrands = [];
 let selectedRating = [];
@@ -249,7 +250,7 @@ const FilterSidebar = ({ page }) => {
         </Row>
         <Row>
           <StyledAccordian defaultActiveKey="0">
-            <Card>
+            <Card className={styles.card}>
               <Accordion.Toggle
                 as={Card.Header}
                 eventKey="0"
@@ -260,6 +261,7 @@ const FilterSidebar = ({ page }) => {
                     avgRating: chevronState.avgRating,
                   });
                 }}
+                className={styles.cardHeader}
               >
                 Price{' '}
                 <i
@@ -271,7 +273,7 @@ const FilterSidebar = ({ page }) => {
                 />
               </Accordion.Toggle>
               <Accordion.Collapse eventKey="0">
-                <Card.Body>
+                <Card.Body className={styles.cardBody}>
                   <Form.Group as={Row}>
                     <Col xs="11">
                       <Form>
@@ -345,7 +347,7 @@ const FilterSidebar = ({ page }) => {
         </Row>
         <Row>
           <StyledAccordian defaultActiveKey="1">
-            <Card>
+            <Card className={styles.card}>
               <Accordion.Toggle
                 as={Card.Header}
                 eventKey="0"
@@ -356,6 +358,7 @@ const FilterSidebar = ({ page }) => {
                     avgRating: chevronState.avgRating,
                   });
                 }}
+                className={styles.cardHeader}
               >
                 Brand{' '}
                 <i
@@ -367,7 +370,7 @@ const FilterSidebar = ({ page }) => {
                 />
               </Accordion.Toggle>
               <Accordion.Collapse eventKey="0">
-                <Card.Body>
+                <Card.Body className={styles.cardBody}>
                   <StyledFormFlexRow>
                     {brands.map((elem) => (
                       <Form.Check
@@ -393,7 +396,7 @@ const FilterSidebar = ({ page }) => {
         </Row>
         <Row>
           <StyledAccordian defaultActiveKey="0">
-            <Card>
+            <Card className={styles.card}>
               <Accordion.Toggle
                 as={Card.Header}
                 eventKey="0"
@@ -404,6 +407,7 @@ const FilterSidebar = ({ page }) => {
                     avgRating: !chevronState.avgRating,
                   });
                 }}
+                className={styles.cardHeader}
               >
                 Avg Rating{' '}
                 <i
@@ -415,7 +419,7 @@ const FilterSidebar = ({ page }) => {
                 />
               </Accordion.Toggle>
               <Accordion.Collapse eventKey="0">
-                <Card.Body>
+                <Card.Body className={styles.cardBody}>
                   <Form>
                     {rating.map((elem) => (
                       <Form.Check
