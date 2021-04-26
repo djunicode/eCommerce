@@ -86,6 +86,15 @@ export default function Chatbot() {
           return value.level === '1';
         }),
       );
+      const tfmsg = chatbot.data.filter((value) => {
+        if (value.level === '0') {
+          return value;
+        }
+        return null;
+      });
+      if (tfmsg.length !== 0) {
+        setChats([{ type: 'robot', message: tfmsg[0].msg }]);
+      }
       const filtered = chatbot.data.filter((value) => {
         return value.level === '1';
       });

@@ -76,10 +76,10 @@ const Acc = ({
       {dispmsgs.map((dispmsg) => {
         return (
           <Accordion defaultActiveKey="0" key={dispmsg.index}>
-            <Card style={{ backgroundColor: 'white' }}>
+            <Card style={{ backgroundColor: '#F9F9F9' }}>
               <Card.Header
                 style={{
-                  backgroundColor: 'white',
+                  backgroundColor: '#F9F9F9',
                   padding: '0',
                   borderBottom: '2px solid rgba(0,0,0,0.125)',
                 }}
@@ -119,7 +119,7 @@ const Acc = ({
               <Accordion.Collapse eventKey="1">
                 <Card.Body
                   style={{
-                    backgroundColor: 'white',
+                    backgroundColor: '#F9F9F9',
                     paddingRight: '0px',
                     paddingLeft: '1rem',
                   }}

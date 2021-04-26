@@ -81,7 +81,6 @@ const ProductScreen = () => {
           name
           discount
           price
-          discountedPrice
           user {
               _id
               name
