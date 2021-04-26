@@ -18,6 +18,8 @@ import UserEditScreen from './screens/UserEditScreen';
 import ProductListScreen from './screens/ProductListScreen';
 import ProductEditScreen from './screens/ProductEditScreen';
 import OrderListScreen from './screens/OrderListScreen';
+import OrderSummaryScreen from './screens/OrderSummaryScreen';
+import OrdersScreen from './adminscreens/OrdersScreen';
 import SearchScreen from './screens/SearchScreen';
 import CategoryScreen from './screens/CategoryScreen';
 import ChatbotAdmin from './screens/ChatbotAdmin';
@@ -62,10 +64,6 @@ const App = () => {
             path="/admin/orderlist"
             component={OrderListScreen}
           />
-          <Route
-            path="/admin/orderdetails/:id"
-            component={OrderDetailsAdmin}
-          />
           <Route path="/admin/chatbot" component={ChatbotAdmin} />
           <Route
             path="/search/:keyword"
@@ -82,7 +80,16 @@ const App = () => {
             component={HomeScreen}
             exact
           />
+          <Route
+            path="/admin/orderdetails/:id"
+            component={OrderDetailsAdmin}
+          />
+          <Route
+            path="/OrderSummaryScreen"
+            component={OrderSummaryScreen}
+          />
           <Route path="/" component={HomeScreen} exact />
+          <Route path="/orderscreen" component={OrdersScreen} />
         </Container>
       </main>
       <Footer />

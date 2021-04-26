@@ -1,5 +1,6 @@
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
+import styled from 'styled-components';
 
 function Message({ message, bottom }) {
   if (bottom) {
@@ -16,7 +17,7 @@ function Message({ message, bottom }) {
                 maxWidth: '100%',
               }}
             >
-              {message}
+              <Font>{message}</Font>
             </div>
           </Col>
         </Row>
@@ -37,7 +38,7 @@ function Message({ message, bottom }) {
             maxWidth: '100%',
           }}
         >
-          {message}
+          <Font>{message}</Font>
         </div>
       </Col>
     </Row>
@@ -45,3 +46,8 @@ function Message({ message, bottom }) {
 }
 
 export default Message;
+
+const Font = styled.span`
+  line-height: 30px;
+  letter-spacing: 0.03em;
+`;
