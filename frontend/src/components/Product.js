@@ -21,11 +21,6 @@ const Product = ({ product }) => {
       <StyledCardBody>
         <Card.Text as="h4">
           <Rating value={product.avgRating} />
-          {product.countInStock === 0 && (
-            <StyledOutOfStock as="p">
-              <i>Out of Stock</i>
-            </StyledOutOfStock>
-          )}
         </Card.Text>
 
         <Link to={`/product/${product._id}`}>
@@ -39,6 +34,11 @@ const Product = ({ product }) => {
         </StyledBrand>
 
         <StyledPrice as="b">Rs {product.price} /-</StyledPrice>
+        {product.countInStock === 0 && (
+          <StyledOutOfStock as="p">
+            <i>Out of Stock</i>
+          </StyledOutOfStock>
+        )}
       </StyledCardBody>
     </StyledCard>
   );
@@ -96,12 +96,15 @@ const StyledPrice = styled(Card.Text)`
 const StyledOutOfStock = styled.p`
   color: red;
   font-size: 9px;
-  position: absolute;
-  top: 250px;
-  right: 8px;
+  float: right;
   background-color: #ffcdd2;
   opacity: 0.8;
   padding: 6px;
   border-radius: 4px;
   border: 1px red solid;
+
+  @media (max-width: 445px) {
+    float: none;
+    text-align: center;
+  }
 `;
