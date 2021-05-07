@@ -55,7 +55,6 @@ const FilterSidebar = ({ page }) => {
 
   const filterData = useSelector((state) => state.filter);
   const { filters } = filterData;
-  console.log(filters);
 
   const [priceRange, setPriceRange] = useState({
     max: Math.max.apply(Math, [

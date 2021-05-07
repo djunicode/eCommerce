@@ -27,7 +27,6 @@ import '../css/card.module.css';
 
 const SearchScreen = () => {
   const { keyword } = useParams();
-  console.log(keyword);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -36,11 +35,9 @@ const SearchScreen = () => {
 
   const searchedProduct = useSelector((state) => state.search);
   const { loading, error, products } = searchedProduct;
-  console.log(products);
 
   const filtersApplied = useSelector((state) => state.filter);
   const { filters } = filtersApplied;
-  console.log(filters);
 
   if (products && products.length === 0 && !loading) {
     return (
@@ -83,6 +80,7 @@ const SearchScreen = () => {
                     onClick={() => {
                       dispatch(search(keyword, 'asc'));
                       if (
+                        filters.brands &&
                         JSON.parse(
                           sessionStorage.getItem(
                             'proshop_brand_length',
@@ -100,6 +98,7 @@ const SearchScreen = () => {
                     onClick={() => {
                       dispatch(search(keyword, 'desc'));
                       if (
+                        filters.brands &&
                         JSON.parse(
                           sessionStorage.getItem(
                             'proshop_brand_length',

@@ -8,7 +8,6 @@ import { LIGHT_BLUE } from '../util/colors';
 import styles from '../css/card.module.css';
 
 const Product = ({ product }) => {
-  console.log(product.countInStock);
   return (
     <StyledCard className={`my-3 ${styles.card}`}>
       <Link to={`/product/${product._id}`}>

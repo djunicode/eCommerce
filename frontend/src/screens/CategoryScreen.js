@@ -88,6 +88,7 @@ const CategoryScreen = () => {
                     onClick={() => {
                       dispatch(getProductByCategory(id, 'asc'));
                       if (
+                        filters.brands &&
                         JSON.parse(
                           sessionStorage.getItem(
                             'proshop_brand_length',
@@ -105,6 +106,7 @@ const CategoryScreen = () => {
                     onClick={() => {
                       dispatch(getProductByCategory(id, 'desc'));
                       if (
+                        filters.brands &&
                         JSON.parse(
                           sessionStorage.getItem(
                             'proshop_brand_length',
