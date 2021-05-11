@@ -1,34 +1,68 @@
 import React, { useState } from 'react';
-import {Form, Button} from 'react-bootstrap';
+import {Form, Button, Row, Col} from 'react-bootstrap';
 
-function NewOptions ({addOption}) {
+function NewOptions (props) {
 
     // const [quest, setQuest] = useState('');
-    const [optName, setOptName] = useState('');
-    const [optPrice, setOptPrice] = useState(0);
-    const [optDiscount, setOptDiscount] = useState(0);
-    const [optQty, setOptQty] = useState(0);
 
-    function SubmitForm(e) {
-        e.preventDefault();
-        // addQuestion(quest);
-        addOption(optName, optPrice, OptDiscount, optQty);
-      }
+    // function SubmitForm(e) {
+    //     e.preventDefault();
+    //     // addQuestion(quest);
+    //     addOption(optName, optPrice, optDiscount, optQty);
+    // }
 
-    function changeInput(e) {
-        setQuest(e.target.value);
-        // addQuestion(quest);
-        addOption(optName, optPrice, OptDiscount, optQty);
-    }
+    // const handleInputChange = (e)=>{
+    //     const {name,value} = e.target;
+    //     setSample({
+    //       [name]: value
+    //     })
+    //     console.log(sample);
+    //   }
 
     return (
-        <Form onSubmit={SubmitForm} className="form-one">
-            <Form.Label>Question</Form.Label>
-            {/* htmlFor attribute links the label to the input since it has id with the same value */}
-            <Form.Control  type="text" value={quest} onChange={changeInput} required/>
-            <Button variant="outlined" color="primary" onClick={SubmitForm} size="small" className="add-button">
-                Add Question
-            </Button>
+        <Form>
+            <Row>
+                <Col>
+                    <Form.Label>Name</Form.Label>
+                    <Form.Control
+                        type="text"
+                        placeholder="Enter name"
+                        name="optName"
+                        // onChange={(e)=>{handleInputChange(e)}}
+                        onChange={(e) => {props.setOptName(e.target.value)}}
+                    />
+                </Col>
+                <Col>
+                    <Form.Label>Price</Form.Label>
+                    <Form.Control
+                        type="number"
+                        placeholder="Enter price"
+                        name="optPrice"
+                        // onChange={(e)=>{handleInputChange(e)}}
+                        onChange={(e) => {props.setOptPrice(e.target.value)}}
+                    />
+                </Col>
+                <Col>
+                    <Form.Label>Discount</Form.Label>
+                    <Form.Control
+                        type="number"
+                        placeholder="Enter discount"
+                        name="optDiscount"
+                        // onChange={(e)=>{handleInputChange(e)}}
+                        onChange={(e) => {props.setOptDiscount(e.target.value)}}
+                    />
+                </Col>
+                <Col>
+                    <Form.Label>Quantity</Form.Label>
+                    <Form.Control
+                        type="number"
+                        placeholder="Enter quantity"
+                        name="optQty"
+                        // onChange={(e)=>{handleInputChange(e)}}
+                        onChange={(e) => {props.setOptQty(e.target.value)}}
+                    />
+                </Col>
+            </Row>
         </Form>
     );
 }

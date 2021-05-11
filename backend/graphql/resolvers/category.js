@@ -5,7 +5,7 @@ import { loggedin, admin } from '../../utils/verifyUser.js';
 // Category
 const createCategory = async (args, { req, redis }) => {
   try {
-    // if (admin(req)) {
+    if (admin(req)) {
       const { name } = args;
 
       const resp = await Category.find({ name: name });
@@ -19,7 +19,7 @@ const createCategory = async (args, { req, redis }) => {
       } else {
         throw new Error('Category already exists');
       }
-    // }
+    }
   } catch (err) {
     throw err;
   }
@@ -48,7 +48,7 @@ const getCategories = async (args, { req, redis }) => {
 
 const updateCategory = async (args, { req, redis }) => {
   try {
-    // if (admin(req)) {
+    if (admin(req)) {
       const { name, newName } = args;
 
       let updatedCategory = {
@@ -59,7 +59,7 @@ const updateCategory = async (args, { req, redis }) => {
       await Category.update({ name: name }, updatedCategory).exec();
 
       return { msg: 'success' };
-    // }
+    }
   } catch (err) {
     throw err;
   }
@@ -67,13 +67,13 @@ const updateCategory = async (args, { req, redis }) => {
 
 const deleteCategory = async (args, { req, redis }) => {
   try {
-    // if (admin(req)) {
+    if (admin(req)) {
       const { name } = args;
 
       await Category.deleteOne({ name: name });
 
       return { msg: 'success' };
-    // }
+    }
   } catch (err) {
     throw err;
   }
@@ -82,7 +82,7 @@ const deleteCategory = async (args, { req, redis }) => {
 // SubCategory
 const createSubCategory = async (args, { req, redis }) => {
   try {
-    // if (admin(req)) {
+    if (admin(req)) {
       const { name, category } = args;
 
       const resp = await SubCategory.find({ name: name, category: category });
@@ -97,7 +97,7 @@ const createSubCategory = async (args, { req, redis }) => {
       } else {
         throw new Error('Subcategory already exists in given category');
       }
-    // }
+    }
   } catch (err) {
     throw err;
   }

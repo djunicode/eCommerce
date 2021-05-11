@@ -6,13 +6,14 @@ import styled from 'styled-components';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { updateProduct } from '../actions/productActions';
-import SizeModal from '../components/Modals';
 import { createProduct } from '../actions/productActions';
 import { listCategories, listSubCategories } from '../actions/categoryActions';
 import { PRODUCT_CREATE_RESET } from '../constants/productConstants';
 import { printSchema } from 'graphql';
 // import { PRODUCT_UPDATE_RESET } from '../constants/productConstants';
 import { BrandDropdown, CatDropdown, SubCatDropdown } from '../components/Dropdowns';
+import NewOptions from '../components/NewOptions';
+import { set } from 'mongoose';
 
 const ProductCreateScreen = ({ match, history }) => {
 //   const productId = match.params.id;
@@ -29,6 +30,22 @@ const ProductCreateScreen = ({ match, history }) => {
   const [description, setDescription] = useState('');
   // const [uploading, setUploading] = useState(false);
   const [newArrival, setNewArrival] = useState(false);
+  const [optionsInput, setOptionsInput] = useState([]);
+
+  // const initialValues = {
+  //   optName: '',
+  //   optPrice: 0,
+  //   optDiscount: 0,
+  //   optQty: 0
+  // };
+
+  // const [sample, setSample] = useState(initialValues);
+
+  const [optName, setOptName] = useState('');
+  const [optPrice, setOptPrice] = useState(0);
+  const [optDiscount, setOptDiscount] = useState(0);
+  const [optQty, setOptQty] = useState(0);
+
 
   const dispatch = useDispatch();
 
@@ -45,14 +62,6 @@ const ProductCreateScreen = ({ match, history }) => {
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-
-  const query = `mutation {
-    createProduct(productInput: {name: "${name}", discount: ${discount}, price: ${price}, user: "${userInfo._id}", image: "${image}", brand: "${brand}", category: "${categ}", subcategory: "${subCateg}", new: ${newArrival}, countInStock: ${countInStock}, numReviews: 0, description: "${description}"}) {
-        name
-        _id
-    }
-  }
-  `;
   
   useEffect(() => {
       if (successCreate) {
@@ -60,11 +69,41 @@ const ProductCreateScreen = ({ match, history }) => {
         } 
   }, [successCreate, createdProduct]);
 
+  function handleSubmit(e) {
+    let temp = {name: optName, discount: optDiscount, price: optPrice, countInStock: optQty}
+    setOptionsInput([...optionsInput, temp]);
+    console.log(optionsInput);
+  }
+
   const createProductHandler = () => {
-      // if(userInfo) {
+
+        handleSubmit();
+
+        let temp = {name: optName, discount: optDiscount, price: optPrice, countInStock: optQty}
+    
+        const newOptions = [...optionsInput, temp];
+
+        var OptFields = newOptions.reduce((accumulator, option) => {let optionString=`{name: "${option.name}", price: ${option.price}, discount: ${option.discount}, countInStock: ${option.countInStock}},` 
+        accumulator+=optionString;
+        console.log(accumulator);
+        console.log(optionsInput);
+        return accumulator;
+        }, "")
+        console.log(OptFields);
+
+        var newString = `[${OptFields}]`
+
+        const query = `mutation {
+          createProduct(productInput: {name: "${name}", discount: ${discount}, price: ${price}, options: ${newString}, image: "${image}", brand: "${brand}", category: "${categ}", subcategory: "${subCateg}", new: ${newArrival}, countInStock: ${countInStock}, numReviews: 0, description: "${description}"}) {
+              name
+              _id
+          }
+        }
+        `;
+
         dispatch(createProduct(query));
         console.log("product created");
-        console.log(query);
+        // console.log(query);
         // history.push('/admin/productlist');
       // }
   };
@@ -110,6 +149,45 @@ const ProductCreateScreen = ({ match, history }) => {
 //   };
 
 
+  var ctr = 1;
+
+  const [click, setClick] = useState([ctr]);
+
+  const addNew = () => {
+    setClick([...click, click+1 ]);
+    console.log(click);
+    handleSubmit();
+    setOptName('');
+    setOptPrice(0);
+    setOptDiscount(0);
+    setOptQty(0);
+  }
+
+  // const addOption = (oName, oPrice, oDiscount, oQty) => {
+  //   setOptionsInput([...option, {optName: oName, optPrice: oPrice, optDiscount: oDiscount, optQty: oQty}]);
+  //   console.log(option);
+  // }
+
+  useEffect(() => {
+    // setOptionsInput([...option, sample]);
+    console.log(optionsInput);
+  }, [optionsInput]);
+
+  // useEffect(() => {
+  //   let temp = {name: optName, price: optPrice, discount: optDiscount, qty: optQty}
+  //   setOptionsInput([...option, temp]);
+  //   console.log(option);
+  // }, [optQty, optName, optPrice, optDiscount]);
+
+  // const [sample, setSample] = useState()
+  // let sample = [];
+  //           brands.map((br) => {
+  //               let optionsTemp = {label: br.name, value: br._id}  
+  //               optionsTwo.push(optionsTemp);
+  //           })
+  //           setOptionsInputList(optionsTwo);
+
+
   return (
     <div style={{padding: '120px 4rem'}}>
       <Link to="/admin/productlist" className="btn btn-light my-3" style={{border: '1px solid #D4D4D4'}}>
@@ -123,7 +201,7 @@ const ProductCreateScreen = ({ match, history }) => {
       ) : (
         <>
           <Form style={{ background: '#F9F9F9', padding: '3rem', marginBottom: '40px' }}>
-            <Row>
+            <Row style={{ marginBottom: '1rem' }}>
               <Col>
                 <Row style={{ marginBottom: '1rem' }}>
                   <Col controlId="name">
@@ -148,6 +226,18 @@ const ProductCreateScreen = ({ match, history }) => {
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
                     />
+                  </Col>
+                  
+                  <Col>
+                    <Form.Group as={Col} controlId="countInStock">
+                      <Form.Label>Quantity</Form.Label>
+                      <Form.Control
+                        type="number"
+                        placeholder="Enter quantity"
+                        value={countInStock}
+                        onChange={(e) => setCountInStock(e.target.value)}
+                      />
+                    </Form.Group>
                   </Col>
                 </Row>
 
@@ -229,28 +319,6 @@ const ProductCreateScreen = ({ match, history }) => {
               />
             </Form.Group>
 
-            <Row>
-              <Form.Group as={Col} controlId="countInStock">
-                <Form.Label>Quantity</Form.Label>
-                <Form.Control
-                  type="number"
-                  placeholder="Enter quantity"
-                  value={countInStock}
-                  onChange={(e) => setCountInStock(e.target.value)}
-                />
-              </Form.Group>
-
-              <Form.Group as={Col} controlId="size">
-                <Form.Label>Size</Form.Label>
-                <Form.Control
-                  type="number"
-                  placeholder="Enter size"
-                  value={size}
-                  onChange={(e) => setSize(e.target.value)}
-                />
-              </Form.Group>
-            </Row>
-
             <Form.Check 
               type="switch"
               id="custom-switch"
@@ -281,7 +349,22 @@ const ProductCreateScreen = ({ match, history }) => {
           </Form>
         </>
       )}
-      <Button onClick={createProductHandler}>Save Changes</Button>
+      <div>
+        {click.map((c,index) => {
+          return( 
+            <div style={{ background: '#F9F9F9', padding: '3rem', marginBottom: '40px' }}> 
+              <div>OPTION {index+1}</div>
+              <NewOptions setOptName={setOptName} setOptPrice={setOptPrice} setOptDiscount={setOptDiscount} setOptQty={setOptQty} /> 
+            </div> 
+          );
+        })}
+      </div>
+      <div style={{ background: '#F9F9F9', padding: '2rem 3rem', marginBottom: '40px', color: '#30475E', fontWeight: '600'}} onClick={addNew}>
+      <i class="fas fa-plus" style={{marginRight: '15px'}}></i> ADD A NEW OPTION
+      </div>
+      <Col className="text-right">
+        <Button style={{background: '#F05454'}} onClick={createProductHandler}>Save Changes</Button>
+      </Col>
     </div>
   );
 };

@@ -50,7 +50,7 @@ import {
   subCategoryEditReducer,
   subCategoryListReducer,
 } from './reducers/categoryReducers';
-import { brandCreateReducer, brandListReducer } from './reducers/brandReducers';
+import { brandCreateReducer, brandDeleteReducer, brandEditReducer, brandListReducer } from './reducers/brandReducers';
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -92,6 +92,8 @@ const reducer = combineReducers({
   subCategoryDelete: subCategoryDeleteReducer,
   brandList: brandListReducer,
   brandCreate: brandCreateReducer,
+  brandDelete: brandDeleteReducer,
+  brandEdit: brandEditReducer,
   updateChatbot,
 });
 

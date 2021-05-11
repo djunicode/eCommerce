@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Col } from 'react-bootstrap';
+import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { createCategories, listCategories, listSubCategories, deleteCategories, createSubCategories, deleteSubCategories } from '../actions/categoryActions';
 import CreatableSelect from 'react-select/creatable';
 import { components } from 'react-select';
-import {CategoryModal, SubCategoryModal} from './Modals';
-import { listBrands, createNewBrand } from '../actions/brandActions';
+import {CategoryModal, SubCategoryModal, BrandModal} from './Modals';
+import { listBrands, createNewBrand, deleteBrands } from '../actions/brandActions';
 
 
 const Option = (props) => {
@@ -17,8 +18,10 @@ const Option = (props) => {
             <components.Option {...props}>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <span>{props.data.label}</span>
-                <a href="#" onClick={handleModal}>Edit</a>
-                <a href="#" onClick={handleDelete}>Delete</a>
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <a href="#" onClick={handleModal}><Icon className="fas fa-edit" /></a>
+                    <a href="#" onClick={handleDelete}><Icon className="fas fa-trash" /></a>
+                </div>
                 </div>
             </components.Option>
         </>
@@ -227,7 +230,7 @@ export const SubCatDropdown = ({categ, subCateg, setSubCateg}) => {
 
     const createOption = (label) => ({
         label,
-        value: label
+        value: createSubcategory._id,
     });
     
     const handleCreateSubCategory = (inputValue) => {
@@ -239,7 +242,7 @@ export const SubCatDropdown = ({categ, subCateg, setSubCateg}) => {
         console.log("new option created");
 
         const queryCreateSub = `mutation {
-            createCategory (name: "${newOption.label}", category: "${categ}") {
+            createSubCategory (name: "${newOption.label}", category: "${categ}") {
                 name
                 _id
             }
@@ -331,6 +334,9 @@ export const BrandDropdown = ({brand, setBrand}) => {
     const brandCreate = useSelector((state) => state.brandCreate);
     const { createBrand } = brandCreate;
 
+    const brandDelete = useSelector((state) => state.brandDelete);
+    const { deleteBrand } = brandDelete;
+
     const queryBrands = `query {
         getBrands {
           name,
@@ -356,7 +362,7 @@ export const BrandDropdown = ({brand, setBrand}) => {
             setOptionList(optionsTwo);
         }
         console.log(optionList);
-    }, [brands, createBrand])
+    }, [brands, createBrand, deleteBrand])
     
     const handleChange = (newValue, actionMeta) => {
         if(newValue != null) {
@@ -397,46 +403,68 @@ export const BrandDropdown = ({brand, setBrand}) => {
         dispatch(createNewBrand(queryCreateBrand));
     }
 
-    // const [modalShow, setModalShow] = React.useState(false);
-    // const [newBrand, setNewBrand] = useState([
-    //     {
-    //     value: '',
-    //     },
-    // ]);
-    // const editBrand = (br) => {
-    //     setNewBrand([{ br }]);
-    // };
+    const handleDelete = () => {
+        const queryDeleteBrand = `mutation {
+            deleteBrand (name: "${selectedBrand}") {
+                msg
+            }
+        }`;
 
-    // const handleModal = (event) => {
-    //     event.preventDefault();
-    //     console.log("Open Modal");
-    //     setModalShow(true);
-    //     console.log(modalShow);
-    // };
+        if(window.confirm("Are you sure you want to delete this brand?")) {
+            dispatch(deleteBrands(queryDeleteBrand));
+            console.log(selectedBrand);
+            console.log("brand deleted");
+            console.log(deleteBrand.msg);
+        }
+    }
+
+
+    const [modalShow, setModalShow] = React.useState(false);
+    const [newBrand, setNewBrand] = useState([
+        {
+        value: '',
+        },
+    ]);
+    const editBrand = (br) => {
+        setNewBrand([{ br }]);
+    };
+
+    const handleModal = (event) => {
+        event.preventDefault();
+        console.log("Open Modal");
+        setModalShow(true);
+        console.log(modalShow);
+    };
     
 
     return(
         <>
-            {/* <BrandModal 
+            <BrandModal 
                 selectedBrand={selectedBrand}
                 editBrand={editBrand}
                 show={modalShow}
                 onHide={() => setModalShow(false)}
-            /> */}
+            />
 
-            <Col>
-                <Form.Label>Brand</Form.Label>
-                <CreatableSelect
-                // handleModal={handleModal}
-                isClearable
-                onChange={handleChange}
-                onInputChange={handleInputChange}
-                options={optionList}
-                // components={{ Option }}
-                onCreateOption={handleCreateBrand}
-                // handleDelete={handleDelete}
-                />
-            </Col>
+            <Form.Label>Brand</Form.Label>
+            <CreatableSelect
+            handleModal={handleModal}
+            isClearable
+            onChange={handleChange}
+            onInputChange={handleInputChange}
+            options={optionList}
+            components={{ Option }}
+            onCreateOption={handleCreateBrand}
+            handleDelete={handleDelete}
+            />
         </>
     )
 }
+
+const Icon = styled.i `
+    margin: 0 10px;
+    color: #929293;
+    &:hover {
+        color: #30475E;
+    }
+`

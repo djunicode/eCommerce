@@ -5,6 +5,8 @@ import { admin, loggedin } from '../../utils/verifyUser.js';
 // private/admin
 const createProduct = async (args, req) => {
   try {
+    console.log(req);
+    console.log(req.user);
     // if (admin(req)) {
       const product = new Product({
         name: args.productInput.name,
@@ -35,7 +37,7 @@ const createProduct = async (args, req) => {
 // cached
 const getProducts = async (args, { req, redis }) => {
   try {
-    // if (admin(req)) {
+    if (admin(req)) {
       const products = await redis.get('products:all');
 
       if (products) {
@@ -56,7 +58,7 @@ const getProducts = async (args, { req, redis }) => {
           throw new Error('No Products found');
         }
       }
-    // }
+    }
   } catch (err) {
     throw err;
   }
@@ -192,7 +194,7 @@ const getNewProducts = async (args, { req, redis }) => {
 // private/admin
 const updateProduct = async (args, { req, redis }) => {
   try {
-    // if (admin(req)) {
+    if (admin(req)) {
       // console.log(args.productId);
       // console.log(args);
       const product = await Product.findById(args.productId);
@@ -218,7 +220,7 @@ const updateProduct = async (args, { req, redis }) => {
       const updatedProduct = await Product.findById(args.productId);
       console.log(updatedProduct);
       return updatedProduct;
-    // }
+    }
   } catch (err) {
     console.log(err);
     throw err;
@@ -229,7 +231,7 @@ const updateProduct = async (args, { req, redis }) => {
 // private/admin
 const deleteProduct = async (args, { req, redis }) => {
   try {
-    // if (admin(req)) {
+    if (admin(req)) {
       const product = await Product.find({ _id: args.id });
       if (product) {
         const deleted = await Product.findByIdAndDelete(args.id);
@@ -238,7 +240,7 @@ const deleteProduct = async (args, { req, redis }) => {
       } else {
         throw new Error('Product not found');
       }
-    // }
+    }
   } catch (err) {
     console.log(err);
     throw err;

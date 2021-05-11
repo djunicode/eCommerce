@@ -31,6 +31,10 @@ import {
   SUBCATEGORY_DELETE_FAIL,
 } from '../constants/categoryConstants';
 
+
+const userinfo = JSON.parse(localStorage.getItem('userInfo'));
+console.log(userinfo);
+
 const url = 'http://localhost:5000/graphql';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -95,32 +99,70 @@ export const listSubCategories = (query) => async (dispatch) => {
   }
 };
 
-export const createCategories = (query) => async (dispatch) => {
+// export const createCategories = (query) => async (dispatch) => {
+//   try {
+//     dispatch({ type: CATEGORY_CREATE_REQUEST });
+
+//     const request = {
+//       method: 'post',
+//       url: 'http://localhost:5000/graphql',
+//       data: {
+//         query,
+//       },
+//       headers: { 'Content-Type': 'application/json' },
+//     };
+
+//     const { data } = await axios(request);
+
+//     dispatch({
+//       type: CATEGORY_CREATE_SUCCESS,
+//       payload: data.data.createCategory,
+//     });
+//   } catch (error) {
+//     dispatch({
+//       type: CATEGORY_CREATE_FAIL,
+//       payload:
+//         error.response && error.response.data.message
+//           ? error.response.data.message
+//           : error.message,
+//     });
+//   }
+// };
+
+export const createCategories = (query) => async (
+  dispatch
+) => {
   try {
-    dispatch({ type: CATEGORY_CREATE_REQUEST });
+    dispatch({
+      type: CATEGORY_CREATE_REQUEST,
+    });
 
-    const request = {
-      method: 'post',
-      url: 'http://localhost:5000/graphql',
-      data: {
-        query,
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${userinfo.token}`,
       },
-      headers: { 'Content-Type': 'application/json' },
     };
+    console.log(config);
 
-    const { data } = await axios(request);
+    const { data } = await axios.post('http://localhost:5000/graphql', {query}, config);
 
     dispatch({
       type: CATEGORY_CREATE_SUCCESS,
       payload: data.data.createCategory,
     });
   } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    // if (message === 'Not authorized, token failed') {
+    //   dispatch(logout());
+    // }
+    console.log(message);
     dispatch({
       type: CATEGORY_CREATE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      payload: message,
     });
   }
 };
@@ -135,7 +177,7 @@ export const createSubCategories = (query) => async (dispatch) => {
       data: {
         query,
       },
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userinfo.token}`, },
     };
 
     const { data } = await axios(request);
@@ -145,12 +187,17 @@ export const createSubCategories = (query) => async (dispatch) => {
       payload: data.data.createSubCategory,
     });
   } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    // if (message === 'Not authorized, token failed') {
+    //   dispatch(logout());
+    // }
+    console.log(message);
     dispatch({
       type: SUBCATEGORY_CREATE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      payload: message,
     });
   }
 };
@@ -165,7 +212,7 @@ export const editCategories = (query) => async (dispatch) => {
       data: {
         query,
       },
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userinfo.token}`, },
     };
 
     const { data } = await axios(request);
@@ -175,12 +222,17 @@ export const editCategories = (query) => async (dispatch) => {
       payload: data.data.updateCategory,
     });
   } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    // if (message === 'Not authorized, token failed') {
+    //   dispatch(logout());
+    // }
+    console.log(message);
     dispatch({
       type: CATEGORY_EDIT_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      payload: message,
     });
   }
 };
@@ -195,7 +247,7 @@ export const editSubCategories = (query) => async (dispatch) => {
       data: {
         query,
       },
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userinfo.token}`, },
     };
 
     const { data } = await axios(request);
@@ -205,12 +257,17 @@ export const editSubCategories = (query) => async (dispatch) => {
       payload: data.data.updateSubCategory,
     });
   } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    // if (message === 'Not authorized, token failed') {
+    //   dispatch(logout());
+    // }
+    console.log(message);
     dispatch({
       type: SUBCATEGORY_EDIT_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      payload: message,
     });
   }
 };
@@ -225,7 +282,7 @@ export const deleteCategories = (query) => async (dispatch) => {
       data: {
         query,
       },
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userinfo.token}`, },
     };
 
     const { data } = await axios(request);
@@ -235,12 +292,17 @@ export const deleteCategories = (query) => async (dispatch) => {
       payload: data.data.deleteCategory,
     });
   } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    // if (message === 'Not authorized, token failed') {
+    //   dispatch(logout());
+    // }
+    console.log(message);
     dispatch({
       type: CATEGORY_DELETE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      payload: message,
     });
   }
 };
@@ -255,7 +317,7 @@ export const deleteSubCategories = (query) => async (dispatch) => {
       data: {
         query,
       },
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userinfo.token}`, },
     };
 
     const { data } = await axios(request);
@@ -265,12 +327,17 @@ export const deleteSubCategories = (query) => async (dispatch) => {
       payload: data.data.deleteSubCategory,
     });
   } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    // if (message === 'Not authorized, token failed') {
+    //   dispatch(logout());
+    // }
+    console.log(message);
     dispatch({
       type: SUBCATEGORY_DELETE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      payload: message,
     });
   }
 };

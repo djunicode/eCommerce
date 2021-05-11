@@ -64,12 +64,18 @@ const ProductListScreen = ({ history, match }) => {
   const { userInfo } = userLogin;
 
 
-
   const querylist = `query {
     getProducts{
      _id
      name
-
+     category {
+       name
+       _id
+     }
+     subcategory {
+       name
+       _id
+     }
     }
   }`
 
@@ -77,7 +83,14 @@ const search = `query {
     searchProduct (searchTerm: "${searchProd}") {
      name
      _id
-
+     category {
+      name
+      _id
+    }
+    subcategory {
+      name
+      _id
+    }
   }
 }`
 
@@ -99,6 +112,14 @@ const catProd = `query {
   getProductByCategory (categoryId: "${category}") {
     _id
     name
+    category {
+      name
+      _id
+    }
+    subcategory {
+      name
+      _id
+    }
   }
 }`;
 
@@ -106,6 +127,14 @@ const subCatProd = `query {
   getProductBySubCategory (subCategoryId: "${subCategory}") {
     _id
     name
+    category {
+      name
+      _id
+    }
+    subcategory {
+      name
+      _id
+    }
   }
 }`;
 
@@ -180,7 +209,7 @@ const subCatProd = `query {
   //   console.log("hi");
   // };
 
-  const columnWidths = [338, 215, 215, 245, 105];
+  const columnWidths = [338, 225, 200, 240, 105];
   const rowHeights = [48, 320];
 
   const Cell = ({ columnIndex, rowIndex, style }) => (
@@ -193,7 +222,7 @@ const subCatProd = `query {
             category==="" ? (
               products.map((pr) => (
                 <tr>
-                  {columnIndex === 0 ? (<td style={{height: '50px'}}>{pr.name}</td>) : (columnIndex === 1 ? (<td style={{height: '50px'}}>{pr._id}</td>) : (columnIndex === 2 ? (<td style={{height: '50px'}}>{pr._id}</td>) : (columnIndex === 3 ? (<td style={{height: '50px'}}>{pr._id}</td>) : <td style={{padding: '7.4px', height: '50px'}}>
+                  {columnIndex === 0 ? (<td style={{height: '70px'}}>{pr.name}</td>) : (columnIndex === 1 ? (<td style={{height: '70px'}}>{pr.category.name}</td>) : (columnIndex === 2 ? (<td style={{height: '70px'}}>{pr.subcategory.name}</td>) : (columnIndex === 3 ? (<td style={{height: '70px'}}>{pr._id}</td>) : <td style={{padding: '7.4px', height: '70px'}}>
                     <LinkContainer
                           to={`/admin/product/${pr._id}/edit`}
                         >
@@ -213,7 +242,7 @@ const subCatProd = `query {
               subCategory==="" ? (
                 pByC.map((prodbycat) => (
                   <tr>
-                    {columnIndex === 0 ? (<td style={{height: '50px'}}>{prodbycat.name}</td>) : (columnIndex === 1 ? (<td style={{height: '50px'}}>{prodbycat._id}</td>) : (columnIndex === 2 ? (<td style={{height: '50px'}}>{prodbycat._id}</td>) : (columnIndex === 3 ? (<td style={{height: '50px'}}>{prodbycat._id}</td>) : <td style={{padding: '7.4px', height: '50px'}}>
+                    {columnIndex === 0 ? (<td style={{height: '70px'}}>{prodbycat.name}</td>) : (columnIndex === 1 ? (<td style={{height: '70px'}}>{prodbycat.category.name}</td>) : (columnIndex === 2 ? (<td style={{height: '70px'}}>{prodbycat.subcategory.name}</td>) : (columnIndex === 3 ? (<td style={{height: '70px'}}>{prodbycat._id}</td>) : <td style={{padding: '7.4px', height: '70px'}}>
                       <LinkContainer
                             to={`/admin/prodbycatoduct/${prodbycat._id}/edit`}
                           >
@@ -232,7 +261,7 @@ const subCatProd = `query {
               ) : (
                 pBySC.map((prodbysubcat) => (
                   <tr>
-                    {columnIndex === 0 ? (<td style={{height: '50px'}}>{prodbysubcat.name}</td>) : (columnIndex === 1 ? (<td style={{height: '50px'}}>{prodbysubcat._id}</td>) : (columnIndex === 2 ? (<td style={{height: '50px'}}>{prodbysubcat._id}</td>) : (columnIndex === 3 ? (<td style={{height: '50px'}}>{prodbysubcat._id}</td>) : <td style={{padding: '7.4px', height: '50px'}}>
+                    {columnIndex === 0 ? (<td style={{height: '70px'}}>{prodbysubcat.name}</td>) : (columnIndex === 1 ? (<td style={{height: '70px'}}>{prodbysubcat.category.name}</td>) : (columnIndex === 2 ? (<td style={{height: '70px'}}>{prodbysubcat.subcategory.name}</td>) : (columnIndex === 3 ? (<td style={{height: '70px'}}>{prodbysubcat._id}</td>) : <td style={{padding: '7.4px', height: '70px'}}>
                       <LinkContainer
                             to={`/admin/prodbysubcatoduct/${prodbysubcat._id}/edit`}
                           >
@@ -253,7 +282,7 @@ const subCatProd = `query {
           ) : (
             searchproducts.map((sr) => (
               <tr>
-                {columnIndex === 0 ? (<td style={{height: '50px'}}>{sr.name}</td>) : (columnIndex === 1 ? (<td style={{height: '50px'}}>{sr._id}</td>) : (columnIndex === 2 ? (<td style={{height: '50px'}}>{sr._id}</td>) : (columnIndex === 3 ? (<td style={{height: '50px'}}>{sr._id}</td>) : <td style={{padding: '7.4px', height: '50px'}}>
+                {columnIndex === 0 ? (<td style={{height: '70px'}}>{sr.name}</td>) : (columnIndex === 1 ? (<td style={{height: '70px'}}>{sr.category.name}</td>) : (columnIndex === 2 ? (<td style={{height: '70px'}}>{sr.subcategory.name}</td>) : (columnIndex === 3 ? (<td style={{height: '70px'}}>{sr._id}</td>) : <td style={{padding: '7.4px', height: '70px'}}>
                   <LinkContainer
                         to={`/admin/sroduct/${sr._id}/edit`}
                       >

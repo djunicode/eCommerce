@@ -191,6 +191,24 @@ h2 {
   padding-left: 37px !important;
 }
 
+.css-yk16xz-control {
+  border: none !important;
+  border-radius: 0 !important;
+  height: calc(1.5em + 1.5rem + 0px);
+  padding: 0 1rem;
+  font-size: 0.87rem !important;
+  color: #55595c;
+  line-height: 1.5;
+}
+
+.css-1okebmr-indicatorSeparator {
+  width: 0 !important;
+}
+
+.custom-control-label::before {
+  border: 1.5px solid #D4D4D4;
+}
+
 @media(max-width: 990px){
   .fcISXU{
     width: 90% !important;
