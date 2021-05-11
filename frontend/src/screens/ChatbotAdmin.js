@@ -34,12 +34,14 @@ const ChatbotAdmin = () => {
   const [dmsg, setDmsg] = useState(); // to save index to be delted on clicking delete icon
   const [tmessages, setTmessages] = useState([]);
   const [flag, setFlag] = useState(true);
+  const [fmsg, setFmsg] = useState({ msg: '' }); // stores the first message to be displayed by the chatbot
 
   useEffect(() => {
     if (messages.length !== 0 && flag) {
       setFlag(false);
       setTmessages(messages.slice());
     }
+    console.log(messages);
   }, [messages]);
 
   const { loading, data, error } = useSelector(
@@ -73,6 +75,17 @@ const ChatbotAdmin = () => {
       });
       const n = levl1[levl1.length - 1].index;
       const N = parseInt(n);
+      const tfmsg = data.filter((value) => {
+        if (value.level === '0') {
+          return value;
+        }
+        return null;
+      });
+      if (tfmsg.length === 0) {
+        setFmsg({ level: '0', index: '0', msg: '', info: '' });
+      } else {
+        setFmsg(tfmsg[0]);
+      }
       let i = 1;
       const msgs = [];
       while (i <= N) {
@@ -127,6 +140,9 @@ const ChatbotAdmin = () => {
 
   const handleSave = () => {
     const details = [];
+    details.push(
+      `{level:"${fmsg.level}",index:"${fmsg.index}",msg:"${fmsg.msg}",info:"${fmsg.info}"}`,
+    );
     messages.map((m) => {
       m.map((m1) => {
         details.push(
@@ -155,8 +171,19 @@ const ChatbotAdmin = () => {
                 <StyledBox>
                   <InputGroup className="m-2">
                     <FormControl
+                      type="text"
                       placeholder="Message"
                       aria-describedby="basic-addon2"
+                      value={fmsg.msg}
+                      onChange={(e) => {
+                        const { value } = e.target;
+                        setFmsg((t) => {
+                          const temp = { ...t };
+                          temp.msg = value;
+                          return temp;
+                        });
+                        console.log(e.target.value);
+                      }}
                     />
                     <InputGroup.Append>
                       <InputGroup.Text id="basic-addon2">
@@ -182,10 +209,10 @@ const ChatbotAdmin = () => {
                         defaultActiveKey="0"
                         key={msg[0].index}
                       >
-                        <Card style={{ backgroundColor: 'white' }}>
+                        <Card style={{ backgroundColor: '#F9F9F9' }}>
                           <Card.Header
                             style={{
-                              backgroundColor: 'white',
+                              backgroundColor: '#F9F9F9',
                               padding: '0',
                               borderBottom:
                                 '2px solid rgba(0,0,0,0.125)',
@@ -226,7 +253,7 @@ const ChatbotAdmin = () => {
                           <Accordion.Collapse eventKey="1">
                             <Card.Body
                               style={{
-                                backgroundColor: 'white',
+                                backgroundColor: '#F9F9F9',
                                 position: 'relative',
                                 paddingRight: '0px',
                                 paddingLeft: '1rem',
@@ -544,7 +571,7 @@ const StyledBtn = styled(Button)`
 `;
 
 // const Saccordion = styled(Accordion)`
-//   background-color: white;
+//   background-color: #F9F9F9;
 // `;
 
 const StyledDiv = styled.div`

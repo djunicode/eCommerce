@@ -25,3 +25,7 @@ yarn-error.log*
 
 .vscode/*
 *.code-workspace
+
+# redis linux support
+redis-stable.tar.gz
+redis-stable/

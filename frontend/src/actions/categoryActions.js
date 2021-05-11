@@ -6,7 +6,6 @@ import {
   PRODCUTS_BY_CATEGORY_ID_LIST_SUCCESS,
   CATEGORY_LIST_REQUEST,
   CATEGORY_LIST_SUCCESS,
-  CATEGORY_LIST_RESET,
   CATEGORY_LIST_FAIL,
   SUBCATEGORY_LIST_REQUEST,
   SUBCATEGORY_LIST_SUCCESS,
@@ -360,7 +359,6 @@ export const getProductByCategory = (id, sort = 'none') => async (
                     name
                     discount
                     price
-                    discountedPrice
                     user{
                         _id
                     }

@@ -23,6 +23,8 @@ import {
 
 import { DARK_BLUE_2 } from '../util/colors';
 
+import '../css/card.module.css';
+
 const SearchScreen = () => {
   const { keyword } = useParams();
   console.log(keyword);
@@ -40,7 +42,7 @@ const SearchScreen = () => {
   const { filters } = filtersApplied;
   console.log(filters);
 
-  if (products.length === 0 && !loading) {
+  if (products && products.length === 0 && !loading) {
     return (
       <Message variant="danger">
         No Products Matched the Search criteria!
