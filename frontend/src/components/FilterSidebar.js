@@ -507,12 +507,16 @@ const FilterSidebar = ({ page }) => {
         <Row>
           <StyledClearFiltersBtn
             onClick={() => {
-              dispatch(filter({}));
               setBrandState([]);
               selectedBrands = [];
               setRatingState([]);
               selectedRating = [];
               setPriceState();
+              setPriceRange({
+                max: prices.max,
+                min: prices.min,
+              });
+              dispatch(filter({}));
             }}
           >
             Clear Filters
@@ -613,7 +617,7 @@ const StyledClearFiltersBtn = styled(Button)`
 
   :hover {
     transform: scale(0.98);
-    transition: 1s;
+    transition: 0.2s;
     background-color: ${DARK_BLUE_2};
   }
 `;
