@@ -3,11 +3,11 @@ import { admin, loggedin } from '../../utils/verifyUser.js';
 
 // Create new product
 // private/admin
-const createProduct = async (args, req) => {
+const createProduct = async (args, {req}) => {
   try {
     console.log(req);
     console.log(req.user);
-    // if (admin(req)) {
+    if (admin(req)) {
       const product = new Product({
         name: args.productInput.name,
         discount: args.productInput.discount,
@@ -25,7 +25,7 @@ const createProduct = async (args, req) => {
       });
       const res = await product.save();
       return res;
-    // }
+    }
   } catch (err) {
     console.log(err);
     throw err;
@@ -204,9 +204,9 @@ const updateProduct = async (args, { req, redis }) => {
 
       const newUpdatedProduct = {
         name: args.updateProduct.name,
-        discount: args.productInput.discount,
+        discount: args.updateProduct.discount,
         price: args.updateProduct.price,
-        options: args.productInput.options,
+        options: args.updateProduct.options,
         image: args.updateProduct.image,
         brand: args.updateProduct.brand,
         category: args.updateProduct.category,

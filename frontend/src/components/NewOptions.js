@@ -3,22 +3,6 @@ import {Form, Button, Row, Col} from 'react-bootstrap';
 
 function NewOptions (props) {
 
-    // const [quest, setQuest] = useState('');
-
-    // function SubmitForm(e) {
-    //     e.preventDefault();
-    //     // addQuestion(quest);
-    //     addOption(optName, optPrice, optDiscount, optQty);
-    // }
-
-    // const handleInputChange = (e)=>{
-    //     const {name,value} = e.target;
-    //     setSample({
-    //       [name]: value
-    //     })
-    //     console.log(sample);
-    //   }
-
     return (
         <Form>
             <Row>

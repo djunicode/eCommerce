@@ -32,15 +32,6 @@ const ProductCreateScreen = ({ match, history }) => {
   const [newArrival, setNewArrival] = useState(false);
   const [optionsInput, setOptionsInput] = useState([]);
 
-  // const initialValues = {
-  //   optName: '',
-  //   optPrice: 0,
-  //   optDiscount: 0,
-  //   optQty: 0
-  // };
-
-  // const [sample, setSample] = useState(initialValues);
-
   const [optName, setOptName] = useState('');
   const [optPrice, setOptPrice] = useState(0);
   const [optDiscount, setOptDiscount] = useState(0);
@@ -77,76 +68,33 @@ const ProductCreateScreen = ({ match, history }) => {
 
   const createProductHandler = () => {
 
-        handleSubmit();
+    handleSubmit();
 
-        let temp = {name: optName, discount: optDiscount, price: optPrice, countInStock: optQty}
-    
-        const newOptions = [...optionsInput, temp];
+    let temp = {name: optName, discount: optDiscount, price: optPrice, countInStock: optQty}
 
-        var OptFields = newOptions.reduce((accumulator, option) => {let optionString=`{name: "${option.name}", price: ${option.price}, discount: ${option.discount}, countInStock: ${option.countInStock}},` 
-        accumulator+=optionString;
-        console.log(accumulator);
-        console.log(optionsInput);
-        return accumulator;
-        }, "")
-        console.log(OptFields);
+    const newOptions = [...optionsInput, temp];
 
-        var newString = `[${OptFields}]`
+    var OptFields = newOptions.reduce((accumulator, option) => {let optionString=`{name: "${option.name}", price: ${option.price}, discount: ${option.discount}, countInStock: ${option.countInStock}},` 
+    accumulator+=optionString;
+    console.log(accumulator);
+    console.log(optionsInput);
+    return accumulator;
+    }, "")
+    console.log(OptFields);
 
-        const query = `mutation {
-          createProduct(productInput: {name: "${name}", discount: ${discount}, price: ${price}, options: ${newString}, image: "${image}", brand: "${brand}", category: "${categ}", subcategory: "${subCateg}", new: ${newArrival}, countInStock: ${countInStock}, numReviews: 0, description: "${description}"}) {
-              name
-              _id
-          }
-        }
-        `;
+    var newString = `[${OptFields}]`
 
-        dispatch(createProduct(query));
-        console.log("product created");
-        // console.log(query);
-        // history.push('/admin/productlist');
-      // }
+    const query = `mutation {
+      createProduct(productInput: {name: "${name}", discount: ${discount}, price: ${price}, options: ${newString}, image: "${image}", brand: "${brand}", category: "${categ}", subcategory: "${subCateg}", new: ${newArrival}, countInStock: ${countInStock}, numReviews: 0, description: "${description}"}) {
+          name
+          _id
+      }
+    }
+    `;
+
+    dispatch(createProduct(query));
+    console.log("product created");
   };
-
-//   const productUpdate = useSelector((state) => state.productUpdate);
-//   const {
-//     loading: loadingUpdate,
-//     error: errorUpdate,
-//     success: successUpdate,
-//   } = productUpdate;
-
-  // useEffect(() => {
-  //   if (successUpdate) {
-  //     dispatch({ type: PRODUCT_UPDATE_RESET });
-  //     history.push('/admin/productlist');
-  //     } 
-  //     else if (!product.name || product._id !== productId) {
-  //       dispatch(listProductDetails(productId));
-  //     } else {
-  //       setName(product.name);
-  //       setPrice(product.price);
-  //       setImage(product.image);
-  //       setBrand(product.brand);
-  //       setCategory(product.category);
-  //       setCountInStock(product.countInStock);
-  //       setDescription(product.description);
-  //   }
-  // }, [dispatch, history, productId, product, successUpdate]);
-
-//   const submitHandler = (e) => {
-//     e.preventDefault();
-//     dispatch(
-//       updateProduct({
-//         _id: productId,
-//         name,
-//         image,
-//         brand,
-//         category,
-//         description,
-//         countInStock,
-//       }),
-//     );
-//   };
 
 
   var ctr = 1;
@@ -163,29 +111,11 @@ const ProductCreateScreen = ({ match, history }) => {
     setOptQty(0);
   }
 
-  // const addOption = (oName, oPrice, oDiscount, oQty) => {
-  //   setOptionsInput([...option, {optName: oName, optPrice: oPrice, optDiscount: oDiscount, optQty: oQty}]);
-  //   console.log(option);
-  // }
 
   useEffect(() => {
     // setOptionsInput([...option, sample]);
     console.log(optionsInput);
   }, [optionsInput]);
-
-  // useEffect(() => {
-  //   let temp = {name: optName, price: optPrice, discount: optDiscount, qty: optQty}
-  //   setOptionsInput([...option, temp]);
-  //   console.log(option);
-  // }, [optQty, optName, optPrice, optDiscount]);
-
-  // const [sample, setSample] = useState()
-  // let sample = [];
-  //           brands.map((br) => {
-  //               let optionsTemp = {label: br.name, value: br._id}  
-  //               optionsTwo.push(optionsTemp);
-  //           })
-  //           setOptionsInputList(optionsTwo);
 
 
   return (
@@ -193,7 +123,7 @@ const ProductCreateScreen = ({ match, history }) => {
       <Link to="/admin/productlist" className="btn btn-light my-3" style={{border: '1px solid #D4D4D4'}}>
         Go Back
       </Link>
-      <h1>Create Product</h1>
+      <h1 style={{marginBottom: '30px'}}>Create New Product</h1>
       {loading ? (
         <Loader />
       ) : error ? (
@@ -261,51 +191,6 @@ const ProductCreateScreen = ({ match, history }) => {
                   </Col>
                 </Row>
               </Col>
-
-              {/* <Col md={4}>
-                <Table size="sm">
-                  <tbody>
-                    <tr>
-                      <td
-                        style={{
-                          padding: '0',
-                          border: 'none',
-                          color: '#222831',
-                        }}
-                      >
-                        <Form.Label>Size</Form.Label>
-                      </td>
-                      <td
-                        style={{
-                          padding: '0',
-                          border: 'none',
-                          color: '#222831',
-                        }}
-                      >
-                        <Form.Label>Price</Form.Label>
-                      </td>
-                    </tr>
-                    {sizes.map((s) => {
-                      return (
-                        <tr>
-                          <SizeCol>{s.size}</SizeCol>
-                          {prices.map((p) => {
-                            return <SizeCol>{p.price}</SizeCol>;
-                          })}
-                        </tr>
-                      );
-                    })}
-                    <tr>
-                      <SizeCol
-                        colSpan="2"
-                        onClick={() => setModalShow(true)}
-                      >
-                        + Add size and price
-                      </SizeCol>
-                    </tr>
-                  </tbody>
-                </Table>
-              </Col> */}
             </Row>
 
             <Form.Group controlId="description">
@@ -363,7 +248,7 @@ const ProductCreateScreen = ({ match, history }) => {
       <i class="fas fa-plus" style={{marginRight: '15px'}}></i> ADD A NEW OPTION
       </div>
       <Col className="text-right">
-        <Button style={{background: '#F05454'}} onClick={createProductHandler}>Save Changes</Button>
+        <Button style={{background: '#F05454'}} onClick={createProductHandler}>Create Product</Button>
       </Col>
     </div>
   );

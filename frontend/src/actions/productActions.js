@@ -151,7 +151,6 @@ export const createProduct = (query) => async (
     console.log(config);
 
     const { data } = await axios.post('http://localhost:5000/graphql', {query}, config);
-    debugger
 
     dispatch({
       type: PRODUCT_CREATE_SUCCESS,

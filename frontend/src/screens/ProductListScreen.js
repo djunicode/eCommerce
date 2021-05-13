@@ -68,14 +68,6 @@ const ProductListScreen = ({ history, match }) => {
     getProducts{
      _id
      name
-     category {
-       name
-       _id
-     }
-     subcategory {
-       name
-       _id
-     }
     }
   }`
 
@@ -142,18 +134,7 @@ const subCatProd = `query {
 
   //********** USE EFFECTS **********
   useEffect(() => {
-    // dispatch({ type: PRODUCT_CREATE_RESET });
-
-    // if (!userInfo || !userInfo.isAdmin) {
-    //   history.push('/login');
-    // }
-
-    // if (successCreate) {
-    //   // history.push(`/admin/product/${createdProduct._id}/edit`);
-    //   history.push(`/admin/productlist`);
-    // } else {
-        dispatch(listProducts(querylist));
-    // }
+    dispatch(listProducts(querylist));
   }, [
     dispatch,
     history,
@@ -204,11 +185,6 @@ const subCatProd = `query {
     }
   };
 
-  // const createProductHandler = () => {
-  //   // dispatch(createProduct(query));
-  //   console.log("hi");
-  // };
-
   const columnWidths = [338, 225, 200, 240, 105];
   const rowHeights = [48, 320];
 
@@ -222,7 +198,7 @@ const subCatProd = `query {
             category==="" ? (
               products.map((pr) => (
                 <tr>
-                  {columnIndex === 0 ? (<td style={{height: '70px'}}>{pr.name}</td>) : (columnIndex === 1 ? (<td style={{height: '70px'}}>{pr.category.name}</td>) : (columnIndex === 2 ? (<td style={{height: '70px'}}>{pr.subcategory.name}</td>) : (columnIndex === 3 ? (<td style={{height: '70px'}}>{pr._id}</td>) : <td style={{padding: '7.4px', height: '70px'}}>
+                  {columnIndex === 0 ? (<td style={{height: '70px'}}>{pr.name}</td>) : (columnIndex === 1 ? (<td style={{height: '70px'}}>{pr.name}</td>) : (columnIndex === 2 ? (<td style={{height: '70px'}}>{pr.name}</td>) : (columnIndex === 3 ? (<td style={{height: '70px'}}>{pr._id}</td>) : <td style={{padding: '7.4px', height: '70px'}}>
                     <LinkContainer
                           to={`/admin/product/${pr._id}/edit`}
                         >

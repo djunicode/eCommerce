@@ -66,7 +66,7 @@ export const CatDropdown = ({categ, setCateg}) => {
             })
             setOptionList(optionsTwo);
         }
-        console.log(optionList);
+        // console.log(optionList);
     }, [categories, createCategory, deleteCategory])
     
     const handleChange = (newValue, actionMeta) => {
@@ -207,7 +207,7 @@ export const SubCatDropdown = ({categ, subCateg, setSubCateg}) => {
             })
             setOptionList(optionsTwo);
         }
-        console.log(optionList);
+        // console.log(optionList);
     }, [subcategories, createSubcategory, deleteSubcategory])
     
     const handleChange = (newValue, actionMeta) => {
@@ -253,7 +253,7 @@ export const SubCatDropdown = ({categ, subCateg, setSubCateg}) => {
 
     const handleDelete = () => {
         const queryDeleteSub = `mutation {
-            deleteSubcategory (subCategoryId: "${subCateg}") {
+            deleteSubCategory (subCategoryId: "${subCateg}") {
                 msg
             }
         }`;
@@ -361,7 +361,7 @@ export const BrandDropdown = ({brand, setBrand}) => {
             })
             setOptionList(optionsTwo);
         }
-        console.log(optionList);
+        // console.log(optionList);
     }, [brands, createBrand, deleteBrand])
     
     const handleChange = (newValue, actionMeta) => {
