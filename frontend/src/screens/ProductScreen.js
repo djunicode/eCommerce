@@ -1,7 +1,5 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,19 +11,19 @@ import {
   Button,
   Form,
   Nav,
-  Jumbotron,
+  // Jumbotron,
 } from 'react-bootstrap';
-import ReactImageMagnify from 'react-image-magnify';
+// import ReactImageMagnify from 'react-image-magnify';
 // import { set } from 'mongoose';
 import Rating from '../components/Rating';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import watchImg687 from '../images/wristwatch_687.jpg';
-import watchImg1200 from '../images/wristwatch_1200.jpg';
+// import watchImg687 from '../images/wristwatch_687.jpg';
+// import watchImg1200 from '../images/wristwatch_1200.jpg';
 import { getProduct } from '../actions/productidAction';
 import Review from '../components/Review';
 import Question from '../components/Question';
-import ReactSlickIntegration from '../components/ReactSlickIntegration';
+// import ReactSlickIntegration from '../components/ReactSlickIntegration';
 import ReactSlick from '../components/ReactSlick';
 
 const initialValues = {
@@ -134,11 +132,11 @@ const ProductScreen = () => {
 
   const handleDone = () => {
     if (values.question) {
-      setQuestions((q) => {
+      setQuestions((qu) => {
         setAaq(false);
         return [
           { question: values.question, answer: 'None Yet' },
-          ...q,
+          ...qu,
         ];
       });
     }
@@ -284,6 +282,7 @@ const ProductScreen = () => {
                         display: 'flex',
                         alignItems: 'center',
                         flexDirection: 'col',
+                        justifyContent: 'center',
                       }}
                     >
                       <span
@@ -791,7 +790,7 @@ const ProductScreen = () => {
                       </div>
                     </>
                   )}
-                  {questions.map((question, index) => {
+                  {questions.map((question) => {
                     return (
                       <Question
                         question={question.question}

@@ -1,7 +1,7 @@
 /* eslint-disable import/named */
 /* eslint-disable import/prefer-default-export */
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import {
   CHATBOT_CREATE_FAIL,
   CHATBOT_CREATE_SUCCESS,
@@ -10,6 +10,7 @@ import {
   CHATBOT_UPDATE_SUCCESS,
   CHATBOT_UPDATE_REQUEST,
 } from '../constants/chatbotConstants';
+import { logout } from './userActions';
 
 export const getChat = (query) => async (dispatch) => {
   try {
@@ -83,8 +84,8 @@ export const updateChat = (mutation) => async (dispatch) => {
           : error.message,
     });
     if (error.response.status === 401) {
-      const history = useHistory();
-      history.push('/login');
+      const dis = useDispatch();
+      dis(logout());
     }
   }
 };
