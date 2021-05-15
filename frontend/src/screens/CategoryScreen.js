@@ -23,6 +23,8 @@ import {
   StyledWarning,
 } from '../util/StyledComponents';
 
+import '../css/card.module.css';
+
 const CategoryScreen = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -48,7 +50,7 @@ const CategoryScreen = () => {
     renderedProds = [];
   }, [filters, products, id]);
 
-  if (products.length === 0 && !loading) {
+  if (products && products.length === 0 && !loading) {
     return (
       <Message variant="danger">
         No Products found in this Category

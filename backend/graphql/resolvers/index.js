@@ -49,6 +49,8 @@ import {
 import {
   getBrands,
   createBrand,
+  updateBrand,
+  deleteBrand,
 } from './brand.js';
 
 import { questions, question, editQuestions } from './chatbot.js';
@@ -70,6 +72,8 @@ export default {
   //brand
   createBrand: createBrand,
   getBrands: getBrands,
+  updateBrand: updateBrand,
+  deleteBrand: deleteBrand,
   //categories
   createCategory: createCategory,
   getCategories: getCategories,
