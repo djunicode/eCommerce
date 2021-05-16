@@ -36,9 +36,7 @@ import { logout } from './userActions';
 const userinfo = JSON.parse(localStorage.getItem('userInfo'));
 console.log(userinfo);
 
-export const listProducts = (query) => async (
-  dispatch,
-) => {
+export const listProducts = (query) => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_LIST_REQUEST });
 
@@ -48,7 +46,10 @@ export const listProducts = (query) => async (
       data: {
         query,
       },
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userinfo.token}`, },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userinfo.token}`,
+      },
     };
 
     const { data } = await axios(request);
@@ -94,7 +95,10 @@ export const listProductDetails = (id) => async (dispatch) => {
   }
 };
 
-export const deleteProduct = (query) => async (dispatch, getState) => {
+export const deleteProduct = (query) => async (
+  dispatch,
+  getState,
+) => {
   try {
     dispatch({
       type: PRODUCT_DELETE_REQUEST,
@@ -107,12 +111,16 @@ export const deleteProduct = (query) => async (dispatch, getState) => {
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${userinfo.token}`,
+        Authorization: `Bearer ${userinfo.token}`,
       },
     };
     // console.log(userInfo.token);
 
-    const { data } = await axios.post('http://localhost:5000/graphql', {query}, config);
+    const { data } = await axios.post(
+      'http://localhost:5000/graphql',
+      { query },
+      config,
+    );
 
     dispatch({
       type: PRODUCT_DELETE_SUCCESS,
@@ -133,9 +141,7 @@ export const deleteProduct = (query) => async (dispatch, getState) => {
   }
 };
 
-export const createProduct = (query) => async (
-  dispatch
-) => {
+export const createProduct = (query) => async (dispatch) => {
   console.log('this works');
   try {
     dispatch({
@@ -145,12 +151,16 @@ export const createProduct = (query) => async (
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${userinfo.token}`,
+        Authorization: `Bearer ${userinfo.token}`,
       },
     };
     console.log(config);
 
-    const { data } = await axios.post('http://localhost:5000/graphql', {query}, config);
+    const { data } = await axios.post(
+      'http://localhost:5000/graphql',
+      { query },
+      config,
+    );
 
     dispatch({
       type: PRODUCT_CREATE_SUCCESS,
@@ -172,9 +182,7 @@ export const createProduct = (query) => async (
   }
 };
 
-export const updateProduct = (query) => async (
-  dispatch,
-) => {
+export const updateProduct = (query) => async (dispatch) => {
   try {
     dispatch({
       type: PRODUCT_UPDATE_REQUEST,
@@ -187,11 +195,15 @@ export const updateProduct = (query) => async (
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${userinfo.token}`,
+        Authorization: `Bearer ${userinfo.token}`,
       },
     };
 
-    const { data } = await axios.post('http://localhost:5000/graphql', {query}, config);
+    const { data } = await axios.post(
+      'http://localhost:5000/graphql',
+      { query },
+      config,
+    );
 
     dispatch({
       type: PRODUCT_UPDATE_SUCCESS,
@@ -347,7 +359,9 @@ export const listProductByCategory = (query) => async (dispatch) => {
   }
 };
 
-export const listProductBySubCategory = (query) => async (dispatch) => {
+export const listProductBySubCategory = (query) => async (
+  dispatch,
+) => {
   try {
     dispatch({ type: PRODUCT_BY_SUBCATEGORY_REQUEST });
 

@@ -166,7 +166,7 @@ export const subCategoryCreateReducer = (
       return { createSubcategory: [] };
     case SUBCATEGORY_CREATE_SUCCESS:
       return {
-       createSubcategory: action.payload,
+        createSubcategory: action.payload,
       };
     case SUBCATEGORY_CREATE_FAIL:
       return { error: action.payload };

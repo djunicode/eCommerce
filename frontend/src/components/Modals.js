@@ -5,7 +5,6 @@ import { editBrands } from '../actions/brandActions';
 import { editCategories } from '../actions/categoryActions';
 
 export function CategoryModal(props) {
-
   const [newCat, setNewCat] = useState('');
   const [show, setShow] = useState(true);
   // const alertDisplay = [];
@@ -20,7 +19,6 @@ export function CategoryModal(props) {
       msg
     }
   }`;
-
 
   function SubmitForm(e) {
     e.preventDefault();
@@ -47,51 +45,51 @@ export function CategoryModal(props) {
 
   return (
     <>
-    <Modal
-      // eslint-disable-next-line react/jsx-props-no-spreading
-      {...props}
-      size="md"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-      backdrop="static"
-      keyboard={false}
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Edit Category : {props.selectedCategory}
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form onSubmit={SubmitForm} className="category-form">
-          <Form.Label>New category name: </Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter value"
-            value={newCat}
-            onChange={changeCat}
-          />
-        </Form>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={SubmitForm}>Save Changes</Button>
-        <Button onClick={props.onHide}>Close</Button>
-      </Modal.Footer>
-    </Modal>
-    {/* <div>{alertDisplay}</div> */}
+      <Modal
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        {...props}
+        size="md"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Edit Category : {props.selectedCategory}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={SubmitForm} className="category-form">
+            <Form.Label>New category name: </Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter value"
+              value={newCat}
+              onChange={changeCat}
+            />
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={SubmitForm}>Save Changes</Button>
+          <Button onClick={props.onHide}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+      {/* <div>{alertDisplay}</div> */}
     </>
   );
 }
 
-
 export function SubCategoryModal(props) {
-
   const [newSubCat, setNewSubCat] = useState('');
   const [show, setShow] = useState(true);
   // const alertDisplay = [];
 
   const dispatch = useDispatch();
 
-  const subCategoryEdit = useSelector((state) => state.subCategoryEdit);
+  const subCategoryEdit = useSelector(
+    (state) => state.subCategoryEdit,
+  );
   const { error, editSubcategory } = subCategoryEdit;
 
   const queryEditSub = `mutation {
@@ -99,7 +97,6 @@ export function SubCategoryModal(props) {
       msg
     }
   }`;
-
 
   function SubmitForm(e) {
     e.preventDefault();
@@ -126,44 +123,42 @@ export function SubCategoryModal(props) {
 
   return (
     <>
-    <Modal
-      // eslint-disable-next-line react/jsx-props-no-spreading
-      {...props}
-      size="md"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-      backdrop="static"
-      keyboard={false}
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Edit Sub Category : {props.selectedSubCategory}
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form onSubmit={SubmitForm} className="category-form">
-          <Form.Label>New sub category name: </Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter value"
-            value={newSubCat}
-            onChange={changeSubCat}
-          />
-        </Form>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={SubmitForm}>Save Changes</Button>
-        <Button onClick={props.onHide}>Close</Button>
-      </Modal.Footer>
-    </Modal>
-    {/* <div>{alertDisplay}</div> */}
+      <Modal
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        {...props}
+        size="md"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Edit Sub Category : {props.selectedSubCategory}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={SubmitForm} className="category-form">
+            <Form.Label>New sub category name: </Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter value"
+              value={newSubCat}
+              onChange={changeSubCat}
+            />
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={SubmitForm}>Save Changes</Button>
+          <Button onClick={props.onHide}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+      {/* <div>{alertDisplay}</div> */}
     </>
   );
 }
 
-
 export function BrandModal(props) {
-
   const [newBrand, setNewBrand] = useState('');
   // const [show, setShow] = useState(true);
   // const alertDisplay = [];
@@ -178,7 +173,6 @@ export function BrandModal(props) {
       msg
     }
   }`;
-
 
   function SubmitForm(e) {
     e.preventDefault();
@@ -205,37 +199,37 @@ export function BrandModal(props) {
 
   return (
     <>
-    <Modal
-      // eslint-disable-next-line react/jsx-props-no-spreading
-      {...props}
-      size="md"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-      backdrop="static"
-      keyboard={false}
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Edit Brand : {props.selectedBrand}
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form onSubmit={SubmitForm} className="brand-form">
-          <Form.Label>New brand name: </Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter value"
-            value={newBrand}
-            onChange={changeBrand}
-          />
-        </Form>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={SubmitForm}>Save Changes</Button>
-        <Button onClick={props.onHide}>Close</Button>
-      </Modal.Footer>
-    </Modal>
-    {/* <div>{alertDisplay}</div> */}
+      <Modal
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        {...props}
+        size="md"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Edit Brand : {props.selectedBrand}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={SubmitForm} className="brand-form">
+            <Form.Label>New brand name: </Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter value"
+              value={newBrand}
+              onChange={changeBrand}
+            />
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={SubmitForm}>Save Changes</Button>
+          <Button onClick={props.onHide}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+      {/* <div>{alertDisplay}</div> */}
     </>
   );
 }

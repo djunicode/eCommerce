@@ -12,7 +12,7 @@ import {
   productTopRatedReducer,
   productSearchReducer,
   productByCategoryReducer,
-  productBySubCategoryReducer
+  productBySubCategoryReducer,
 } from './reducers/productReducers';
 import cartReducer from './reducers/cartReducers';
 import {
@@ -50,7 +50,12 @@ import {
   subCategoryEditReducer,
   subCategoryListReducer,
 } from './reducers/categoryReducers';
-import { brandCreateReducer, brandDeleteReducer, brandEditReducer, brandListReducer } from './reducers/brandReducers';
+import {
+  brandCreateReducer,
+  brandDeleteReducer,
+  brandEditReducer,
+  brandListReducer,
+} from './reducers/brandReducers';
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -77,7 +82,7 @@ const reducer = combineReducers({
   search: searchReducer,
   filter: filterReducer,
   chatbot: chatbotReducer,
-  productid: productidReducer,  
+  productid: productidReducer,
   productsByCategory: productsByCategoryIdReducer,
   categoryList: categoryListReducer,
   subCategoryList: subCategoryListReducer,

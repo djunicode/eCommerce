@@ -30,7 +30,6 @@ import {
   SUBCATEGORY_DELETE_FAIL,
 } from '../constants/categoryConstants';
 
-
 const userinfo = JSON.parse(localStorage.getItem('userInfo'));
 console.log(userinfo);
 
@@ -128,9 +127,7 @@ export const listSubCategories = (query) => async (dispatch) => {
 //   }
 // };
 
-export const createCategories = (query) => async (
-  dispatch
-) => {
+export const createCategories = (query) => async (dispatch) => {
   try {
     dispatch({
       type: CATEGORY_CREATE_REQUEST,
@@ -139,12 +136,16 @@ export const createCategories = (query) => async (
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${userinfo.token}`,
+        Authorization: `Bearer ${userinfo.token}`,
       },
     };
     console.log(config);
 
-    const { data } = await axios.post('http://localhost:5000/graphql', {query}, config);
+    const { data } = await axios.post(
+      'http://localhost:5000/graphql',
+      { query },
+      config,
+    );
 
     dispatch({
       type: CATEGORY_CREATE_SUCCESS,
@@ -176,7 +177,10 @@ export const createSubCategories = (query) => async (dispatch) => {
       data: {
         query,
       },
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userinfo.token}`, },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userinfo.token}`,
+      },
     };
 
     const { data } = await axios(request);
@@ -211,7 +215,10 @@ export const editCategories = (query) => async (dispatch) => {
       data: {
         query,
       },
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userinfo.token}`, },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userinfo.token}`,
+      },
     };
 
     const { data } = await axios(request);
@@ -246,7 +253,10 @@ export const editSubCategories = (query) => async (dispatch) => {
       data: {
         query,
       },
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userinfo.token}`, },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userinfo.token}`,
+      },
     };
 
     const { data } = await axios(request);
@@ -281,7 +291,10 @@ export const deleteCategories = (query) => async (dispatch) => {
       data: {
         query,
       },
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userinfo.token}`, },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userinfo.token}`,
+      },
     };
 
     const { data } = await axios(request);
@@ -316,7 +329,10 @@ export const deleteSubCategories = (query) => async (dispatch) => {
       data: {
         query,
       },
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userinfo.token}`, },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userinfo.token}`,
+      },
     };
 
     const { data } = await axios(request);

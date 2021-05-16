@@ -42,7 +42,7 @@ const App = () => {
           <Route path="/product/:id" component={ProductScreen} />
           <Route path="/cart/:id?" component={CartScreen} />
           <Route path="/category/:id" component={CategoryScreen} />
-          
+
           <Route path="/admin/userlist" component={UserListScreen} />
           <Route
             path="/admin/user/:id/edit"
@@ -75,7 +75,7 @@ const App = () => {
             component={OrderDetailsAdmin}
           />
           <Route path="/admin/chatbot" component={ChatbotAdmin} />
-          
+
           <Route
             path="/search/:keyword"
             component={SearchScreen}

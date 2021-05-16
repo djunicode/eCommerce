@@ -34,7 +34,10 @@ import {
   PRODUCT_BY_SUBCATEGORY_FAIL,
 } from '../constants/productConstants';
 
-export const productListReducer = (state = { products: [] }, action) => {
+export const productListReducer = (
+  state = { products: [] },
+  action,
+) => {
   switch (action.type) {
     case PRODUCT_LIST_REQUEST:
       return { loading: true, products: [] };
@@ -152,7 +155,7 @@ export const productTopRatedReducer = (
 };
 
 export const productSearchReducer = (
-  state = { searchproducts: []},
+  state = { searchproducts: [] },
   action,
 ) => {
   switch (action.type) {
