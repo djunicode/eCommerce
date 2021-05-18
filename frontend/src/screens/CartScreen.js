@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   Row,
   Col,
@@ -23,8 +24,8 @@ const CartScreen = ({ match, location, history }) => {
 
   const dispatch = useDispatch();
 
-  const cart = useSelector((state) => state.cart);
-  const { cartItems } = cart;
+  // const cart = useSelector((state) => state.cart);
+  // const { cartItems } = cart;
 
   useEffect(() => {
     if (productId) {
@@ -32,52 +33,66 @@ const CartScreen = ({ match, location, history }) => {
     }
   }, [dispatch, productId, qty]);
 
-  const removeFromCartHandler = (id) => {
-    dispatch(removeFromCart(id));
-  };
+  // const removeFromCartHandler = (id) => {
+  //   dispatch(removeFromCart(id));
+  // };
 
   const checkoutHandler = () => {
     history.push('/login?redirect=shipping');
   };
 
-  const addedtocart = [
-    {
-      name: 'some products',
-      price: 1299,
-      brand: 'some shop name',
-      qty: 2,
-      size: '12 x 8',
-      image: '../uploads/Baking Items.jpg',
-    },
-    {
-      name: 'some products',
-      price: 1299,
-      brand: 'some shop name',
-      qty: 2,
-      size: '12 x 8',
-      image: '../uploads/Cutlery.jpg',
-    },
-    {
-      name: 'some products',
-      price: 1299,
-      brand: 'some shop name',
-      qty: 2,
-      size: '12 x 8',
-      image: '../uploads/Cutlery.jpg',
-    },
-  ];
+  // const cartItems = [
+  //   {
+  //     name: 'some products',
+  //     price: 1299,
+  //     brand: 'some shop name',
+  //     qty: 2,
+  //     size: '12 x 8',
+  //     image: '../uploads/Baking Items.jpg',
+  //   },
+  //   {
+  //     name: 'some products',
+  //     price: 1299,
+  //     brand: 'some shop name',
+  //     qty: 2,
+  //     size: '12 x 8',
+  //     image: '../uploads/Cutlery.jpg',
+  //   },
+  //   {
+  //     name: 'some products',
+  //     price: 1299,
+  //     brand: 'some shop name',
+  //     qty: 2,
+  //     size: '12 x 8',
+  //     image: '../uploads/Cutlery.jpg',
+  //   },
+  // ];
+
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    setCartItems(JSON.parse(localStorage.getItem('cart')));
+    console.log(JSON.parse(localStorage.getItem('cart')));
+  }, []);
 
   return (
-    <Row>
+    <Row style={{ padding: '0 4rem' }}>
       <Col md={8}>
-        <h1>Shopping Cart</h1>
-        {addedtocart.length === 0 ? (
+        <Link
+          to="/"
+          className="btn btn-light my-3"
+          style={{ border: '1px solid #D4D4D4' }}
+        >
+          Go Back
+        </Link>
+        <h1>My Cart</h1>
+        {cartItems.length === 0 ? (
           <Message>
-            Your cart is empty <Link to="/">Go Back</Link>
+            Your cart is empty. <br />
           </Message>
         ) : (
           <ListGroup variant="flush">
-            {addedtocart.map((item) => (
+            {cartItems.map((item, index) => (
               <ListGroup.Item>
                 <Media>
                   <Image
@@ -92,7 +107,7 @@ const CartScreen = ({ match, location, history }) => {
                     <Row>
                       <Col>
                         <div>{item.name}</div>
-                        <div>{item.brand}</div>
+                        <div>{item.brand.name}</div>
                       </Col>
                       <Col>Rs {item.price}</Col>
                     </Row>
@@ -100,16 +115,16 @@ const CartScreen = ({ match, location, history }) => {
                       <Col>
                         Size:
                         <span>
-                          <Form.Control as="select" value={item.size}>
+                          {/* <Form.Control as="select" value={item.size}>
                             <option>{item.size}</option>
-                          </Form.Control>
+                          </Form.Control> */}
                         </span>
                       </Col>
                       <Col>
                         Qty:
                         <span>
                           <Form.Control
-                            value={item.qty}
+                            value={item.countInStock}
                             // onChange={(e) =>
                             //   dispatch(
                             //     addToCart(
@@ -133,9 +148,18 @@ const CartScreen = ({ match, location, history }) => {
                         <Button
                           type="button"
                           variant="light"
-                          onClick={() =>
-                            removeFromCartHandler(item.product)
-                          }
+                          onClick={() => {
+                            const cart = JSON.parse(
+                              localStorage.getItem('cart'),
+                            );
+                            cart.splice(index, 1);
+                            setCartItems(cart);
+                            console.log(cart);
+                            localStorage.setItem(
+                              'cart',
+                              JSON.stringify(cart),
+                            );
+                          }}
                         >
                           <i className="fas fa-trash" />
                         </Button>
@@ -153,22 +177,22 @@ const CartScreen = ({ match, location, history }) => {
       <Col md={4}>
         <Card>
           <ListGroup variant="flush">
-            <ListGroup.Item>
+            {/* <ListGroup.Item>
               <h2>
                 Subtotal (
-                {addedtocart.reduce((acc, item) => acc + item.qty, 0)}
+                {cartItems.reduce((acc, item) => acc + item.qty, 0)}
                 ) items
               </h2>
               $
-              {addedtocart
+              {cartItems
                 .reduce((acc, item) => acc + item.qty * item.price, 0)
                 .toFixed(2)}
-            </ListGroup.Item>
+            </ListGroup.Item> */}
             <ListGroup.Item>
               <Button
                 type="button"
                 className="btn-block"
-                disabled={addedtocart.length === 0}
+                disabled={cartItems.length === 0}
                 onClick={checkoutHandler}
               >
                 Proceed To Checkout

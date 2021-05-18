@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { VariableSizeGrid as Grid } from 'react-window';
-import ReactDOM from 'react-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 import styled from 'styled-components';
 import { Table, Button, Row, Col, Form } from 'react-bootstrap';
@@ -11,7 +10,6 @@ import Loader from '../components/Loader';
 import {
   listProducts,
   deleteProduct,
-  createProduct,
   searchProducts,
   listProductByCategory,
   listProductBySubCategory,
@@ -20,9 +18,8 @@ import {
   listCategories,
   listSubCategories,
 } from '../actions/categoryActions';
-import { PRODUCT_CREATE_RESET } from '../constants/productConstants';
 
-const ProductListScreen = ({ history, match }) => {
+const ProductListScreen = ({ history }) => {
   const [searchProd, setSearchProd] = useState('');
   const [category, setCategory] = useState('');
   const [subCategory, setSubCategory] = useState('');
@@ -33,11 +30,7 @@ const ProductListScreen = ({ history, match }) => {
   const { loading, error, products } = productList;
 
   const productSearch = useSelector((state) => state.productSearch);
-  const {
-    searchloading,
-    searcherror,
-    searchproducts = [],
-  } = productSearch;
+  const { searchproducts = [] } = productSearch;
 
   const productDelete = useSelector((state) => state.productDelete);
   const {
@@ -55,30 +48,38 @@ const ProductListScreen = ({ history, match }) => {
   } = productCreate;
 
   const categoryList = useSelector((state) => state.categoryList);
-  const { catloading, caterror, categories } = categoryList;
+  const { categories } = categoryList;
 
   const subCategoryList = useSelector(
     (state) => state.subCategoryList,
   );
-  const { suberror, subcategories = [] } = subCategoryList;
+  const { subcategories = [] } = subCategoryList;
 
   const productByCategory = useSelector(
     (state) => state.productByCategory,
   );
-  const { Cerror, pByC = [] } = productByCategory;
+  const { pByC = [] } = productByCategory;
 
   const productBySubCategory = useSelector(
     (state) => state.productBySubCategory,
   );
-  const { SCerror, pBySC = [] } = productBySubCategory;
+  const { pBySC = [] } = productBySubCategory;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   const querylist = `query {
     getProducts{
-     _id
-     name
+      _id
+      name
+      category {
+        name
+        _id
+      }
+      subcategory {
+        name
+        _id
+      }
     }
   }`;
 
@@ -167,7 +168,7 @@ const ProductListScreen = ({ history, match }) => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (category != '') {
+    if (category !== '') {
       dispatch(listSubCategories(querySub));
       dispatch(listProductBySubCategory(subCatProd));
     }
@@ -220,9 +221,13 @@ const ProductListScreen = ({ history, match }) => {
                   {columnIndex === 0 ? (
                     <td style={{ height: '70px' }}>{pr.name}</td>
                   ) : columnIndex === 1 ? (
-                    <td style={{ height: '70px' }}>{pr.name}</td>
+                    <td style={{ height: '70px' }}>
+                      {pr.category.name}
+                    </td>
                   ) : columnIndex === 2 ? (
-                    <td style={{ height: '70px' }}>{pr.name}</td>
+                    <td style={{ height: '70px' }}>
+                      {pr.subcategory.name}
+                    </td>
                   ) : columnIndex === 3 ? (
                     <td style={{ height: '70px' }}>{pr._id}</td>
                   ) : (
@@ -364,7 +369,7 @@ const ProductListScreen = ({ history, match }) => {
   );
 
   return (
-    <div style={{ padding: '120px 4rem' }}>
+    <div style={{ padding: '0 4rem' }}>
       <Row>
         <Col>
           <Form.Label>Search Products</Form.Label>

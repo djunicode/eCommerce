@@ -1,31 +1,30 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
 import {
-  Container,
   Row,
   Col,
   Card,
   Button,
   Form,
   Nav,
-  Jumbotron,
+  // Jumbotron,
 } from 'react-bootstrap';
-import ReactImageMagnify from 'react-image-magnify';
+// import ReactImageMagnify from 'react-image-magnify';
 // import { set } from 'mongoose';
+import { useHistory } from 'react-router-dom';
 import Rating from '../components/Rating';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import watchImg687 from '../images/wristwatch_687.jpg';
-import watchImg1200 from '../images/wristwatch_1200.jpg';
+// import watchImg687 from '../images/wristwatch_687.jpg';
+// import watchImg1200 from '../images/wristwatch_1200.jpg';
 import { getProduct } from '../actions/productidAction';
 import Review from '../components/Review';
 import Question from '../components/Question';
-import ReactSlickIntegration from '../components/ReactSlickIntegration';
+// import ReactSlickIntegration from '../components/ReactSlickIntegration';
 import ReactSlick from '../components/ReactSlick';
 
 const initialValues = {
@@ -51,6 +50,7 @@ const ProductScreen = () => {
   const { loading, data, error } = useSelector(
     (state) => state.productid,
   );
+  const history = useHistory();
 
   const handleTab = (e) => {
     if (e.target.name === 'pd') {
@@ -134,11 +134,11 @@ const ProductScreen = () => {
 
   const handleDone = () => {
     if (values.question) {
-      setQuestions((q) => {
+      setQuestions((qu) => {
         setAaq(false);
         return [
           { question: values.question, answer: 'None Yet' },
-          ...q,
+          ...qu,
         ];
       });
     }
@@ -146,14 +146,14 @@ const ProductScreen = () => {
   };
 
   return (
-    <>
+    <Box>
       {loading ? (
         <Loader />
       ) : error ? (
         <Message>{error}</Message>
       ) : (
         <>
-          <Container
+          <Contain
             style={{
               backgroundColor: 'white',
               border: '1px solid #D5D5D5',
@@ -162,7 +162,7 @@ const ProductScreen = () => {
             }}
           >
             <Row style={{ height: '100%' }}>
-              <Col lg={6}>
+              <Col md={5} className="mr-4">
                 <div className="img-fluid" style={{ zIndex: '1000' }}>
                   {/* <ReactImageMagnify
                     {...{
@@ -201,70 +201,66 @@ const ProductScreen = () => {
                   transform: 'translateY(1.8%)',
                 }}
               />
-              <Col lg={5} className="fluid_instructions">
-                <h1
+              <Col md={6} className="fluid_instructions">
+                <Heading
                   style={{
                     letterSpacing: '0',
                     textTransform: 'none',
-                    paddingBottom: '0px',
+                    padding: '0px',
                   }}
                 >
                   {data.name}
-                </h1>
-                <small
+                </Heading>
+                <div
                   style={{
-                    paddingTop: '0px',
+                    paddingTop: '0.5rem',
                     color: '#5F5F5F',
-                    fontSize: '0.9rem',
+                    fontSize: '1.2rem',
                     transform: 'translateY(-1.5%)',
                   }}
                 >
                   {data.brand && data.brand.name}
-                </small>
+                </div>
                 <Rating value={4.5} text="(4.5)" />
-                <div
+                <Price
                   className="mt-3"
-                  style={{ color: '#222831', fontWeight: '450' }}
+                  style={{
+                    color: 'black',
+                    fontWeight: '1000',
+                  }}
                 >
-                  <span
-                    style={{
-                      color: 'black',
-                      fontWeight: '1000',
-                      fontSize: '1.4rem',
-                      marginBottom: '1000px',
-                    }}
-                  >
-                    Rs {data.price}
-                  </span>
-                  <br />
+                  Rs {data.price}
+                </Price>
+                <div className="mt-4" style={{ fontWeight: '450' }}>
                   {data.description}
                 </div>
-                <Row className="mt-3">
-                  <Col xs={6}>
+                <Row className="mt-5">
+                  <Col xs={12} sm={6}>
                     <Row
                       className="pl-3"
                       style={{
                         display: 'flex',
                         alignItems: 'center',
+                        flexDirection: 'col',
                       }}
                     >
-                      <label
+                      <Parameters
                         className="mr-2"
                         style={{
                           color: 'black',
-                          fontWeight: '1000',
-                          fontSize: '1.1rem',
+                          fontWeight: '700',
                         }}
                         htmlFor="size"
                       >
                         Size:
-                      </label>
+                      </Parameters>
                       <Form.Control
                         as="select"
                         value={4}
                         onChange={(e) => setQty(e.target.value)}
                         style={{
                           width: 'auto',
+                          height: '35px',
                           paddingTop: '0px',
                           paddingBottom: '0px',
                           backgroundColor: '#eceeef',
@@ -278,24 +274,17 @@ const ProductScreen = () => {
                       </Form.Control>
                     </Row>
                   </Col>
-                  <Col xs={6}>
-                    <Row
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        flexDirection: 'col',
-                      }}
-                    >
-                      <span
+                  <Col xs={12} sm={6}>
+                    <QtyRow>
+                      <Parameters
                         className="mr-2"
                         style={{
                           color: 'black',
-                          fontWeight: '1000',
-                          fontSize: '1.1rem',
+                          fontWeight: '700',
                         }}
                       >
                         Qty:
-                      </span>
+                      </Parameters>
                       <span
                         className="mr-1"
                         style={{
@@ -317,12 +306,12 @@ const ProductScreen = () => {
                           }}
                         /> */}
                         <Button
-                          className="rounded py-1"
                           style={{
-                            fontSize: '2rem',
+                            fontSize: '1.5rem',
                             backgroundColor: '#5EAAA8',
-                            paddingRight: '0.7rem',
-                            paddingLeft: '0.7rem',
+                            padding: '0 0.5rem',
+                            margin: '0.4rem',
+                            width: '1.8rem',
                           }}
                           disabled={qty === 1}
                           onClick={() => {
@@ -339,6 +328,7 @@ const ProductScreen = () => {
                         <div
                           style={{
                             padding: '0.75rem 1rem',
+                            height: '35px',
                             backgroundColor: '#eceeef',
                             display: 'flex',
                             justifyContent: 'center',
@@ -367,10 +357,12 @@ const ProductScreen = () => {
                           }}
                         /> */}
                         <Button
-                          className="rounded px-2 py-1"
                           style={{
-                            fontSize: '2rem',
+                            fontSize: '1.5rem',
                             backgroundColor: '#5EAAA8',
+                            padding: '0 0.5rem',
+                            margin: '0.4rem',
+                            width: '1.8rem',
                           }}
                           disabled={qty === data.countInStock}
                           onClick={() => {
@@ -382,112 +374,131 @@ const ProductScreen = () => {
                           +
                         </Button>
                       </span>
-                    </Row>
+                    </QtyRow>
                   </Col>
                 </Row>
 
                 <Row
-                  className="mt-4 pl-3"
+                  className="pl-3"
                   style={{
                     display: 'flex',
                     alignItems: 'center',
+                    marginTop: '3rem',
                   }}
                 >
-                  <label
+                  <Parameters
                     style={{
                       color: 'black',
-                      fontWeight: '1000',
-                      fontSize: '1.1rem',
+                      fontWeight: '700',
                       transform: 'translateY(-30%)',
                     }}
                     className="mr-2"
                   >
                     Delivery:
-                  </label>
-                  <span style={{ width: '70%' }}>
+                  </Parameters>
+                  <span>
                     <Form.Control
                       type="text"
                       placeholder="Enter pincode"
-                      className="rounded-left"
                       style={{
-                        width: '80%',
+                        width: '70%',
+                        height: '40px',
                         display: 'inline',
                         backgroundColor: '#eceeef',
+                        marginBottom: '0.5rem',
                       }}
                     />
                     <Button
-                      className="rounded-right"
                       style={{
-                        width: '20%',
+                        width: '30%',
+                        height: '40px',
                         padding: '0px',
                         display: 'inline',
-                        paddingTop: '0.75rem',
-                        paddingBottom: '0.75rem',
                         backgroundColor: '#f7f7f9',
                         color: 'black',
+                        border: '1px solid #eceeef',
                       }}
                     >
                       CHECK
                     </Button>
                     <br />
                     <span style={{ fontSize: '0.7rem' }}>
-                      Enter pincode to check whther delivery is
+                      Enter pincode to check whether delivery is
                       available.
                     </span>
                   </span>
                 </Row>
                 <Row
-                  className="mt-3 mb-4"
+                  className="mt-5 mb-4"
                   style={{
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}
                 >
-                  <Col xs={6} style={{ textAlign: 'center' }}>
-                    <Button
-                      className="rounded"
+                  <Col xs={12} sm={6}>
+                    <ActionButtons
                       style={{
-                        width: '70%',
                         padding: '6px 12px',
                         backgroundColor: '#F05454',
                         textTransform: 'none',
+                        borderRadius: '3px',
                       }}
                       onClick={() => {
-                        localStorage.setItem(
-                          'product',
-                          JSON.stringify(data),
-                        );
-                        if (localStorage.getItem('product'))
-                          window.location.href = '/cart';
+                        if (localStorage.getItem('cart')) {
+                          const cart = JSON.parse(
+                            localStorage.getItem('cart'),
+                          );
+                          console.log(typeof data);
+                          console.log(cart);
+                          cart.push(data);
+                          localStorage.setItem(
+                            'cart',
+                            JSON.stringify(cart),
+                          );
+                        } else {
+                          const cart = [];
+                          cart.push(data);
+                          localStorage.setItem(
+                            'cart',
+                            JSON.stringify(cart),
+                          );
+                        }
+                        history.push('/cart');
                       }}
                     >
                       Add to Cart
-                    </Button>
+                    </ActionButtons>
                   </Col>
-                  <Col xs={6} style={{ textAlign: 'center' }}>
-                    <Button
-                      className="rounded"
+                  <Col xs={12} sm={6}>
+                    <ActionButtons
                       style={{
-                        width: '70%',
                         padding: '6px 12px',
                         backgroundColor: '#FC7845',
                         textTransform: 'none',
+                        borderRadius: '3px',
+                      }}
+                      onClick={() => {
+                        localStorage.setItem(
+                          'buy',
+                          JSON.stringify(data),
+                        );
+                        history.push('/OrderSummaryScreen');
                       }}
                     >
                       Buy Now
-                    </Button>
+                    </ActionButtons>
                   </Col>
                 </Row>
               </Col>
             </Row>
-          </Container>
-          <Container className="my-5" style={{ padding: '0px' }}>
+          </Contain>
+          <Contain className="my-5" style={{ padding: '0px' }}>
             <Nav fill variant="tabs" defaultActiveKey="/home">
               <Nav.Item
                 style={{ marginRight: '0', flex: '0 1 auto' }}
               >
-                <Nav.Link
+                <Links
                   name="pd"
                   onClick={(e) => {
                     handleTab(e);
@@ -495,16 +506,16 @@ const ProductScreen = () => {
                   style={{
                     backgroundColor: `${pd ? '#F9F9F9' : 'white'}`,
                     fontWeight: '700',
-                    padding: '0.4rem 0.5rem',
+                    padding: '0.7rem 1rem',
                   }}
                 >
                   Product Details
-                </Nav.Link>
+                </Links>
               </Nav.Item>
               <Nav.Item
                 style={{ marginRight: '0', flex: '0 1 auto' }}
               >
-                <Nav.Link
+                <Links
                   name="rr"
                   onClick={(e) => {
                     handleTab(e);
@@ -512,16 +523,16 @@ const ProductScreen = () => {
                   style={{
                     backgroundColor: `${rr ? '#F9F9F9' : 'white'}`,
                     fontWeight: '700',
-                    padding: '0.4rem 0.5rem',
+                    padding: '0.7rem 1rem',
                   }}
                 >
                   Ratings &amp; Reviews
-                </Nav.Link>
+                </Links>
               </Nav.Item>
               <Nav.Item
                 style={{ marginRight: '0', flex: '0 1 auto' }}
               >
-                <Nav.Link
+                <Links
                   name="q"
                   onClick={(e) => {
                     handleTab(e);
@@ -529,11 +540,11 @@ const ProductScreen = () => {
                   style={{
                     backgroundColor: `${q ? '#F9F9F9' : 'white'}`,
                     fontWeight: '700',
-                    padding: '0.4rem 0.5rem',
+                    padding: '0.7rem 1rem',
                   }}
                 >
                   Questions
-                </Nav.Link>
+                </Links>
               </Nav.Item>
             </Nav>
             <Card
@@ -791,7 +802,7 @@ const ProductScreen = () => {
                       </div>
                     </>
                   )}
-                  {questions.map((question, index) => {
+                  {questions.map((question) => {
                     return (
                       <Question
                         question={question.question}
@@ -802,12 +813,82 @@ const ProductScreen = () => {
                 </>
               )}
             </Card>
-          </Container>
+          </Contain>
           {/* <Chatbot /> */}
         </>
       )}
-    </>
+    </Box>
   );
 };
 
 export default ProductScreen;
+
+const Box = styled.div`
+  padding: 0 4vw;
+
+  @media screen and (max-width: 991px) {
+    padding: 0;
+  }
+`;
+const Contain = styled.div`
+  padding: 3rem;
+
+  @media screen and (max-width: 991px) {
+    margin: 0 4vw;
+  }
+  @media screen and (max-width: 600px) {
+    margin: 0;
+    padding: 1.7rem;
+  }
+`;
+const Heading = styled.h1`
+  margin-top: 0;
+
+  @media screen and (max-width: 767px) {
+    margin-top: 5rem;
+  }
+  @media screen and (max-width: 420px) {
+    margin-top: 4rem;
+  }
+`;
+const Price = styled.div`
+  font-size: 1.7rem;
+
+  @media screen and (max-width: 600px) {
+    font-size: 1.3rem;
+  }
+`;
+const Parameters = styled.label`
+  font-size: 1.1rem;
+
+  @media screen and (max-width: 600px) {
+    font-size: 0.8rem;
+  }
+`;
+const Links = styled(Nav.Link)`
+  font-size: 1rem;
+
+  @media screen and (max-width: 600px) {
+    font-size: 0.7rem;
+  }
+`;
+const QtyRow = styled(Row)`
+  display: flex;
+  align-items: center;
+  flex-direction: col;
+  justify-content: center;
+
+  @media screen and (max-width: 576px) {
+    padding-left: 1rem;
+    justify-content: start;
+    margin-top: 2rem;
+  }
+`;
+const ActionButtons = styled(Button)`
+  width: 90%;
+
+  @media screen and (max-width: 576px) {
+    width: 100%;
+    margin-bottom: 30px;
+  }
+`;

@@ -2,7 +2,6 @@ import axios from 'axios';
 import {
   PRODCUTS_BY_CATEGORY_ID_LIST_FAIL,
   PRODCUTS_BY_CATEGORY_ID_LIST_REQUEST,
-  PRODCUTS_BY_CATEGORY_ID_LIST_RESET,
   PRODCUTS_BY_CATEGORY_ID_LIST_SUCCESS,
   CATEGORY_LIST_REQUEST,
   CATEGORY_LIST_SUCCESS,
@@ -434,7 +433,9 @@ export const getProductByCategory = (id, sort = 'none') => async (
         'proshop_brand_length',
         JSON.stringify([...new Set(brands)].length),
       );
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
 
     dispatch({
       type: PRODCUTS_BY_CATEGORY_ID_LIST_SUCCESS,

@@ -1,5 +1,6 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
-import { Form, Col } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import CreatableSelect from 'react-select/creatable';
@@ -39,12 +40,12 @@ const Option = (props) => {
               justifyContent: 'space-between',
             }}
           >
-            <a href="#" onClick={handleModal}>
+            <button href="#" onClick={handleModal}>
               <Icon className="fas fa-edit" />
-            </a>
-            <a href="#" onClick={handleDelete}>
+            </button>
+            <button href="#" onClick={handleDelete}>
               <Icon className="fas fa-trash" />
-            </a>
+            </button>
           </div>
         </div>
       </components.Option>
@@ -52,17 +53,17 @@ const Option = (props) => {
   );
 };
 
-export const CatDropdown = ({ categ, setCateg }) => {
+export const CatDropdown = ({ setCateg }) => {
   const dispatch = useDispatch();
 
   const categoryList = useSelector((state) => state.categoryList);
-  const { catloading, caterror, categories } = categoryList;
+  const { categories } = categoryList;
 
   const categoryCreate = useSelector((state) => state.categoryCreate);
-  const { error, createCategory } = categoryCreate;
+  const { createCategory } = categoryCreate;
 
   const categoryDelete = useSelector((state) => state.categoryDelete);
-  const { catError, deleteCategory } = categoryDelete;
+  const { deleteCategory } = categoryDelete;
 
   const queryCategories = `query {
         getCategories {
@@ -90,20 +91,18 @@ export const CatDropdown = ({ categ, setCateg }) => {
     // console.log(optionList);
   }, [categories, createCategory, deleteCategory]);
 
-  const handleChange = (newValue, actionMeta) => {
+  const handleChange = (newValue) => {
     if (newValue != null) {
       setSelectedCategory(newValue.label);
       setCateg(newValue.value);
     }
     console.group('Value Changed');
     console.log(selectedCategory);
-    // console.log(`action: ${actionMeta.action}`);
     console.groupEnd();
   };
-  const handleInputChange = (inputValue, actionMeta) => {
+  const handleInputChange = (inputValue) => {
     console.group('Input Changed');
     console.log(inputValue);
-    // console.log(`action: ${actionMeta.action}`);
     console.groupEnd();
   };
 
@@ -153,6 +152,9 @@ export const CatDropdown = ({ categ, setCateg }) => {
       value: '',
     },
   ]);
+
+  console.log(newCat);
+
   const editCat = (cat) => {
     setNewCat([{ cat }]);
   };
@@ -194,17 +196,17 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg }) => {
   const subCategoryList = useSelector(
     (state) => state.subCategoryList,
   );
-  const { subloading, suberror, subcategories } = subCategoryList;
+  const { subcategories } = subCategoryList;
 
   const subCategoryCreate = useSelector(
     (state) => state.subCategoryCreate,
   );
-  const { error, createSubcategory } = subCategoryCreate;
+  const { createSubcategory } = subCategoryCreate;
 
   const subCategoryDelete = useSelector(
     (state) => state.subCategoryDelete,
   );
-  const { Error, deleteSubcategory } = subCategoryDelete;
+  const { deleteSubcategory } = subCategoryDelete;
 
   const querySub = `query{
         getSubCategories (categoryId: "${categ}") {
@@ -214,7 +216,7 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg }) => {
     }`;
 
   useEffect(() => {
-    if (categ != '') {
+    if (categ !== '') {
       dispatch(listSubCategories(querySub));
     }
   }, [categ]);
@@ -234,20 +236,18 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg }) => {
     // console.log(optionList);
   }, [subcategories, createSubcategory, deleteSubcategory]);
 
-  const handleChange = (newValue, actionMeta) => {
+  const handleChange = (newValue) => {
     if (newValue != null) {
       setSelectedSubCategory(newValue.label);
       setSubCateg(newValue.value);
     }
     console.group('Value Changed');
     console.log(selectedSubCategory);
-    // console.log(`action: ${actionMeta.action}`);
     console.groupEnd();
   };
-  const handleInputChange = (inputValue, actionMeta) => {
+  const handleInputChange = (inputValue) => {
     console.group('Input Changed');
     console.log(inputValue);
-    // console.log(`action: ${actionMeta.action}`);
     console.groupEnd();
   };
 
@@ -299,6 +299,9 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg }) => {
       value: '',
     },
   ]);
+
+  console.log(newSubCat);
+
   const editSubCat = (subcat) => {
     setNewSubCat([{ subcat }]);
   };
@@ -312,19 +315,6 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg }) => {
 
   return (
     <>
-      {/* <Col controlId="subCateg">
-                <Form.Label>Sub Category</Form.Label>
-                <Form.Control
-                    as="select"
-                    value={subCategory} 
-                    onChange={(e) => {setSubCateg(e.target.value);}}
-                >
-                {subcategories.map((sub) => (
-                    <option value={sub._id}>{sub.name}</option>
-                ))}
-                </Form.Control>
-            </Col> */}
-
       <SubCategoryModal
         subCateg={subCateg}
         selectedSubCategory={selectedSubCategory}
@@ -348,11 +338,11 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg }) => {
   );
 };
 
-export const BrandDropdown = ({ brand, setBrand }) => {
+export const BrandDropdown = ({ setBrand }) => {
   const dispatch = useDispatch();
 
   const brandList = useSelector((state) => state.brandList);
-  const { error, brands } = brandList;
+  const { brands } = brandList;
 
   const brandCreate = useSelector((state) => state.brandCreate);
   const { createBrand } = brandCreate;
@@ -386,20 +376,18 @@ export const BrandDropdown = ({ brand, setBrand }) => {
     // console.log(optionList);
   }, [brands, createBrand, deleteBrand]);
 
-  const handleChange = (newValue, actionMeta) => {
+  const handleChange = (newValue) => {
     if (newValue != null) {
       setSelectedBrand(newValue.label);
       setBrand(newValue.value);
     }
     console.group('Value Changed');
     console.log(selectedBrand);
-    // console.log(`action: ${actionMeta.action}`);
     console.groupEnd();
   };
-  const handleInputChange = (inputValue, actionMeta) => {
+  const handleInputChange = (inputValue) => {
     console.group('Input Changed');
     console.log(inputValue);
-    // console.log(`action: ${actionMeta.action}`);
     console.groupEnd();
   };
 
@@ -447,6 +435,9 @@ export const BrandDropdown = ({ brand, setBrand }) => {
       value: '',
     },
   ]);
+
+  console.log(newBrand);
+
   const editBrand = (br) => {
     setNewBrand([{ br }]);
   };

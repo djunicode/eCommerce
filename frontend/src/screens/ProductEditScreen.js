@@ -1,24 +1,16 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable no-unused-vars, no-param-reassign */
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Button, Col, Row, Table } from 'react-bootstrap';
+import { Form, Button, Col, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components';
-import { printSchema } from 'graphql';
-import { set } from 'mongoose';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import {
   updateProduct,
   createProduct,
 } from '../actions/productActions';
-import SizeModal from '../components/Modals';
-
-import {
-  listCategories,
-  listSubCategories,
-} from '../actions/categoryActions';
-import { PRODUCT_CREATE_RESET } from '../constants/productConstants';
-// import { PRODUCT_UPDATE_RESET } from '../constants/productConstants';
 import {
   BrandDropdown,
   CatDropdown,
@@ -147,7 +139,7 @@ const ProductEditScreen = ({ match, history }) => {
       price: optPrice,
       countInStock: optQty,
     };
-    if (optName != '') {
+    if (optName !== '') {
       setOptionsInput([...optionsInput, temp]);
     }
     console.log(optionsInput);
@@ -214,7 +206,7 @@ const ProductEditScreen = ({ match, history }) => {
   }, [optionsInput]);
 
   return (
-    <div style={{ padding: '120px 4rem' }}>
+    <div style={{ padding: '0 4rem' }}>
       <Link
         to="/admin/productlist"
         className="btn btn-light my-3"
@@ -412,7 +404,7 @@ const ProductEditScreen = ({ match, history }) => {
           );
         })}
         {click.map((c, index) => {
-          if (index == 0) {
+          if (index === 0) {
             return <div />;
           }
 

@@ -1,23 +1,13 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable no-unused-vars, no-param-reassign */
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Button, Col, Row, Table } from 'react-bootstrap';
+import { Form, Button, Col, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components';
-import { printSchema } from 'graphql';
-import { set } from 'mongoose';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import {
-  updateProduct,
-  createProduct,
-} from '../actions/productActions';
-
-import {
-  listCategories,
-  listSubCategories,
-} from '../actions/categoryActions';
-import { PRODUCT_CREATE_RESET } from '../constants/productConstants';
-// import { PRODUCT_UPDATE_RESET } from '../constants/productConstants';
+import { createProduct } from '../actions/productActions';
 import {
   BrandDropdown,
   CatDropdown,
@@ -25,7 +15,7 @@ import {
 } from '../components/Dropdowns';
 import NewOptions from '../components/NewOptions';
 
-const ProductCreateScreen = ({ match, history }) => {
+const ProductCreateScreen = ({ history }) => {
   //   const productId = match.params.id;
 
   const [name, setName] = useState('');
@@ -62,8 +52,8 @@ const ProductCreateScreen = ({ match, history }) => {
     product: createdProduct,
   } = productCreate;
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  // const userLogin = useSelector((state) => state.userLogin);
+  // const { userInfo } = userLogin;
 
   useEffect(() => {
     if (successCreate) {
@@ -106,7 +96,8 @@ const ProductCreateScreen = ({ match, history }) => {
     const newString = `[${OptFields}]`;
 
     const query = `mutation {
-      createProduct(productInput: {name: "${name}", discount: ${discount}, price: ${price}, options: ${newString}, image: "${image}", brand: "${brand}", category: "${categ}", subcategory: "${subCateg}", new: ${newArrival}, countInStock: ${countInStock}, numReviews: 0, description: "${description}"}) {
+      createProduct(productInput: {name: "${name}", discount: ${discount}, price: ${price}, options: ${newString}, image: "${image}", brand: "${brand}", category: "${categ}", subcategory: "${subCateg}", new: ${newArrival}, countInStock: ${countInStock}, numReviews: 0, description: "${description}"}) 
+      {
           name
           _id
       }
@@ -132,12 +123,11 @@ const ProductCreateScreen = ({ match, history }) => {
   };
 
   useEffect(() => {
-    // setOptionsInput([...option, sample]);
     console.log(optionsInput);
   }, [optionsInput]);
 
   return (
-    <div style={{ padding: '120px 4rem' }}>
+    <div style={{ padding: '0 4rem' }}>
       <Link
         to="/admin/productlist"
         className="btn btn-light my-3"
@@ -304,7 +294,7 @@ const ProductCreateScreen = ({ match, history }) => {
         }}
         onClick={addNew}
       >
-        <i className="fas fa-plus" style={{ marginRight: '15px' }} />{' '}
+        <i className="fas fa-plus" style={{ marginRight: '15px' }} />
         ADD A NEW OPTION
       </div>
       <Col className="text-right">
@@ -320,8 +310,3 @@ const ProductCreateScreen = ({ match, history }) => {
 };
 
 export default ProductCreateScreen;
-
-const SizeCol = styled.td`
-  border: 1px solid rgb(0, 0, 0, 0.05);
-  background: rgb(255, 255, 255);
-`;

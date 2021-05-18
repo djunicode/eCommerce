@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import React from 'react';
+import { Form, Row, Col } from 'react-bootstrap';
 
 function NewOptions(props) {
   return (

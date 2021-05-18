@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars, react/destructuring-assignment */
 import React, { useState } from 'react';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,7 +7,7 @@ import { editCategories } from '../actions/categoryActions';
 
 export function CategoryModal(props) {
   const [newCat, setNewCat] = useState('');
-  const [show, setShow] = useState(true);
+  // const [show, setShow] = useState(true);
   // const alertDisplay = [];
 
   const dispatch = useDispatch();

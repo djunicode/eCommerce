@@ -95,10 +95,7 @@ export const listProductDetails = (id) => async (dispatch) => {
   }
 };
 
-export const deleteProduct = (query) => async (
-  dispatch,
-  getState,
-) => {
+export const deleteProduct = (query) => async (dispatch) => {
   try {
     dispatch({
       type: PRODUCT_DELETE_REQUEST,
@@ -187,10 +184,6 @@ export const updateProduct = (query) => async (dispatch) => {
     dispatch({
       type: PRODUCT_UPDATE_REQUEST,
     });
-
-    // const {
-    //   userLogin: { userInfo },
-    // } = getState();
 
     const config = {
       headers: {
