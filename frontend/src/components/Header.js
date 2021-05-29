@@ -28,13 +28,22 @@ const Header = () => {
                 <StyledH1>ProShop</StyledH1>
               </Navbar.Brand>
             </LinkContainer>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
+            <StyledSmallScreenSearchBox>
               <Route
                 render={({ history }) => (
                   <SearchBox history={history} />
                 )}
               />
+            </StyledSmallScreenSearchBox>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <StyledHideOnMd>
+                <Route
+                  render={({ history }) => (
+                    <SearchBox history={history} />
+                  )}
+                />
+              </StyledHideOnMd>
               <Nav className="ml-auto">
                 <StyledNavLink
                   as={Link}
@@ -111,6 +120,10 @@ const StyledH1 = styled.h1`
   padding: 0;
   margin: 0;
   font-size: 20px;
+
+  @media (max-width: 400px) {
+    font-size: 16px;
+  }
 `;
 
 const StyledNavLink = styled(Nav.Link)`
@@ -148,5 +161,23 @@ const StyledNavDropDownItem = styled(NavDropdown.Item)`
   &:hover {
     background-color: ${LIGHT_PEACH};
     color: ${DARK_BLUE_2};
+  }
+`;
+
+const StyledSmallScreenSearchBox = styled.div`
+  width: 60%;
+  @media (min-width: 992px) {
+    display: none;
+  }
+
+  @media (max-width: 450px) {
+    width: 50%;
+  }
+`;
+
+const StyledHideOnMd = styled.div`
+  width: 45%;
+  @media (max-width: 992px) {
+    display: none;
   }
 `;

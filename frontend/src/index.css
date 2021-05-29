@@ -220,3 +220,15 @@ body {
     padding-top: 20px;
   }
 }
+
+@media(max-width: 768px){
+  .navbar-brand{
+    margin-right: 6px !important;
+  }
+}
+
+@media(max-width: 600px){
+  .navbar .container, .navbar .container-fluid, .navbar .container-sm, .navbar .container-md, .navbar .container-lg, .navbar .container-xl{
+    justify-content: center !important;
+  }
+}
