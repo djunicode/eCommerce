@@ -59,6 +59,8 @@ export default buildSchema(`
         editQuestions(details: [QuestionInput]!): Response!
 
         createBrand(name: String!): Brand!
+        updateBrand(name: String!, newName: String!): Response!
+        deleteBrand(name: String!): Response!
 
         createCategory(name: String!): Category!
         updateCategory(name: String!, newName: String!): Response!
