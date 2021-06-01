@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 import React from 'react';
 import { Link, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,13 +30,9 @@ const Header = () => {
                 <StyledH1>ProShop</StyledH1>
               </Navbar.Brand>
             </LinkContainer>
-            <StyledSmallScreenSearchBox>
-              <Route
-                render={({ history }) => (
-                  <SearchBox history={history} />
-                )}
-              />
-            </StyledSmallScreenSearchBox>
+            {/* <StyledCartOnSmall
+              className={'fas fa-shopping-cart'}
+            /> */}
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <StyledHideOnMd>
@@ -97,6 +95,13 @@ const Header = () => {
               </Nav>
             </Navbar.Collapse>
           </Container>
+          <StyledSmallScreenSearchBox>
+            <Route
+              render={({ history }) => (
+                <SearchBox history={history} />
+              )}
+            />
+          </StyledSmallScreenSearchBox>
         </StyledNavbar>
       </header>
     </>
@@ -165,19 +170,24 @@ const StyledNavDropDownItem = styled(NavDropdown.Item)`
 `;
 
 const StyledSmallScreenSearchBox = styled.div`
-  width: 60%;
+  width: 100%;
+  margin-top: 12px;
   @media (min-width: 992px) {
     display: none;
-  }
-
-  @media (max-width: 450px) {
-    width: 50%;
   }
 `;
 
 const StyledHideOnMd = styled.div`
   width: 45%;
   @media (max-width: 992px) {
+    display: none;
+  }
+`;
+
+const StyledCartOnSmall = styled.i`
+  justify-self: flex-end !important;
+  color: ${LIGHT_PEACH};
+  @media (min-width: 992px) {
     display: none;
   }
 `;
