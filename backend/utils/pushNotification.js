@@ -8,7 +8,7 @@ webpush.setVapidDetails(
   process.env.VAPID_PRIVATE_KEY
 );
 
-export const sendNotification = (userId, message) => {
+export const pushNotification = (userId, message) => {
   try {
     const user = await User.findById(userId);
 
