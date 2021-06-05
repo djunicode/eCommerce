@@ -9,6 +9,7 @@ import cors from 'cors';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import paymentRouter from './routes/paymentRouter.js';
 // import uploadRouter from './routes/uploadRoutes.js'; // Server crashes without valid AWS creds
+import notificationRouter from './routes/notificationRouter.js';
 import { verify } from './middleware/authMiddleware.js';
 import connectDB from './config/db.js';
 
@@ -42,8 +43,9 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use(paymentRouter);
-// app.use(uploadRouter);
+app.use('/payment', paymentRouter);
+// app.use('/upload', uploadRouter);
+app.use('/notifications', notificationRouter);
 
 app.use(
   '/graphql',
