@@ -1,6 +1,7 @@
 import { generateVAPIDKeys } from 'web-push';
 import asyncHandler from 'express-async-handler';
 import { loggedin } from '../utils/verifyUser.js';
+import { pushNotification } from '../utils/pushNotification.js'
 
 import User from '../models/userModel.js';
 
@@ -12,7 +13,7 @@ if (!process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
   return;
 }
 
-export const getPublicKey = asyncHandler(
+const getPublicKey = asyncHandler(
   async((req, res) => {
     res.send(process.env.VAPID_PUBLIC_KEY);
   })
@@ -35,7 +36,7 @@ const isValidSaveRequest = (req, res) => {
   return true;
 };
 
-export const registerUser = asyncHandler(
+const registerUser = asyncHandler(
   async((req, res) => {
     try {
       if (loggedin(req) && isValidSaveRequest(req, res)) {
@@ -58,4 +59,21 @@ export const registerUser = asyncHandler(
       console.log(err);
       throw err;
     }
-  }));
+  })
+);
+
+const sendNotification = asyncHandler(async((req, res) => {
+  try {
+    if (loggedin(req)) {
+      const resp = pushNotification(req.user._id, req.body.message);
+      if(!resp) {
+        throw new Error('User subscription expired')
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}))
+
+export { getPublicKey, registerUser , sendNotification}
