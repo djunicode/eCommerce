@@ -5,6 +5,9 @@ import colors from 'colors';
 import morgan from 'morgan';
 import Redis from 'ioredis';
 import cors from 'cors';
+import webpush from 'web-push';
+
+dotenv.config();
 
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import paymentRouter from './routes/paymentRouter.js';
@@ -18,9 +21,23 @@ import { graphqlHTTP } from 'express-graphql';
 import graphqlSchema from './graphql/schemas/index.js';
 import graphqlResolvers from './graphql/resolvers/index.js';
 
-dotenv.config();
-
 await connectDB();
+
+if (!process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
+  const keys = webpush.generateVAPIDKeys();
+  console.log(keys);
+  webpush.setVapidDetails(
+    'mailto:none@none.com',
+    keys.publicKey,
+    keys.privateKey
+  );
+} else {
+  webpush.setVapidDetails(
+    process.env.VAPID_CONTACT,
+    process.env.VAPID_PUBLIC_KEY,
+    process.env.VAPID_PRIVATE_KEY
+  );
+}
 
 const app = express();
 const redis = new Redis();

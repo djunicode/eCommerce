@@ -1,16 +1,9 @@
-import { generateVAPIDKeys } from 'web-push';
+import webpush from 'web-push';
 import asyncHandler from 'express-async-handler';
 import { loggedin } from '../utils/verifyUser.js';
 import { pushNotification } from '../utils/pushNotification.js';
 
 import User from '../models/userModel.js';
-
-if (!process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
-  console.log(
-    'You must set the VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY environment variables. You can use the following ones:'
-  );
-  console.log(generateVAPIDKeys());
-}
 
 const getPublicKey = asyncHandler(async (req, res) => {
   res.send(process.env.VAPID_PUBLIC_KEY);
