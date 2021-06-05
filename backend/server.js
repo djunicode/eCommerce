@@ -8,6 +8,7 @@ import cors from 'cors';
 
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import paymentRouter from './routes/paymentRouter.js';
+// import uploadRouter from './routes/uploadRoutes.js'; // Server crashes without valid AWS creds
 import { verify } from './middleware/authMiddleware.js';
 import connectDB from './config/db.js';
 
@@ -42,6 +43,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(paymentRouter);
+// app.use(uploadRouter);
 
 app.use(
   '/graphql',
@@ -54,13 +56,6 @@ app.use(
     };
   })
 );
-
-app.get('/api/config/paypal', (req, res) =>
-  res.send(process.env.PAYPAL_CLIENT_ID)
-);
-
-const __dirname = path.resolve();
-app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '/frontend/build')));
