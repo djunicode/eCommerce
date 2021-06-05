@@ -1,7 +1,7 @@
 import { generateVAPIDKeys } from 'web-push';
 import asyncHandler from 'express-async-handler';
 import { loggedin } from '../utils/verifyUser.js';
-import { pushNotification } from '../utils/pushNotification.js'
+import { pushNotification } from '../utils/pushNotification.js';
 
 import User from '../models/userModel.js';
 
@@ -10,14 +10,11 @@ if (!process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
     'You must set the VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY environment variables. You can use the following ones:'
   );
   console.log(generateVAPIDKeys());
-  return;
 }
 
-const getPublicKey = asyncHandler(
-  async((req, res) => {
-    res.send(process.env.VAPID_PUBLIC_KEY);
-  })
-);
+const getPublicKey = asyncHandler(async (req, res) => {
+  res.send(process.env.VAPID_PUBLIC_KEY);
+});
 
 const isValidSaveRequest = (req, res) => {
   if (!req.body || !req.body.endpoint) {
@@ -36,44 +33,42 @@ const isValidSaveRequest = (req, res) => {
   return true;
 };
 
-const registerUser = asyncHandler(
-  async((req, res) => {
-    try {
-      if (loggedin(req) && isValidSaveRequest(req, res)) {
-        const user = await User.findById(req.user._id);
-  
-        if (user) {
-          user.subscriptionDetails = req.body
-
-          const updatedUser = await user.save();
-  
-          return {
-            ...updatedUser._doc,
-            password: null
-          };
-        } else {
-          throw new Error('User not found');
-        }
-      }
-    } catch (err) {
-      console.log(err);
-      throw err;
-    }
-  })
-);
-
-const sendNotification = asyncHandler(async((req, res) => {
+const registerUser = asyncHandler(async (req, res) => {
   try {
-    if (loggedin(req)) {
-      const resp = pushNotification(req.user._id, req.body.message);
-      if(!resp) {
-        throw new Error('User subscription expired')
+    if (loggedin(req) && isValidSaveRequest(req, res)) {
+      const user = await User.findById(req.user._id);
+
+      if (user) {
+        user.subscriptionDetails = req.body;
+
+        const updatedUser = await user.save();
+
+        return {
+          ...updatedUser._doc,
+          password: null,
+        };
+      } else {
+        throw new Error('User not found');
       }
     }
   } catch (err) {
     console.log(err);
     throw err;
   }
-}))
+});
 
-export { getPublicKey, registerUser , sendNotification}
+const sendNotification = asyncHandler(async (req, res) => {
+  try {
+    if (loggedin(req)) {
+      const resp = pushNotification(req.user._id, req.body.message);
+      if (!resp) {
+        throw new Error('User subscription expired');
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+});
+
+export { getPublicKey, registerUser, sendNotification };
