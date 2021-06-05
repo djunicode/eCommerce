@@ -32,14 +32,11 @@ const registerUser = asyncHandler(async (req, res) => {
       const user = await User.findById(req.user._id);
 
       if (user) {
-        user.subscriptionDetails = req.body;
+        user.subscriptionDetails = JSON.stringify(req.body);
 
-        const updatedUser = await user.save();
+        await user.save();
 
-        return {
-          ...updatedUser._doc,
-          password: null,
-        };
+        res.sendStatus(200);
       } else {
         throw new Error('User not found');
       }
@@ -57,6 +54,7 @@ const sendNotification = asyncHandler(async (req, res) => {
       if (!resp) {
         throw new Error('User subscription expired');
       }
+      res.sendStatus(200);
     }
   } catch (err) {
     console.log(err);
