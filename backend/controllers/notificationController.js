@@ -1,0 +1,65 @@
+import webpush from 'web-push';
+import asyncHandler from 'express-async-handler';
+import { loggedin } from '../utils/verifyUser.js';
+import { pushNotification } from '../utils/pushNotification.js';
+
+import User from '../models/userModel.js';
+
+const getPublicKey = asyncHandler(async (req, res) => {
+  res.send(process.env.VAPID_PUBLIC_KEY);
+});
+
+const isValidSaveRequest = (req, res) => {
+  if (!req.body || !req.body.endpoint) {
+    res.status(400);
+    res.setHeader('Content-Type', 'application/json');
+    res.send(
+      JSON.stringify({
+        error: {
+          id: 'no-endpoint',
+          message: 'Subscription must have an endpoint.',
+        },
+      })
+    );
+    return false;
+  }
+  return true;
+};
+
+const registerUser = asyncHandler(async (req, res) => {
+  try {
+    if (loggedin(req) && isValidSaveRequest(req, res)) {
+      const user = await User.findById(req.user._id);
+
+      if (user) {
+        user.subscriptionDetails = JSON.stringify(req.body);
+
+        await user.save();
+
+        res.sendStatus(200);
+      } else {
+        throw new Error('User not found');
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+});
+
+const sendNotification = asyncHandler(async (req, res) => {
+  try {
+    if (loggedin(req)) {
+      const resp = await pushNotification(req.user._id, req.body.message);
+      if (!resp) {
+        throw new Error('User subscription expired');
+      }
+      res.sendStatus(200);
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+});
+
+export { getPublicKey, registerUser, sendNotification };
