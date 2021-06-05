@@ -8,7 +8,10 @@ export const pushNotification = async (userId, message) => {
 
     if (user && user.subscriptionDetails) {
       try {
-        await webpush.sendNotification(user.subscriptionDetails, message);
+        await webpush.sendNotification(
+          JSON.parse(user.subscriptionDetails),
+          message
+        );
         return true;
       } catch (err) {
         if (err.statusCode === 404 || err.statusCode === 410) {
