@@ -2,12 +2,6 @@ import webpush from 'web-push';
 
 import User from '../models/userModel.js';
 
-webpush.setVapidDetails(
-  process.env.VAPID_CONTACT,
-  process.env.VAPID_PUBLIC_KEY,
-  process.env.VAPID_PRIVATE_KEY
-);
-
 export const pushNotification = async (userId, message) => {
   try {
     const user = await User.findById(userId);
