@@ -60,7 +60,7 @@ const registerUser = asyncHandler(async (req, res) => {
 const sendNotification = asyncHandler(async (req, res) => {
   try {
     if (loggedin(req)) {
-      const resp = pushNotification(req.user._id, req.body.message);
+      const resp = await pushNotification(req.user._id, req.body.message);
       if (!resp) {
         throw new Error('User subscription expired');
       }
