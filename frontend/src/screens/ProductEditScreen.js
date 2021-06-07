@@ -97,8 +97,14 @@ const ProductEditScreen = ({ match, history }) => {
   const [optQty, setOptQty] = useState();
 
   const [validated, setValidated] = useState(false);
-  const [dropdownError, setDropdownError] = useState({brand: 'none', category: 'none', subcategory: 'none', optionname: 'none', optionprice: 'none', optionqty: 'none'})
-
+  const [dropdownError, setDropdownError] = useState({
+    brand: 'none',
+    category: 'none',
+    subcategory: 'none',
+    optionname: 'none',
+    optionprice: 'none',
+    optionqty: 'none',
+  });
 
   useEffect(() => {
     if (data && data.brand && data.category && data.subcategory) {
@@ -152,33 +158,45 @@ const ProductEditScreen = ({ match, history }) => {
   const updateProductHandler = (event) => {
     handleSubmit();
 
-    let dbrand, dcategory, dsubcategory, optionname, optionprice, optionqty;
+    let dbrand;
+    let dcategory;
+    let dsubcategory;
+    let optionname;
+    let optionprice;
+    let optionqty;
 
-    if(brand === '') {
+    if (brand === '') {
       dbrand = 'flex';
     }
 
-    if(categ === '') {
+    if (categ === '') {
       dcategory = 'flex';
     }
-    
-    if(subCateg === '') {
-      dsubcategory = 'flex'
+
+    if (subCateg === '') {
+      dsubcategory = 'flex';
     }
 
-    if(optName === '') {
-      optionname = 'flex'
+    if (optName === '') {
+      optionname = 'flex';
     }
 
-    if(!optPrice) {
-      optionprice = 'flex'
+    if (!optPrice) {
+      optionprice = 'flex';
     }
 
-    if(!optQty) {
-      optionqty = 'flex'
+    if (!optQty) {
+      optionqty = 'flex';
     }
 
-    setDropdownError({brand: `${dbrand}`, category: `${dcategory}`, subcategory: `${dsubcategory}`, optionname: `${optionname}`, optionprice: `${optionprice}`, optionqty: `${optionqty}`});
+    setDropdownError({
+      brand: `${dbrand}`,
+      category: `${dcategory}`,
+      subcategory: `${dsubcategory}`,
+      optionname: `${optionname}`,
+      optionprice: `${optionprice}`,
+      optionqty: `${optionqty}`,
+    });
 
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
@@ -280,7 +298,9 @@ const ProductEditScreen = ({ match, history }) => {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                     />
-                    <Form.Control.Feedback type="invalid">This field is required</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                      This field is required
+                    </Form.Control.Feedback>
                   </Col>
 
                   <Col controlId="brand">
@@ -299,7 +319,9 @@ const ProductEditScreen = ({ match, history }) => {
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
                     />
-                    <Form.Control.Feedback type="invalid">This field is required</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                      This field is required
+                    </Form.Control.Feedback>
                   </Col>
 
                   <Col>
@@ -314,7 +336,9 @@ const ProductEditScreen = ({ match, history }) => {
                           setCountInStock(e.target.value)
                         }
                       />
-                      <Form.Control.Feedback type="invalid">This field is required</Form.Control.Feedback>
+                      <Form.Control.Feedback type="invalid">
+                        This field is required
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                 </Row>
@@ -355,7 +379,9 @@ const ProductEditScreen = ({ match, history }) => {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
-              <Form.Control.Feedback type="invalid">This field is required</Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">
+                This field is required
+              </Form.Control.Feedback>
             </Form.Group>
 
             {/* <Form.Check 
@@ -411,7 +437,9 @@ const ProductEditScreen = ({ match, history }) => {
                         setOptName(e.target.value);
                       }}
                     />
-                    <Form.Control.Feedback type="invalid">This field is required</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                      This field is required
+                    </Form.Control.Feedback>
                   </Col>
                   <Col>
                     <Form.Label>Price</Form.Label>
@@ -424,7 +452,9 @@ const ProductEditScreen = ({ match, history }) => {
                         setOptPrice(e.target.value);
                       }}
                     />
-                    <Form.Control.Feedback type="invalid">This field is required</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                      This field is required
+                    </Form.Control.Feedback>
                   </Col>
                   <Col>
                     <Form.Label>Discount</Form.Label>
@@ -448,7 +478,9 @@ const ProductEditScreen = ({ match, history }) => {
                         setOptQty(e.target.value);
                       }}
                     />
-                    <Form.Control.Feedback type="invalid">This field is required</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                      This field is required
+                    </Form.Control.Feedback>
                   </Col>
                 </Row>
               </Form>

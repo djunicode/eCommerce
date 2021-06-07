@@ -37,7 +37,14 @@ const ProductCreateScreen = ({ history }) => {
   const [optQty, setOptQty] = useState();
 
   const [validated, setValidated] = useState(false);
-  const [dropdownError, setDropdownError] = useState({brand: 'none', category: 'none', subcategory: 'none', optionname: 'none', optionprice: 'none', optionqty: 'none'})
+  const [dropdownError, setDropdownError] = useState({
+    brand: 'none',
+    category: 'none',
+    subcategory: 'none',
+    optionname: 'none',
+    optionprice: 'none',
+    optionqty: 'none',
+  });
 
   const dispatch = useDispatch();
 
@@ -75,33 +82,45 @@ const ProductCreateScreen = ({ history }) => {
   const createProductHandler = (event) => {
     handleSubmit();
 
-    let dbrand, dcategory, dsubcategory, optionname, optionprice, optionqty;
+    let dbrand;
+    let dcategory;
+    let dsubcategory;
+    let optionname;
+    let optionprice;
+    let optionqty;
 
-    if(brand === '') {
+    if (brand === '') {
       dbrand = 'flex';
     }
 
-    if(categ === '') {
+    if (categ === '') {
       dcategory = 'flex';
     }
-    
-    if(subCateg === '') {
-      dsubcategory = 'flex'
+
+    if (subCateg === '') {
+      dsubcategory = 'flex';
     }
 
-    if(optName === '') {
-      optionname = 'flex'
+    if (optName === '') {
+      optionname = 'flex';
     }
 
-    if(!optPrice) {
-      optionprice = 'flex'
+    if (!optPrice) {
+      optionprice = 'flex';
     }
 
-    if(!optQty) {
-      optionqty = 'flex'
+    if (!optQty) {
+      optionqty = 'flex';
     }
 
-    setDropdownError({brand: `${dbrand}`, category: `${dcategory}`, subcategory: `${dsubcategory}`, optionname: `${optionname}`, optionprice: `${optionprice}`, optionqty: `${optionqty}`});
+    setDropdownError({
+      brand: `${dbrand}`,
+      category: `${dcategory}`,
+      subcategory: `${dsubcategory}`,
+      optionname: `${optionname}`,
+      optionprice: `${optionprice}`,
+      optionqty: `${optionqty}`,
+    });
 
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
@@ -140,7 +159,6 @@ const ProductCreateScreen = ({ history }) => {
     }
     `;
 
-    
     dispatch(createProduct(query));
   };
 
@@ -183,7 +201,7 @@ const ProductCreateScreen = ({ history }) => {
               padding: '3rem',
               marginBottom: '40px',
             }}
-            noValidate 
+            noValidate
             validated={validated}
           >
             <Row style={{ marginBottom: '1rem' }}>
@@ -198,7 +216,9 @@ const ProductCreateScreen = ({ history }) => {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                     />
-                    <Form.Control.Feedback type="invalid">This field is required</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                      This field is required
+                    </Form.Control.Feedback>
                   </Col>
 
                   <Col controlId="brand">
@@ -218,7 +238,9 @@ const ProductCreateScreen = ({ history }) => {
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
                     />
-                    <Form.Control.Feedback type="invalid">This field is required</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                      This field is required
+                    </Form.Control.Feedback>
                   </Col>
 
                   <Col>
@@ -233,17 +255,20 @@ const ProductCreateScreen = ({ history }) => {
                           setCountInStock(e.target.value)
                         }
                       />
-                      <Form.Control.Feedback type="invalid">This field is required</Form.Control.Feedback>
+                      <Form.Control.Feedback type="invalid">
+                        This field is required
+                      </Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                 </Row>
 
                 <Row style={{ marginBottom: '1rem' }}>
                   <Col controlId="categ">
-                    <CatDropdown 
-                    categ={categ} 
-                    setCateg={setCateg} 
-                    dropdownError={dropdownError}/>
+                    <CatDropdown
+                      categ={categ}
+                      setCateg={setCateg}
+                      dropdownError={dropdownError}
+                    />
                   </Col>
 
                   <Col controlId="subCateg">
@@ -278,7 +303,9 @@ const ProductCreateScreen = ({ history }) => {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
-              <Form.Control.Feedback type="invalid">This field is required</Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">
+                This field is required
+              </Form.Control.Feedback>
             </Form.Group>
 
             <Form.Check
@@ -315,7 +342,7 @@ const ProductCreateScreen = ({ history }) => {
       <div>
         {click.map((c, index) => {
           return (
-            <div 
+            <div
               style={{
                 background: '#F9F9F9',
                 padding: '3rem',

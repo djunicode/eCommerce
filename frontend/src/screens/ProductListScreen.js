@@ -192,15 +192,19 @@ const ProductListScreen = ({ history }) => {
       dispatch(deleteProduct(queryDeleteProduct));
     }
   };
-  
+
   let windowSize;
 
-  if(window.innerWidth >= 1100)
-    windowSize = window.innerWidth-160;
-  else
-    windowSize = 1100;
+  if (window.innerWidth >= 1100) windowSize = window.innerWidth - 160;
+  else windowSize = 1100;
 
-  const columnWidths = [(1.3*windowSize)/5, (0.9*windowSize)/5, (0.9*windowSize)/5, (1.2*windowSize)/5, (1.2*windowSize)/10];
+  const columnWidths = [
+    (1.3 * windowSize) / 5,
+    (0.9 * windowSize) / 5,
+    (0.9 * windowSize) / 5,
+    (1.2 * windowSize) / 5,
+    (1.2 * windowSize) / 10,
+  ];
   const rowHeights = [48, 320];
 
   const Cell = ({ columnIndex, rowIndex, style }) => (
