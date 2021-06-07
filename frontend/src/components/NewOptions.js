@@ -16,6 +16,7 @@ function NewOptions(props) {
               props.setOptName(e.target.value);
             }}
           />
+          <Form.Control.Feedback type="invalid" style={{display: `${props.dropdownError.optionname}`}}>This field is required</Form.Control.Feedback>
         </Col>
         <Col>
           <Form.Label>Price</Form.Label>
@@ -28,6 +29,7 @@ function NewOptions(props) {
               props.setOptPrice(e.target.value);
             }}
           />
+          <Form.Control.Feedback type="invalid" style={{display: `${props.dropdownError.optionprice}`}}>This field is required</Form.Control.Feedback>
         </Col>
         <Col>
           <Form.Label>Discount</Form.Label>
@@ -52,6 +54,7 @@ function NewOptions(props) {
               props.setOptQty(e.target.value);
             }}
           />
+          <Form.Control.Feedback type="invalid" style={{display: `${props.dropdownError.optionqty}`}}>This field is required</Form.Control.Feedback>
         </Col>
       </Row>
     </Form>

@@ -37,15 +37,15 @@ const Option = (props) => {
           <div
             style={{
               display: 'flex',
-              justifyContent: 'space-between',
+              justifyContent: 'center',
             }}
           >
-            <button href="#" onClick={handleModal}>
+            <DropdownButtons href="#" onClick={handleModal}>
               <Icon className="fas fa-edit" />
-            </button>
-            <button href="#" onClick={handleDelete}>
+            </DropdownButtons>
+            <DropdownButtons href="#" onClick={handleDelete}>
               <Icon className="fas fa-trash" />
-            </button>
+            </DropdownButtons>
           </div>
         </div>
       </components.Option>
@@ -53,7 +53,8 @@ const Option = (props) => {
   );
 };
 
-export const CatDropdown = ({ setCateg }) => {
+export const CatDropdown = ({ setCateg, dropdownError }) => {
+
   const dispatch = useDispatch();
 
   const categoryList = useSelector((state) => state.categoryList);
@@ -96,14 +97,9 @@ export const CatDropdown = ({ setCateg }) => {
       setSelectedCategory(newValue.label);
       setCateg(newValue.value);
     }
-    console.group('Value Changed');
-    console.log(selectedCategory);
-    console.groupEnd();
   };
   const handleInputChange = (inputValue) => {
-    console.group('Input Changed');
     console.log(inputValue);
-    console.groupEnd();
   };
 
   const createOption = (label) => ({
@@ -113,11 +109,8 @@ export const CatDropdown = ({ setCateg }) => {
 
   const handleCreateCategory = (inputValue) => {
     const newOption = createOption(inputValue);
-    console.log(newOption);
-    console.groupEnd();
     // setValue(newOption);
     // setOptions([...options, newOption]);
-    console.log('new option created');
 
     const queryCreateCategories = `mutation {
             createCategory (name: "${newOption.label}") {
@@ -140,9 +133,6 @@ export const CatDropdown = ({ setCateg }) => {
       window.confirm('Are you sure you want to delete this category?')
     ) {
       dispatch(deleteCategories(queryDeleteCategories));
-      console.log(selectedCategory);
-      console.log('category deleted');
-      console.log(deleteCategory.msg);
     }
   };
 
@@ -153,17 +143,13 @@ export const CatDropdown = ({ setCateg }) => {
     },
   ]);
 
-  console.log(newCat);
-
   const editCat = (cat) => {
     setNewCat([{ cat }]);
   };
 
   const handleModal = (event) => {
     event.preventDefault();
-    console.log('Open Modal');
     setModalShow(true);
-    console.log(modalShow);
   };
 
   return (
@@ -186,11 +172,12 @@ export const CatDropdown = ({ setCateg }) => {
         onCreateOption={handleCreateCategory}
         handleDelete={handleDelete}
       />
+      <Form.Control.Feedback type="invalid" style={{display: `${dropdownError.category}`}}>This field is required</Form.Control.Feedback>
     </>
   );
 };
 
-export const SubCatDropdown = ({ categ, subCateg, setSubCateg }) => {
+export const SubCatDropdown = ({ categ, subCateg, setSubCateg, dropdownError }) => {
   const dispatch = useDispatch();
 
   const subCategoryList = useSelector(
@@ -233,7 +220,6 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg }) => {
       });
       setOptionList(optionsTwo);
     }
-    // console.log(optionList);
   }, [subcategories, createSubcategory, deleteSubcategory]);
 
   const handleChange = (newValue) => {
@@ -241,14 +227,9 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg }) => {
       setSelectedSubCategory(newValue.label);
       setSubCateg(newValue.value);
     }
-    console.group('Value Changed');
-    console.log(selectedSubCategory);
-    console.groupEnd();
   };
   const handleInputChange = (inputValue) => {
-    console.group('Input Changed');
     console.log(inputValue);
-    console.groupEnd();
   };
 
   const createOption = (label) => ({
@@ -258,11 +239,8 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg }) => {
 
   const handleCreateSubCategory = (inputValue) => {
     const newOption = createOption(inputValue);
-    console.log(newOption);
-    console.groupEnd();
     // setValue(newOption);
     // setOptions([...options, newOption]);
-    console.log('new option created');
 
     const queryCreateSub = `mutation {
             createSubCategory (name: "${newOption.label}", category: "${categ}") {
@@ -287,9 +265,6 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg }) => {
       )
     ) {
       dispatch(deleteSubCategories(queryDeleteSub));
-      console.log(selectedSubCategory);
-      console.log('sub category deleted');
-      console.log(deleteSubcategory.msg);
     }
   };
 
@@ -300,17 +275,13 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg }) => {
     },
   ]);
 
-  console.log(newSubCat);
-
   const editSubCat = (subcat) => {
     setNewSubCat([{ subcat }]);
   };
 
   const handleModal = (event) => {
     event.preventDefault();
-    console.log('Open Modal');
     setModalShow(true);
-    console.log(modalShow);
   };
 
   return (
@@ -334,11 +305,12 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg }) => {
         onCreateOption={handleCreateSubCategory}
         handleDelete={handleDelete}
       />
+      <Form.Control.Feedback type="invalid" style={{display: `${dropdownError.subcategory}`}}>This field is required</Form.Control.Feedback>
     </>
   );
 };
 
-export const BrandDropdown = ({ setBrand }) => {
+export const BrandDropdown = ({ setBrand, dropdownError }) => {
   const dispatch = useDispatch();
 
   const brandList = useSelector((state) => state.brandList);
@@ -373,7 +345,6 @@ export const BrandDropdown = ({ setBrand }) => {
       });
       setOptionList(optionsTwo);
     }
-    // console.log(optionList);
   }, [brands, createBrand, deleteBrand]);
 
   const handleChange = (newValue) => {
@@ -381,14 +352,9 @@ export const BrandDropdown = ({ setBrand }) => {
       setSelectedBrand(newValue.label);
       setBrand(newValue.value);
     }
-    console.group('Value Changed');
-    console.log(selectedBrand);
-    console.groupEnd();
   };
   const handleInputChange = (inputValue) => {
     console.group('Input Changed');
-    console.log(inputValue);
-    console.groupEnd();
   };
 
   const createOption = (label) => ({
@@ -398,9 +364,6 @@ export const BrandDropdown = ({ setBrand }) => {
 
   const handleCreateBrand = (inputValue) => {
     const newOption = createOption(inputValue);
-    console.log(newOption);
-    console.groupEnd();
-    console.log('new option created');
 
     const queryCreateBrand = `mutation {
             createBrand (name: "${newOption.label}") {
@@ -423,9 +386,6 @@ export const BrandDropdown = ({ setBrand }) => {
       window.confirm('Are you sure you want to delete this brand?')
     ) {
       dispatch(deleteBrands(queryDeleteBrand));
-      console.log(selectedBrand);
-      console.log('brand deleted');
-      console.log(deleteBrand.msg);
     }
   };
 
@@ -436,17 +396,13 @@ export const BrandDropdown = ({ setBrand }) => {
     },
   ]);
 
-  console.log(newBrand);
-
   const editBrand = (br) => {
     setNewBrand([{ br }]);
   };
 
   const handleModal = (event) => {
     event.preventDefault();
-    console.log('Open Modal');
     setModalShow(true);
-    console.log(modalShow);
   };
 
   return (
@@ -469,6 +425,7 @@ export const BrandDropdown = ({ setBrand }) => {
         onCreateOption={handleCreateBrand}
         handleDelete={handleDelete}
       />
+      <Form.Control.Feedback type="invalid" style={{display: `${dropdownError.brand}`}}>This field is required</Form.Control.Feedback>
     </>
   );
 };
@@ -479,4 +436,8 @@ const Icon = styled.i`
   &:hover {
     color: #30475e;
   }
+`;
+const DropdownButtons = styled.button `
+  border: none;
+  background: none;
 `;

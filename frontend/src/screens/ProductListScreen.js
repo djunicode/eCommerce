@@ -190,12 +190,17 @@ const ProductListScreen = ({ history }) => {
       window.confirm('Are you sure you want to delete this product?')
     ) {
       dispatch(deleteProduct(queryDeleteProduct));
-      console.log(successDelete);
-      console.log('product is deleted');
     }
   };
+  
+  let windowSize;
 
-  const columnWidths = [338, 225, 200, 240, 105];
+  if(window.innerWidth >= 1100)
+    windowSize = window.innerWidth-160;
+  else
+    windowSize = 1100;
+
+  const columnWidths = [(1.3*windowSize)/5, (0.9*windowSize)/5, (0.9*windowSize)/5, (1.2*windowSize)/5, (1.2*windowSize)/10];
   const rowHeights = [48, 320];
 
   const Cell = ({ columnIndex, rowIndex, style }) => (
@@ -405,7 +410,6 @@ const ProductListScreen = ({ history }) => {
             // value={category}
             onChange={(e) => {
               setCategory(e.target.value);
-              console.log(category);
             }}
             style={{ border: '1px solid #929293' }}
           >
@@ -421,7 +425,6 @@ const ProductListScreen = ({ history }) => {
             defaultValue="Filter by Sub Category"
             onChange={(e) => {
               setSubCategory(e.target.value);
-              console.log(subcategories);
             }}
             style={{ border: '1px solid #929293' }}
           >
@@ -462,7 +465,7 @@ const ProductListScreen = ({ history }) => {
               columnWidth={(index) => columnWidths[index]}
               rowCount={2}
               rowHeight={(index) => rowHeights[index]}
-              width={1120}
+              width={windowSize}
               height={400}
             >
               {Cell}

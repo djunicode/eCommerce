@@ -18,26 +18,26 @@ import NewOptions from '../components/NewOptions';
 const ProductCreateScreen = ({ history }) => {
   //   const productId = match.params.id;
 
-  const [name, setName] = useState('');
+  const [name, setName] = useState();
   const [image, setImage] = useState('one');
   const [brand, setBrand] = useState('');
-  const [price, setPrice] = useState(0.0);
-  const [discount, setDiscount] = useState(0.0);
-  const [categ, setCateg] = useState('6033f160eb01e64a1ccf7046');
-  const [subCateg, setSubCateg] = useState(
-    '6033f161eb01e64a1ccf7055',
-  );
-  const [countInStock, setCountInStock] = useState(0);
-  const [size, setSize] = useState(0);
-  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState();
+  const [discount, setDiscount] = useState(0);
+  const [categ, setCateg] = useState('');
+  const [subCateg, setSubCateg] = useState('');
+  const [countInStock, setCountInStock] = useState();
+  const [description, setDescription] = useState();
   // const [uploading, setUploading] = useState(false);
   const [newArrival, setNewArrival] = useState(false);
   const [optionsInput, setOptionsInput] = useState([]);
 
   const [optName, setOptName] = useState('');
-  const [optPrice, setOptPrice] = useState(0);
+  const [optPrice, setOptPrice] = useState();
   const [optDiscount, setOptDiscount] = useState(0);
-  const [optQty, setOptQty] = useState(0);
+  const [optQty, setOptQty] = useState();
+
+  const [validated, setValidated] = useState(false);
+  const [dropdownError, setDropdownError] = useState({brand: 'none', category: 'none', subcategory: 'none', optionname: 'none', optionprice: 'none', optionqty: 'none'})
 
   const dispatch = useDispatch();
 
@@ -72,8 +72,44 @@ const ProductCreateScreen = ({ history }) => {
     console.log(optionsInput);
   }
 
-  const createProductHandler = () => {
+  const createProductHandler = (event) => {
     handleSubmit();
+
+    let dbrand, dcategory, dsubcategory, optionname, optionprice, optionqty;
+
+    if(brand === '') {
+      dbrand = 'flex';
+    }
+
+    if(categ === '') {
+      dcategory = 'flex';
+    }
+    
+    if(subCateg === '') {
+      dsubcategory = 'flex'
+    }
+
+    if(optName === '') {
+      optionname = 'flex'
+    }
+
+    if(!optPrice) {
+      optionprice = 'flex'
+    }
+
+    if(!optQty) {
+      optionqty = 'flex'
+    }
+
+    setDropdownError({brand: `${dbrand}`, category: `${dcategory}`, subcategory: `${dsubcategory}`, optionname: `${optionname}`, optionprice: `${optionprice}`, optionqty: `${optionqty}`});
+
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    setValidated(true);
 
     const temp = {
       name: optName,
@@ -104,8 +140,8 @@ const ProductCreateScreen = ({ history }) => {
     }
     `;
 
+    
     dispatch(createProduct(query));
-    console.log('product created');
   };
 
   const ctr = 1;
@@ -114,7 +150,6 @@ const ProductCreateScreen = ({ history }) => {
 
   const addNew = () => {
     setClick([...click, click + 1]);
-    console.log(click);
     handleSubmit();
     setOptName('');
     setOptPrice(0);
@@ -122,9 +157,9 @@ const ProductCreateScreen = ({ history }) => {
     setOptQty(0);
   };
 
-  useEffect(() => {
-    console.log(optionsInput);
-  }, [optionsInput]);
+  // useEffect(() => {
+  //   console.log(optionsInput);
+  // }, [optionsInput]);
 
   return (
     <div style={{ padding: '0 4rem' }}>
@@ -148,6 +183,8 @@ const ProductCreateScreen = ({ history }) => {
               padding: '3rem',
               marginBottom: '40px',
             }}
+            noValidate 
+            validated={validated}
           >
             <Row style={{ marginBottom: '1rem' }}>
               <Col>
@@ -155,34 +192,40 @@ const ProductCreateScreen = ({ history }) => {
                   <Col controlId="name">
                     <Form.Label>Name</Form.Label>
                     <Form.Control
+                      required
                       type="text"
                       placeholder="Enter name"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                     />
+                    <Form.Control.Feedback type="invalid">This field is required</Form.Control.Feedback>
                   </Col>
 
                   <Col controlId="brand">
                     <BrandDropdown
                       brand={brand}
                       setBrand={setBrand}
+                      dropdownError={dropdownError}
                     />
                   </Col>
 
                   <Col controlId="price">
                     <Form.Label>Price</Form.Label>
                     <Form.Control
+                      required
                       type="number"
                       placeholder="Enter price"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
                     />
+                    <Form.Control.Feedback type="invalid">This field is required</Form.Control.Feedback>
                   </Col>
 
                   <Col>
                     <Form.Group as={Col} controlId="countInStock">
                       <Form.Label>Quantity</Form.Label>
                       <Form.Control
+                        required
                         type="number"
                         placeholder="Enter quantity"
                         value={countInStock}
@@ -190,13 +233,17 @@ const ProductCreateScreen = ({ history }) => {
                           setCountInStock(e.target.value)
                         }
                       />
+                      <Form.Control.Feedback type="invalid">This field is required</Form.Control.Feedback>
                     </Form.Group>
                   </Col>
                 </Row>
 
                 <Row style={{ marginBottom: '1rem' }}>
                   <Col controlId="categ">
-                    <CatDropdown categ={categ} setCateg={setCateg} />
+                    <CatDropdown 
+                    categ={categ} 
+                    setCateg={setCateg} 
+                    dropdownError={dropdownError}/>
                   </Col>
 
                   <Col controlId="subCateg">
@@ -204,6 +251,7 @@ const ProductCreateScreen = ({ history }) => {
                       categ={categ}
                       subCateg={subCateg}
                       setSubCateg={setSubCateg}
+                      dropdownError={dropdownError}
                     />
                   </Col>
 
@@ -223,12 +271,14 @@ const ProductCreateScreen = ({ history }) => {
             <Form.Group controlId="description">
               <Form.Label>Description</Form.Label>
               <Form.Control
+                required
                 as="textarea"
                 rows={3}
                 placeholder="Enter description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
+              <Form.Control.Feedback type="invalid">This field is required</Form.Control.Feedback>
             </Form.Group>
 
             <Form.Check
@@ -238,7 +288,6 @@ const ProductCreateScreen = ({ history }) => {
               style={{ marginTop: '2rem', fontWeight: '600' }}
               onClick={() => {
                 setNewArrival(!newArrival);
-                console.log(newArrival);
               }}
             />
 
@@ -266,7 +315,7 @@ const ProductCreateScreen = ({ history }) => {
       <div>
         {click.map((c, index) => {
           return (
-            <div
+            <div 
               style={{
                 background: '#F9F9F9',
                 padding: '3rem',
@@ -279,6 +328,7 @@ const ProductCreateScreen = ({ history }) => {
                 setOptPrice={setOptPrice}
                 setOptDiscount={setOptDiscount}
                 setOptQty={setOptQty}
+                dropdownError={dropdownError}
               />
             </div>
           );
