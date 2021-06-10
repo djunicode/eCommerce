@@ -2,6 +2,8 @@ import Order from '../../models/orderModel.js';
 import Product from '../../models/productModel.js';
 import { loggedin, admin } from '../../utils/verifyUser.js';
 import pincode from '../../pincodes.js';
+import { sendEmail } from '../../utils/mailer.js';
+import User from '../../models/userModel.js';
 
 // PS: After .save(), user & product are not populated and can't be queried via graphql
 
@@ -38,8 +40,9 @@ const addOrderItems = async (args, { req, redis }) => {
       if (args.orderInput.deliveredAt) {
         order.deliveredAt = new Date(args.orderInput.deliveredAt);
       }
-
       const res = await order.save();
+      const user = await User.findById(req.user._id);
+      sendEmail(user.name, user.email, 'Order Placed Successfully!', 'your order has been placed successfully.')
       return res;
     }
   } catch (err) {
@@ -104,8 +107,9 @@ const updateOrderToDelivered = async (args, { req, redis }) => {
       if (order) {
         order.isDelivered = true;
         order.deliveredAt = Date.now();
-
         const updatedOrder = await order.save();
+        const user = await User.findById(order.user);
+        sendEmail(user.name, user.email, 'Order Delivered Successfully!', 'your order has been delivered successfully.')
         return updatedOrder;
       } else {
         throw new Error('Order not found!!');
