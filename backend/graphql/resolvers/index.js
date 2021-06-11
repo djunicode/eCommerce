@@ -7,6 +7,8 @@ import {
   deleteUser,
   getUserById,
   updateUser,
+  addUserAddress,
+  deleteUserAddress,
 } from './user.js';
 
 import {
@@ -69,6 +71,8 @@ export default {
   deleteUser: deleteUser,
   getUserById: getUserById,
   updateUser: updateUser,
+  addUserAddress: addUserAddress,
+  deleteUserAddress: deleteUserAddress,
   //brand
   createBrand: createBrand,
   getBrands: getBrands,
