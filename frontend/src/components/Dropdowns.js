@@ -14,9 +14,12 @@ import {
   deleteSubCategories,
 } from '../actions/categoryActions';
 import {
-  CategoryModal,
-  SubCategoryModal,
-  BrandModal,
+  CategoryEditModal,
+  CategoryDeleteModal,
+  SubCategoryEditModal,
+  SubCategoryDeleteModal,
+  BrandEditModal,
+  BrandDeleteModal,
 } from './Modals';
 import {
   listBrands,
@@ -120,23 +123,17 @@ export const CatDropdown = ({ setCateg, dropdownError }) => {
         }`;
 
     dispatch(createCategories(queryCreateCategories));
+    document.location.reload();
   };
 
-  const handleDelete = () => {
-    const queryDeleteCategories = `mutation {
-            deleteCategory (name: "${selectedCategory}") {
-                msg
-            }
-        }`;
+  const [deleteModalShow, setDeleteModalShow] = React.useState(false)
 
-    if (
-      window.confirm('Are you sure you want to delete this category?')
-    ) {
-      dispatch(deleteCategories(queryDeleteCategories));
-    }
+  const handleDelete = (event) => {
+    event.preventDefault();
+    setDeleteModalShow(true);
   };
 
-  const [modalShow, setModalShow] = React.useState(false);
+  const [editModalShow, setEditModalShow] = React.useState(false);
   const [newCat, setNewCat] = useState([
     {
       value: '',
@@ -149,16 +146,21 @@ export const CatDropdown = ({ setCateg, dropdownError }) => {
 
   const handleModal = (event) => {
     event.preventDefault();
-    setModalShow(true);
+    setEditModalShow(true);
   };
 
   return (
     <>
-      <CategoryModal
+      <CategoryEditModal
         selectedCategory={selectedCategory}
         editCat={editCat}
-        show={modalShow}
-        onHide={() => setModalShow(false)}
+        show={editModalShow}
+        onHide={() => setEditModalShow(false)}
+      />
+      <CategoryDeleteModal 
+        selectedCategory={selectedCategory}
+        show={deleteModalShow}
+        onHide={() => setDeleteModalShow(false)}
       />
 
       <Form.Label>Category</Form.Label>
@@ -237,10 +239,10 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg, dropdownError }) 
     value: createSubcategory._id,
   });
 
+  const [suberrordisplay, setSuberrordisplay] = useState('none')
+
   const handleCreateSubCategory = (inputValue) => {
     const newOption = createOption(inputValue);
-    // setValue(newOption);
-    // setOptions([...options, newOption]);
 
     const queryCreateSub = `mutation {
             createSubCategory (name: "${newOption.label}", category: "${categ}") {
@@ -249,26 +251,24 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg, dropdownError }) 
             }
         }`;
 
-    dispatch(createSubCategories(queryCreateSub));
-  };
-
-  const handleDelete = () => {
-    const queryDeleteSub = `mutation {
-            deleteSubCategory (subCategoryId: "${subCateg}") {
-                msg
-            }
-        }`;
-
-    if (
-      window.confirm(
-        'Are you sure you want to delete this sub category?',
-      )
-    ) {
-      dispatch(deleteSubCategories(queryDeleteSub));
+    if(categ === '') {
+      setSuberrordisplay('flex');
+    }
+    else {
+      dispatch(createSubCategories(queryCreateSub));
+      document.location.reload();
+      setSuberrordisplay('none');
     }
   };
 
-  const [modalShow, setModalShow] = React.useState(false);
+  const [deleteModalShow, setDeleteModalShow] = React.useState(false)
+
+  const handleDelete = (event) => {
+    event.preventDefault();
+    setDeleteModalShow(true);
+  };
+
+  const [editModalShow, setEditModalShow] = React.useState(false);
   const [newSubCat, setNewSubCat] = useState([
     {
       value: '',
@@ -281,17 +281,23 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg, dropdownError }) 
 
   const handleModal = (event) => {
     event.preventDefault();
-    setModalShow(true);
+    setEditModalShow(true);
   };
 
   return (
     <>
-      <SubCategoryModal
+      <SubCategoryEditModal
         subCateg={subCateg}
         selectedSubCategory={selectedSubCategory}
         editSubCat={editSubCat}
-        show={modalShow}
-        onHide={() => setModalShow(false)}
+        show={editModalShow}
+        onHide={() => setEditModalShow(false)}
+      />
+      <SubCategoryDeleteModal 
+        selectedSubCategory={selectedSubCategory}
+        show={deleteModalShow}
+        subCateg={subCateg}
+        onHide={() => setDeleteModalShow(false)}
       />
 
       <Form.Label>Sub Category</Form.Label>
@@ -306,6 +312,7 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg, dropdownError }) 
         handleDelete={handleDelete}
       />
       <Form.Control.Feedback type="invalid" style={{display: `${dropdownError.subcategory}`}}>This field is required</Form.Control.Feedback>
+      <Form.Control.Feedback style={{color: 'red', display: `${suberrordisplay}`}}>Select a category first</Form.Control.Feedback>
     </>
   );
 };
@@ -347,23 +354,24 @@ export const BrandDropdown = ({ setBrand, dropdownError }) => {
     }
   }, [brands, createBrand, deleteBrand]);
 
-  const handleChange = (newValue) => {
+  const handleChangeBrand = (newValue) => {
     if (newValue != null) {
       setSelectedBrand(newValue.label);
       setBrand(newValue.value);
+      console.log(newValue.label)
     }
   };
   const handleInputChange = (inputValue) => {
     console.group('Input Changed');
   };
 
-  const createOption = (label) => ({
+  const createBrandOption = (label) => ({
     label,
     value: createBrand._id,
   });
 
   const handleCreateBrand = (inputValue) => {
-    const newOption = createOption(inputValue);
+    const newOption = createBrandOption(inputValue);
 
     const queryCreateBrand = `mutation {
             createBrand (name: "${newOption.label}") {
@@ -373,23 +381,17 @@ export const BrandDropdown = ({ setBrand, dropdownError }) => {
         }`;
 
     dispatch(createNewBrand(queryCreateBrand));
+    document.location.reload();
   };
 
-  const handleDelete = () => {
-    const queryDeleteBrand = `mutation {
-            deleteBrand (name: "${selectedBrand}") {
-                msg
-            }
-        }`;
+  const [deleteModalShow, setDeleteModalShow] = React.useState(false)
 
-    if (
-      window.confirm('Are you sure you want to delete this brand?')
-    ) {
-      dispatch(deleteBrands(queryDeleteBrand));
-    }
+  const handleDelete = (event) => {
+    event.preventDefault();
+    setDeleteModalShow(true);
   };
 
-  const [modalShow, setModalShow] = React.useState(false);
+  const [editModalShow, setEditModalShow] = React.useState(false);
   const [newBrand, setNewBrand] = useState([
     {
       value: '',
@@ -402,23 +404,28 @@ export const BrandDropdown = ({ setBrand, dropdownError }) => {
 
   const handleModal = (event) => {
     event.preventDefault();
-    setModalShow(true);
+    setEditModalShow(true);
   };
 
   return (
     <>
-      <BrandModal
+      <BrandEditModal
         selectedBrand={selectedBrand}
         editBrand={editBrand}
-        show={modalShow}
-        onHide={() => setModalShow(false)}
+        show={editModalShow}
+        onHide={() => setEditModalShow(false)}
+      />
+      <BrandDeleteModal 
+        selectedBrand={selectedBrand}
+        show={deleteModalShow}
+        onHide={() => setDeleteModalShow(false)}
       />
 
       <Form.Label>Brand</Form.Label>
       <CreatableSelect
         handleModal={handleModal}
         isClearable
-        onChange={handleChange}
+        onChange={handleChangeBrand}
         onInputChange={handleInputChange}
         options={optionList}
         components={{ Option }}

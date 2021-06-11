@@ -2,13 +2,15 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { editBrands } from '../actions/brandActions';
-import { editCategories } from '../actions/categoryActions';
+import { editBrands, deleteBrands } from '../actions/brandActions';
+import {
+  editCategories,
+  deleteCategories,
+  deleteSubCategories,
+} from '../actions/categoryActions';
 
-export function CategoryModal(props) {
+export function CategoryEditModal(props) {
   const [newCat, setNewCat] = useState('');
-  // const [show, setShow] = useState(true);
-  // const alertDisplay = [];
 
   const dispatch = useDispatch();
 
@@ -22,20 +24,11 @@ export function CategoryModal(props) {
   }`;
 
   function SubmitForm(e) {
-    e.preventDefault();
     props.editCat(newCat);
     console.log(newCat);
     dispatch(editCategories(queryEditCategories));
     console.log(editCategory.msg);
-    // if(editCategory.msg==="success") {
-    //   if (show) {
-    //     alertDisplay.push (
-    //       <Alert variant="info" onClose={() => setShow(false)} dismissible>
-    //         <p>Category name has been successfully changed.</p>
-    //       </Alert>
-    //     );
-    //   }
-    // }
+    document.location.reload();
   }
 
   function changeCat(e) {
@@ -76,15 +69,52 @@ export function CategoryModal(props) {
           <Button onClick={props.onHide}>Close</Button>
         </Modal.Footer>
       </Modal>
-      {/* <div>{alertDisplay}</div> */}
+    </>
+  );
+}
+export function CategoryDeleteModal(props) {
+  const dispatch = useDispatch();
+
+  const categoryDelete = useSelector((state) => state.categoryDelete);
+  const { deleteCategory } = categoryDelete;
+
+  const queryDeleteCategories = `mutation {
+    deleteCategory (name: "${props.selectedCategory}") {
+        msg
+    }
+  }`;
+
+  function SubmitForm() {
+    dispatch(deleteCategories(queryDeleteCategories));
+    document.location.reload();
+  }
+
+  return (
+    <>
+      <Modal
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        {...props}
+        size="md"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Body>
+          Are you sure you want to delete category :{' '}
+          {props.selectedCategory} ?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={SubmitForm}>Delete</Button>
+          <Button onClick={props.onHide}>Cancel</Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
 
-export function SubCategoryModal(props) {
+export function SubCategoryEditModal(props) {
   const [newSubCat, setNewSubCat] = useState('');
-  const [show, setShow] = useState(true);
-  // const alertDisplay = [];
 
   const dispatch = useDispatch();
 
@@ -100,20 +130,11 @@ export function SubCategoryModal(props) {
   }`;
 
   function SubmitForm(e) {
-    e.preventDefault();
     props.editSubCat(newSubCat);
     console.log(newSubCat);
     dispatch(editCategories(queryEditSub));
     console.log(editSubcategory.msg);
-    // if(editSubcategory.msg==="success") {
-    //   if (show) {
-    //     alertDisplay.push (
-    //       <Alert variant="info" onClose={() => setShow(false)} dismissible>
-    //         <p>Category name has been successfully changed.</p>
-    //       </Alert>
-    //     );
-    //   }
-    // }
+    document.location.reload();
   }
 
   function changeSubCat(e) {
@@ -154,15 +175,54 @@ export function SubCategoryModal(props) {
           <Button onClick={props.onHide}>Close</Button>
         </Modal.Footer>
       </Modal>
-      {/* <div>{alertDisplay}</div> */}
+    </>
+  );
+}
+export function SubCategoryDeleteModal(props) {
+  const dispatch = useDispatch();
+
+  const subCategoryDelete = useSelector(
+    (state) => state.subCategoryDelete,
+  );
+  const { deleteSubcategory } = subCategoryDelete;
+
+  const queryDeleteSub = `mutation {
+    deleteSubCategory (subCategoryId: "${props.subCateg}") {
+        msg
+    }
+  }`;
+
+  function SubmitForm() {
+    dispatch(deleteSubCategories(queryDeleteSub));
+    document.location.reload();
+  }
+
+  return (
+    <>
+      <Modal
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        {...props}
+        size="md"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Body>
+          Are you sure you want to delete sub category :{' '}
+          {props.selectedSubCategory} ?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={SubmitForm}>Delete</Button>
+          <Button onClick={props.onHide}>Cancel</Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
 
-export function BrandModal(props) {
+export function BrandEditModal(props) {
   const [newBrand, setNewBrand] = useState('');
-  // const [show, setShow] = useState(true);
-  // const alertDisplay = [];
 
   const dispatch = useDispatch();
 
@@ -176,20 +236,11 @@ export function BrandModal(props) {
   }`;
 
   function SubmitForm(e) {
-    e.preventDefault();
     props.editBrand(newBrand);
     console.log(newBrand);
     dispatch(editBrands(queryEditBrand));
     console.log(editBrand.msg);
-    // if(editCategory.msg==="success") {
-    //   if (show) {
-    //     alertDisplay.push (
-    //       <Alert variant="info" onClose={() => setShow(false)} dismissible>
-    //         <p>Category name has been successfully changed.</p>
-    //       </Alert>
-    //     );
-    //   }
-    // }
+    document.location.reload();
   }
 
   function changeBrand(e) {
@@ -230,26 +281,46 @@ export function BrandModal(props) {
           <Button onClick={props.onHide}>Close</Button>
         </Modal.Footer>
       </Modal>
-      {/* <div>{alertDisplay}</div> */}
     </>
   );
 }
+export function BrandDeleteModal(props) {
+  const dispatch = useDispatch();
 
-//   function App() {
-//     const [modalShow, setModalShow] = React.useState(false);
+  const brandDelete = useSelector((state) => state.brandDelete);
+  const { deleteBrand } = brandDelete;
 
-//     return (
-//       <>
-//         <Button variant="primary" onClick={() => setModalShow(true)}>
-//           Launch vertically centered modal
-//         </Button>
+  const queryDeleteBrand = `mutation {
+    deleteBrand (name: "${props.selectedBrand}") {
+      msg
+    }
+  }`;
 
-//         <FieldModal
-//           show={modalShow}
-//           onHide={() => setModalShow(false)}
-//         />
-//       </>
-//     );
-//   }
+  function SubmitForm() {
+    dispatch(deleteBrands(queryDeleteBrand));
+    document.location.reload();
+  }
 
-//   render(<App />);
+  return (
+    <>
+      <Modal
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        {...props}
+        size="md"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Body>
+          Are you sure you want to delete brand :{' '}
+          {props.selectedBrand} ?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={SubmitForm}>Delete</Button>
+          <Button onClick={props.onHide}>Cancel</Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}

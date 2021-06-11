@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { Table, Button, Row, Col, Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+// import AutoSizer from "react-virtualized-auto-sizer";
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import {
@@ -193,17 +194,19 @@ const ProductListScreen = ({ history }) => {
     }
   };
 
-  let windowSize;
+  let windowWidth;
+  const windowHeight = (3 * window.innerHeight) / 5;
 
-  if (window.innerWidth >= 1100) windowSize = window.innerWidth - 160;
-  else windowSize = 1100;
+  if (window.innerWidth >= 1150)
+    windowWidth = window.innerWidth - 170;
+  else windowWidth = 1100;
 
   const columnWidths = [
-    (1.3 * windowSize) / 5,
-    (0.9 * windowSize) / 5,
-    (0.9 * windowSize) / 5,
-    (1.2 * windowSize) / 5,
-    (1.2 * windowSize) / 10,
+    (1.3 * windowWidth) / 5,
+    (1 * windowWidth) / 5,
+    (0.9 * windowWidth) / 5,
+    (1.2 * windowWidth) / 5,
+    (1.1 * windowWidth) / 10,
   ];
   const rowHeights = [48, 320];
 
@@ -463,17 +466,21 @@ const ProductListScreen = ({ history }) => {
       ) : (
         <>
           <div style={{ overflowX: 'scroll', marginTop: '35px' }}>
+            {/* <AutoSizer>
+              {({ height, width }) => ( */}
             <Grid
               className="Grid"
               columnCount={5}
               columnWidth={(index) => columnWidths[index]}
               rowCount={2}
               rowHeight={(index) => rowHeights[index]}
-              width={windowSize}
-              height={400}
+              width={windowWidth}
+              height={windowHeight}
             >
               {Cell}
             </Grid>
+            {/* )}
+            </AutoSizer> */}
           </div>
 
           {/* <tbody>
