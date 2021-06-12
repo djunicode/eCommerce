@@ -179,6 +179,8 @@ const StyledSmallScreenSearchBox = styled.div`
 
 const StyledHideOnMd = styled.div`
   width: 45%;
+  text-align: center;
+  margin: auto;
   @media (max-width: 992px) {
     display: none;
   }

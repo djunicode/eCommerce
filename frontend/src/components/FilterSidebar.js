@@ -549,6 +549,10 @@ const StyledTabToggleBtn = styled.button`
   @media (min-width: 900px) {
     display: none;
   }
+
+  @media (max-width: 990px) {
+    top: 145px;
+  }
 `;
 
 const StyledLeftSidebar = styled.div`
@@ -574,6 +578,10 @@ const StyledLeftSidebar = styled.div`
     display: ${(props) =>
       props.display.display && props.display.tab ? '' : 'none'};
     z-index: 2000 !important;
+  }
+
+  @media (max-width: 990px) {
+    top: 145px;
   }
 `;
 

@@ -47,8 +47,9 @@ export const StyledBadgeSortDiv = styled.div`
 
   @media (max-width: 500px) {
     margin-left: 12px;
-    justify-content: space-around;
+    justify-content: flex-end;
     flex-wrap: wrap;
+    align-items: stretch;
   }
 `;
 
