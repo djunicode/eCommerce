@@ -202,9 +202,9 @@ const updateProduct = async (args, { req, redis }) => {
 
       const newUpdatedProduct = {
         name: args.updateProduct.name,
-        discount: args.productInput.discount,
+        discount: args.updateProduct.discount,
         price: args.updateProduct.price,
-        options: args.productInput.options,
+        options: args.updateProduct.options,
         image: args.updateProduct.image,
         brand: args.updateProduct.brand,
         category: args.updateProduct.category,
