@@ -7,10 +7,7 @@ import { Form, Button, Col, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import {
-  updateProduct,
-  createProduct,
-} from '../actions/productActions';
+import { updateProduct } from '../actions/productActions';
 import {
   BrandDropdown,
   CatDropdown,
@@ -307,6 +304,7 @@ const ProductEditScreen = ({ match, history }) => {
                     <BrandDropdown
                       brand={brand}
                       setBrand={setBrand}
+                      dropdownError={dropdownError}
                     />
                   </Col>
 
@@ -345,7 +343,11 @@ const ProductEditScreen = ({ match, history }) => {
 
                 <Row style={{ marginBottom: '1rem' }}>
                   <Col controlId="categ">
-                    <CatDropdown categ={categ} setCateg={setCateg} />
+                    <CatDropdown
+                      categ={categ}
+                      setCateg={setCateg}
+                      dropdownError={dropdownError}
+                    />
                   </Col>
 
                   <Col controlId="subCateg">
@@ -353,6 +355,7 @@ const ProductEditScreen = ({ match, history }) => {
                       categ={categ}
                       subCateg={subCateg}
                       setSubCateg={setSubCateg}
+                      dropdownError={dropdownError}
                     />
                   </Col>
 

@@ -465,7 +465,7 @@ const ProductListScreen = ({ history }) => {
         <Message variant="danger">{error}</Message>
       ) : (
         <>
-          <div style={{ overflowX: 'scroll', marginTop: '35px' }}>
+          <div style={{ overflowX: 'auto', marginTop: '35px' }}>
             {/* <AutoSizer>
               {({ height, width }) => ( */}
             <Grid

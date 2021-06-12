@@ -78,7 +78,9 @@ export const CatDropdown = ({ setCateg, dropdownError }) => {
 
   useEffect(() => {
     dispatch(listCategories(queryCategories));
-  }, [dispatch]);
+    console.log(createCategory);
+    console.log(deleteCategory);
+  }, [dispatch, createCategory, deleteCategory]);
 
   const [optionList, setOptionList] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -112,8 +114,6 @@ export const CatDropdown = ({ setCateg, dropdownError }) => {
 
   const handleCreateCategory = (inputValue) => {
     const newOption = createOption(inputValue);
-    // setValue(newOption);
-    // setOptions([...options, newOption]);
 
     const queryCreateCategories = `mutation {
             createCategory (name: "${newOption.label}") {
@@ -123,7 +123,7 @@ export const CatDropdown = ({ setCateg, dropdownError }) => {
         }`;
 
     dispatch(createCategories(queryCreateCategories));
-    document.location.reload();
+    // document.location.reload();
   };
 
   const [deleteModalShow, setDeleteModalShow] = React.useState(false)
@@ -208,7 +208,7 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg, dropdownError }) 
     if (categ !== '') {
       dispatch(listSubCategories(querySub));
     }
-  }, [categ]);
+  }, [categ, createSubcategory, deleteSubcategory]);
 
   const [optionList, setOptionList] = useState([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState('');
@@ -256,7 +256,7 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg, dropdownError }) 
     }
     else {
       dispatch(createSubCategories(queryCreateSub));
-      document.location.reload();
+      // document.location.reload();
       setSuberrordisplay('none');
     }
   };
@@ -338,7 +338,7 @@ export const BrandDropdown = ({ setBrand, dropdownError }) => {
 
   useEffect(() => {
     dispatch(listBrands(queryBrands));
-  }, [dispatch]);
+  }, [dispatch, createBrand, deleteBrand]);
 
   const [optionList, setOptionList] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState('');
@@ -358,7 +358,6 @@ export const BrandDropdown = ({ setBrand, dropdownError }) => {
     if (newValue != null) {
       setSelectedBrand(newValue.label);
       setBrand(newValue.value);
-      console.log(newValue.label)
     }
   };
   const handleInputChange = (inputValue) => {
@@ -381,7 +380,8 @@ export const BrandDropdown = ({ setBrand, dropdownError }) => {
         }`;
 
     dispatch(createNewBrand(queryCreateBrand));
-    document.location.reload();
+    // handleChangeBrand(inputValue);
+    // document.location.reload();
   };
 
   const [deleteModalShow, setDeleteModalShow] = React.useState(false)

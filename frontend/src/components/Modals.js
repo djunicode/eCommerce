@@ -86,7 +86,8 @@ export function CategoryDeleteModal(props) {
 
   function SubmitForm() {
     dispatch(deleteCategories(queryDeleteCategories));
-    document.location.reload();
+    // document.location.reload();
+    props.onHide();
   }
 
   return (
@@ -100,10 +101,12 @@ export function CategoryDeleteModal(props) {
         backdrop="static"
         keyboard={false}
       >
-        <Modal.Body>
-          Are you sure you want to delete category :{' '}
-          {props.selectedCategory} ?
-        </Modal.Body>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Are you sure you want to delete category :{' '}
+            {props.selectedCategory} ?
+          </Modal.Title>
+        </Modal.Header>
         <Modal.Footer>
           <Button onClick={SubmitForm}>Delete</Button>
           <Button onClick={props.onHide}>Cancel</Button>
@@ -194,7 +197,8 @@ export function SubCategoryDeleteModal(props) {
 
   function SubmitForm() {
     dispatch(deleteSubCategories(queryDeleteSub));
-    document.location.reload();
+    // document.location.reload();
+    props.onHide();
   }
 
   return (
@@ -208,10 +212,12 @@ export function SubCategoryDeleteModal(props) {
         backdrop="static"
         keyboard={false}
       >
-        <Modal.Body>
-          Are you sure you want to delete sub category :{' '}
-          {props.selectedSubCategory} ?
-        </Modal.Body>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Are you sure you want to delete sub category :{' '}
+            {props.selectedSubCategory} ?
+          </Modal.Title>
+        </Modal.Header>
         <Modal.Footer>
           <Button onClick={SubmitForm}>Delete</Button>
           <Button onClick={props.onHide}>Cancel</Button>
@@ -298,7 +304,8 @@ export function BrandDeleteModal(props) {
 
   function SubmitForm() {
     dispatch(deleteBrands(queryDeleteBrand));
-    document.location.reload();
+    // document.location.reload();
+    props.onHide();
   }
 
   return (
@@ -312,10 +319,12 @@ export function BrandDeleteModal(props) {
         backdrop="static"
         keyboard={false}
       >
-        <Modal.Body>
-          Are you sure you want to delete brand :{' '}
-          {props.selectedBrand} ?
-        </Modal.Body>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Are you sure you want to delete brand :{' '}
+            {props.selectedBrand} ?
+          </Modal.Title>
+        </Modal.Header>
         <Modal.Footer>
           <Button onClick={SubmitForm}>Delete</Button>
           <Button onClick={props.onHide}>Cancel</Button>

@@ -80,8 +80,6 @@ const ProductCreateScreen = ({ history }) => {
   }
 
   const createProductHandler = (event) => {
-    handleSubmit();
-
     let dbrand;
     let dcategory;
     let dsubcategory;
@@ -129,37 +127,42 @@ const ProductCreateScreen = ({ history }) => {
     }
 
     setValidated(true);
+    console.log(optionsInput);
 
-    const temp = {
-      name: optName,
-      discount: optDiscount,
-      price: optPrice,
-      countInStock: optQty,
-    };
+    if (optName !== '' && optPrice && optQty) {
+      handleSubmit();
 
-    const newOptions = [...optionsInput, temp];
+      const temp = {
+        name: optName,
+        discount: optDiscount,
+        price: optPrice,
+        countInStock: optQty,
+      };
 
-    const OptFields = newOptions.reduce((accumulator, option) => {
-      const optionString = `{name: "${option.name}", price: ${option.price}, discount: ${option.discount}, countInStock: ${option.countInStock}},`;
-      accumulator += optionString;
-      console.log(accumulator);
-      console.log(optionsInput);
-      return accumulator;
-    }, '');
-    console.log(OptFields);
+      const newOptions = [...optionsInput, temp];
 
-    const newString = `[${OptFields}]`;
+      const OptFields = newOptions.reduce((accumulator, option) => {
+        const optionString = `{name: "${option.name}", price: ${option.price}, discount: ${option.discount}, countInStock: ${option.countInStock}},`;
+        accumulator += optionString;
+        console.log(accumulator);
+        console.log(optionsInput);
+        return accumulator;
+      }, '');
+      console.log(OptFields);
 
-    const query = `mutation {
-      createProduct(productInput: {name: "${name}", discount: ${discount}, price: ${price}, options: ${newString}, image: "${image}", brand: "${brand}", category: "${categ}", subcategory: "${subCateg}", new: ${newArrival}, countInStock: ${countInStock}, numReviews: 0, description: "${description}"}) 
-      {
-          name
-          _id
+      const newString = `[${OptFields}]`;
+
+      const query = `mutation {
+        createProduct(productInput: {name: "${name}", discount: ${discount}, price: ${price}, options: ${newString}, image: "${image}", brand: "${brand}", category: "${categ}", subcategory: "${subCateg}", new: ${newArrival}, countInStock: ${countInStock}, numReviews: 0, description: "${description}"}) 
+        {
+            name
+            _id
+        }
       }
-    }
-    `;
+      `;
 
-    dispatch(createProduct(query));
+      dispatch(createProduct(query));
+    }
   };
 
   const ctr = 1;
@@ -207,7 +210,7 @@ const ProductCreateScreen = ({ history }) => {
             <Row style={{ marginBottom: '1rem' }}>
               <Col>
                 <Row style={{ marginBottom: '1rem' }}>
-                  <Col controlId="name">
+                  <Col>
                     <Form.Label>Name</Form.Label>
                     <Form.Control
                       required
@@ -221,7 +224,7 @@ const ProductCreateScreen = ({ history }) => {
                     </Form.Control.Feedback>
                   </Col>
 
-                  <Col controlId="brand">
+                  <Col>
                     <BrandDropdown
                       brand={brand}
                       setBrand={setBrand}
@@ -229,7 +232,7 @@ const ProductCreateScreen = ({ history }) => {
                     />
                   </Col>
 
-                  <Col controlId="price">
+                  <Col>
                     <Form.Label>Price</Form.Label>
                     <Form.Control
                       required
@@ -244,7 +247,7 @@ const ProductCreateScreen = ({ history }) => {
                   </Col>
 
                   <Col>
-                    <Form.Group as={Col} controlId="countInStock">
+                    <Form.Group as={Col}>
                       <Form.Label>Quantity</Form.Label>
                       <Form.Control
                         required
@@ -263,7 +266,7 @@ const ProductCreateScreen = ({ history }) => {
                 </Row>
 
                 <Row style={{ marginBottom: '1rem' }}>
-                  <Col controlId="categ">
+                  <Col>
                     <CatDropdown
                       categ={categ}
                       setCateg={setCateg}
@@ -271,7 +274,7 @@ const ProductCreateScreen = ({ history }) => {
                     />
                   </Col>
 
-                  <Col controlId="subCateg">
+                  <Col>
                     <SubCatDropdown
                       categ={categ}
                       subCateg={subCateg}
@@ -280,7 +283,7 @@ const ProductCreateScreen = ({ history }) => {
                     />
                   </Col>
 
-                  <Col controlId="discount">
+                  <Col>
                     <Form.Label>Discount</Form.Label>
                     <Form.Control
                       type="number"
@@ -293,7 +296,7 @@ const ProductCreateScreen = ({ history }) => {
               </Col>
             </Row>
 
-            <Form.Group controlId="description">
+            <Form.Group>
               <Form.Label>Description</Form.Label>
               <Form.Control
                 required
