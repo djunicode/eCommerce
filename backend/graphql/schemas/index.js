@@ -74,6 +74,8 @@ export default buildSchema(`
         updateUserProfile(userInput: UpdateUserInput!): User!
         updateUser(userId: ID!, userInput: UpdateUserInput!): User!
         deleteUser(userId: ID!): Response!
+        addUserAddress(userAddressInput: userAddressInput): User!
+        deleteUserAddress(id: ID!): User!
 
         createProduct(productInput: ProductInput):  Product!
         updateProduct(productId: ID!, updateProduct: updateProduct): Product!

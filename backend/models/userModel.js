@@ -28,6 +28,24 @@ const userSchema = mongoose.Schema(
       required: true,
       default: false,
     },
+    userAddress: [{
+      address: {
+        type: String,
+        default: null,
+      },
+      city: {
+        type: String,
+        default: null,
+      },
+      postalCode: {
+        type: String,
+        default: null,
+      },
+      country: {
+        type: String,
+        default: null,
+      },
+    }]
   },
   {
     timestamps: true,
