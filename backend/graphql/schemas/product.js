@@ -48,7 +48,7 @@ export const ProductSchema = `
 
     type Cart {
         _id: ID!
-        user: ID!
+        user: User!
         contents: [Content]
     }
 

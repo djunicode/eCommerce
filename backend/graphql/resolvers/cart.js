@@ -4,8 +4,8 @@ import { loggedin } from '../../utils/verifyUser.js';
 const getCart = async (args, { req, redis }) => {
   try {
     if(loggedin(req)) {
-      const myCart = await Cart.find({ user: req.user }).populate(
-        'contents.product'
+      const myCart = await Cart.findOne({ user: req.user }).populate(
+        'user contents.product'
       );
   
       if (myCart) {
@@ -27,7 +27,7 @@ const getCart = async (args, { req, redis }) => {
 const updateCart = async (args, { req, redis }) => {
   try {
     if (loggedin(req)) {
-      const myCart = await Cart.find({ user: req.user });
+      const myCart = await Cart.findOne({ user: req.user });
   
       if (myCart) {
         const newCart = {

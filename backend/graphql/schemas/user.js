@@ -6,7 +6,16 @@ export const UserSchema = `
         email: String!
         password: String
         isAdmin: Boolean!
+        userAddress: [userAddress]
         token: String
+    }
+
+    type userAddress {
+        _id: ID!
+        address: String
+        city: String
+        postalCode: String
+        country: String
     }
 
     input UserInput {
@@ -15,6 +24,14 @@ export const UserSchema = `
         email: String!
         password: String!
         isAdmin: Boolean
+        userAddress: userAddressInput
+    }
+
+    input userAddressInput {
+        address: String!
+        city: String!
+        postalCode: String!
+        country: String!
     }
     
     input UpdateUserInput {
@@ -23,5 +40,6 @@ export const UserSchema = `
         email: String
         password: String
         isAdmin: Boolean
+        userAddress: userAddressInput
     }
 `;
