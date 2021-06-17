@@ -45,6 +45,7 @@ export default buildSchema(`
         deleteProduct(id: ID!): Product!
         getProductReviews(productId: ID!): [productReview]!
         getProductQnAs(productId: ID!): [productQ]
+        getCart: Cart
         
         isDeliverable(shippingAddressInput: ShippingAddressInput): Boolean!,
         
@@ -74,12 +75,16 @@ export default buildSchema(`
         updateUserProfile(userInput: UpdateUserInput!): User!
         updateUser(userId: ID!, userInput: UpdateUserInput!): User!
         deleteUser(userId: ID!): Response!
+        addUserAddress(userAddressInput: userAddressInput): User!
+        deleteUserAddress(id: ID!): User!
 
         createProduct(productInput: ProductInput):  Product!
         updateProduct(productId: ID!, updateProduct: updateProduct): Product!
         createProductReview(productId: ID!, productReview: ProductReview!): Product!
         createProductQuestion(productId: ID!, question: String!): Product!
         createProductAnswer(productId: ID!, answer: String!, Qindex: Int!): Product!
+
+        updateCart(contents: [ContentInput]): Response!
     }
     schema {
         query: rootQuery

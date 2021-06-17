@@ -7,6 +7,8 @@ import {
   deleteUser,
   getUserById,
   updateUser,
+  addUserAddress,
+  deleteUserAddress,
 } from './user.js';
 
 import {
@@ -55,6 +57,8 @@ import {
 
 import { questions, question, editQuestions } from './chatbot.js';
 
+import { getCart, updateCart } from './cart.js';
+
 import { filterProducts } from './productFilter.js';
 
 import { searchProduct } from './search.js';
@@ -69,6 +73,8 @@ export default {
   deleteUser: deleteUser,
   getUserById: getUserById,
   updateUser: updateUser,
+  addUserAddress: addUserAddress,
+  deleteUserAddress: deleteUserAddress,
   //brand
   createBrand: createBrand,
   getBrands: getBrands,
@@ -98,6 +104,9 @@ export default {
   createProductQuestion: createProductQuestion,
   createProductAnswer: createProductAnswer,
   getProductQnAs: getProductQnAs,
+  //cart
+  getCart: getCart,
+  updateCart: updateCart,
   //orders
   orders: getOrders,
   myorders: getMyOrders,
