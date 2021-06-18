@@ -33,12 +33,11 @@ import {
 } from '../constants/productConstants';
 import { logout } from './userActions';
 
-const userinfo = JSON.parse(localStorage.getItem('userInfo'));
-console.log(userinfo);
-
 export const listProducts = (query) => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_LIST_REQUEST });
+
+    const userinfo = JSON.parse(localStorage.getItem('userInfo'));
 
     const request = {
       method: 'post',
@@ -101,9 +100,7 @@ export const deleteProduct = (query) => async (dispatch) => {
       type: PRODUCT_DELETE_REQUEST,
     });
 
-    // const {
-    //   userLogin: { userInfo },
-    // } = getState();
+    const userinfo = JSON.parse(localStorage.getItem('userInfo'));
 
     const config = {
       headers: {
@@ -111,7 +108,6 @@ export const deleteProduct = (query) => async (dispatch) => {
         Authorization: `Bearer ${userinfo.token}`,
       },
     };
-    // console.log(userInfo.token);
 
     const { data } = await axios.post(
       'http://localhost:5000/graphql',
@@ -144,6 +140,8 @@ export const createProduct = (query) => async (dispatch) => {
     dispatch({
       type: PRODUCT_CREATE_REQUEST,
     });
+
+    const userinfo = JSON.parse(localStorage.getItem('userInfo'));
 
     const config = {
       headers: {
@@ -184,6 +182,8 @@ export const updateProduct = (query) => async (dispatch) => {
     dispatch({
       type: PRODUCT_UPDATE_REQUEST,
     });
+
+    const userinfo = JSON.parse(localStorage.getItem('userInfo'));
 
     const config = {
       headers: {

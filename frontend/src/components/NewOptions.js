@@ -9,10 +9,10 @@ function NewOptions(props) {
         <Col>
           <Form.Label>Name</Form.Label>
           <Form.Control
+            required
             type="text"
             placeholder="Enter name"
             name="optName"
-            // onChange={(e)=>{handleInputChange(e)}}
             onChange={(e) => {
               props.setOptName(e.target.value);
             }}
@@ -27,9 +27,11 @@ function NewOptions(props) {
         <Col>
           <Form.Label>Price</Form.Label>
           <Form.Control
+            required
             type="number"
             placeholder="Enter price"
             name="optPrice"
+            // value={props.optPrice}
             // onChange={(e)=>{handleInputChange(e)}}
             onChange={(e) => {
               props.setOptPrice(e.target.value);
@@ -48,6 +50,7 @@ function NewOptions(props) {
             type="number"
             placeholder="Enter discount"
             name="optDiscount"
+            // value={props.optDiscount}
             // onChange={(e)=>{handleInputChange(e)}}
             onChange={(e) => {
               props.setOptDiscount(e.target.value);
@@ -57,9 +60,11 @@ function NewOptions(props) {
         <Col>
           <Form.Label>Quantity</Form.Label>
           <Form.Control
+            required
             type="number"
             placeholder="Enter quantity"
             name="optQty"
+            // value={props.optQty}
             // onChange={(e)=>{handleInputChange(e)}}
             onChange={(e) => {
               props.setOptQty(e.target.value);

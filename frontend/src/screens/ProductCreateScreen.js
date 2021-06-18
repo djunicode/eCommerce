@@ -21,17 +21,20 @@ const ProductCreateScreen = ({ history }) => {
   const [name, setName] = useState();
   const [image, setImage] = useState('one');
   const [brand, setBrand] = useState('');
+  const [brandName, setBrandName] = useState('Select');
   const [price, setPrice] = useState();
   const [discount, setDiscount] = useState(0);
   const [categ, setCateg] = useState('');
+  const [categoryName, setCategoryName] = useState('Select');
   const [subCateg, setSubCateg] = useState('');
+  const [subCategoryName, setSubCategoryName] = useState('Select');
   const [countInStock, setCountInStock] = useState();
   const [description, setDescription] = useState();
   // const [uploading, setUploading] = useState(false);
   const [newArrival, setNewArrival] = useState(false);
   const [optionsInput, setOptionsInput] = useState([]);
 
-  const [optName, setOptName] = useState('');
+  const [optName, setOptName] = useState();
   const [optPrice, setOptPrice] = useState();
   const [optDiscount, setOptDiscount] = useState(0);
   const [optQty, setOptQty] = useState();
@@ -99,7 +102,7 @@ const ProductCreateScreen = ({ history }) => {
       dsubcategory = 'flex';
     }
 
-    if (optName === '') {
+    if (!optName) {
       optionname = 'flex';
     }
 
@@ -129,7 +132,7 @@ const ProductCreateScreen = ({ history }) => {
     setValidated(true);
     console.log(optionsInput);
 
-    if (optName !== '' && optPrice && optQty) {
+    if (optName && optPrice && optQty) {
       handleSubmit();
 
       const temp = {
@@ -155,8 +158,8 @@ const ProductCreateScreen = ({ history }) => {
       const query = `mutation {
         createProduct(productInput: {name: "${name}", discount: ${discount}, price: ${price}, options: ${newString}, image: "${image}", brand: "${brand}", category: "${categ}", subcategory: "${subCateg}", new: ${newArrival}, countInStock: ${countInStock}, numReviews: 0, description: "${description}"}) 
         {
-            name
-            _id
+          name
+          _id
         }
       }
       `;
@@ -228,6 +231,7 @@ const ProductCreateScreen = ({ history }) => {
                     <BrandDropdown
                       brand={brand}
                       setBrand={setBrand}
+                      brandName={brandName}
                       dropdownError={dropdownError}
                     />
                   </Col>
@@ -270,6 +274,7 @@ const ProductCreateScreen = ({ history }) => {
                     <CatDropdown
                       categ={categ}
                       setCateg={setCateg}
+                      categoryName={categoryName}
                       dropdownError={dropdownError}
                     />
                   </Col>
@@ -279,6 +284,7 @@ const ProductCreateScreen = ({ history }) => {
                       categ={categ}
                       subCateg={subCateg}
                       setSubCateg={setSubCateg}
+                      subCategoryName={subCategoryName}
                       dropdownError={dropdownError}
                     />
                   </Col>
@@ -352,7 +358,11 @@ const ProductCreateScreen = ({ history }) => {
                 marginBottom: '40px',
               }}
             >
-              <div>OPTION {index + 1}</div>
+              <div
+                style={{ marginBottom: '1.5rem', fontWeight: '600' }}
+              >
+                OPTION {index + 1}
+              </div>
               <NewOptions
                 setOptName={setOptName}
                 setOptPrice={setOptPrice}

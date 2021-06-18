@@ -53,48 +53,48 @@ const ProductEditScreen = ({ match, history }) => {
     }
   }`;
 
-  const initialValues = {
-    name: '',
-    image: '',
-    brand: '',
-    price: 0,
-    discount: 0,
-    countInStock: 0,
-    category: '',
-    subCategory: '',
-    description: '',
-    options: [],
-  };
+  // const initialValues = {
+  //   name: '',
+  //   image: '',
+  //   brand: '',
+  //   price: 0,
+  //   discount: 0,
+  //   countInStock: 0,
+  //   category: '',
+  //   subCategory: '',
+  //   description: '',
+  //   options: [],
+  // };
 
   useEffect(() => {
     dispatch(getProduct(queryProductDetails));
   }, [dispatch]);
 
-  const [name, setName] = useState(initialValues.name);
-  const [image, setImage] = useState(initialValues.image);
-  const [brand, setBrand] = useState(initialValues.brand);
-  const [price, setPrice] = useState(initialValues.price);
-  const [discount, setDiscount] = useState(initialValues.discount);
-  const [categ, setCateg] = useState(initialValues.category);
-  const [subCateg, setSubCateg] = useState(initialValues.subCategory);
-  const [countInStock, setCountInStock] = useState(
-    initialValues.countInStock,
-  );
-  const [description, setDescription] = useState(
-    initialValues.description,
-  );
+  const [name, setName] = useState('');
+  const [image, setImage] = useState('');
+  const [brand, setBrand] = useState('');
+  const [brandName, setBrandName] = useState();
+  const [price, setPrice] = useState(0);
+  const [discount, setDiscount] = useState(0);
+  const [categ, setCateg] = useState('');
+  const [categoryName, setCategoryName] = useState();
+  const [subCateg, setSubCateg] = useState('');
+  const [subCategoryName, setSubCategoryName] = useState();
+  const [countInStock, setCountInStock] = useState(0);
+  const [description, setDescription] = useState('');
   // const [uploading, setUploading] = useState(false);
   // const [newArrival, setNewArrival] = useState(initialValues.newArrival);
 
   const [optionsInput, setOptionsInput] = useState([]);
 
-  const [optName, setOptName] = useState('');
+  const [optName, setOptName] = useState();
   const [optPrice, setOptPrice] = useState();
-  const [optDiscount, setOptDiscount] = useState(0);
+  const [optDiscount, setOptDiscount] = useState();
   const [optQty, setOptQty] = useState();
 
   const [validated, setValidated] = useState(false);
   const [dropdownError, setDropdownError] = useState({
+    name: 'none',
     brand: 'none',
     category: 'none',
     subcategory: 'none',
@@ -109,10 +109,13 @@ const ProductEditScreen = ({ match, history }) => {
       setPrice(data.price);
       setImage(data.image);
       setBrand(data.brand._id);
+      setBrandName(data.brand.name);
       setDiscount(data.discount);
       setCountInStock(data.countInStock);
       setCateg(data.category._id);
+      setCategoryName(data.category.name);
       setSubCateg(data.subcategory._id);
+      setSubCategoryName(data.subcategory.name);
       setDescription(data.description);
       setOptionsInput(data.options);
       console.log(optionsInput);
@@ -130,9 +133,6 @@ const ProductEditScreen = ({ match, history }) => {
     success: successUpdate,
   } = productUpdate;
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
-
   useEffect(() => {
     if (successUpdate) {
       history.push('/admin/productlist');
@@ -146,21 +146,24 @@ const ProductEditScreen = ({ match, history }) => {
       price: optPrice,
       countInStock: optQty,
     };
-    if (optName !== '') {
+    if (optName && optPrice && optQty) {
       setOptionsInput([...optionsInput, temp]);
     }
     console.log(optionsInput);
   }
 
   const updateProductHandler = (event) => {
-    handleSubmit();
-
+    let dname;
     let dbrand;
     let dcategory;
     let dsubcategory;
     let optionname;
     let optionprice;
     let optionqty;
+
+    if (name === '') {
+      dname = 'flex';
+    }
 
     if (brand === '') {
       dbrand = 'flex';
@@ -174,7 +177,7 @@ const ProductEditScreen = ({ match, history }) => {
       dsubcategory = 'flex';
     }
 
-    if (optName === '') {
+    if (!optName) {
       optionname = 'flex';
     }
 
@@ -187,6 +190,7 @@ const ProductEditScreen = ({ match, history }) => {
     }
 
     setDropdownError({
+      name: `${dname}`,
       brand: `${dbrand}`,
       category: `${dcategory}`,
       subcategory: `${dsubcategory}`,
@@ -210,7 +214,11 @@ const ProductEditScreen = ({ match, history }) => {
       countInStock: optQty,
     };
 
-    const newOptions = [...optionsInput, temp];
+    let newOptions = [...optionsInput];
+
+    if (optName && optPrice && optQty) {
+      newOptions = [...optionsInput, temp];
+    }
 
     const OptFields = newOptions.reduce((accumulator, option) => {
       const optionString = `{name: "${option.name}", price: ${option.price}, discount: ${option.discount}, countInStock: ${option.countInStock}},`;
@@ -245,10 +253,10 @@ const ProductEditScreen = ({ match, history }) => {
   const addNew = () => {
     setClick([...click, { value: ctr + 1 }]);
     handleSubmit();
-    setOptName('');
-    setOptPrice(0);
+    setOptName();
+    setOptPrice();
     setOptDiscount(0);
-    setOptQty(0);
+    setOptQty();
   };
 
   // useEffect(() => {
@@ -266,7 +274,10 @@ const ProductEditScreen = ({ match, history }) => {
         Go Back
       </Link>
       <h1 style={{ marginBottom: '30px' }}>
-        Edit Product : <span>{prodId}</span>
+        Edit Product :{' '}
+        <span>
+          {name} <small>({prodId})</small>
+        </span>
       </h1>
       {loading ? (
         <Loader />
@@ -291,21 +302,27 @@ const ProductEditScreen = ({ match, history }) => {
                     <Form.Control
                       required
                       type="text"
-                      placeholder={name}
+                      // placeholder={name}
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                     />
-                    <Form.Control.Feedback type="invalid">
+                    <Form.Control.Feedback
+                      type="invalid"
+                      style={{ display: `${dropdownError.name}` }}
+                    >
                       This field is required
                     </Form.Control.Feedback>
                   </Col>
 
                   <Col controlId="brand">
-                    <BrandDropdown
-                      brand={brand}
-                      setBrand={setBrand}
-                      dropdownError={dropdownError}
-                    />
+                    {brandName && (
+                      <BrandDropdown
+                        brand={brand}
+                        setBrand={setBrand}
+                        brandName={brandName}
+                        dropdownError={dropdownError}
+                      />
+                    )}
                   </Col>
 
                   <Col controlId="price">
@@ -313,7 +330,7 @@ const ProductEditScreen = ({ match, history }) => {
                     <Form.Control
                       required
                       type="number"
-                      placeholder={price}
+                      // placeholder={price}
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
                     />
@@ -328,7 +345,7 @@ const ProductEditScreen = ({ match, history }) => {
                       <Form.Control
                         required
                         type="number"
-                        placeholder={countInStock}
+                        // placeholder={countInStock}
                         value={countInStock}
                         onChange={(e) =>
                           setCountInStock(e.target.value)
@@ -343,27 +360,33 @@ const ProductEditScreen = ({ match, history }) => {
 
                 <Row style={{ marginBottom: '1rem' }}>
                   <Col controlId="categ">
-                    <CatDropdown
-                      categ={categ}
-                      setCateg={setCateg}
-                      dropdownError={dropdownError}
-                    />
+                    {categoryName && (
+                      <CatDropdown
+                        categ={categ}
+                        setCateg={setCateg}
+                        categoryName={categoryName}
+                        dropdownError={dropdownError}
+                      />
+                    )}
                   </Col>
 
                   <Col controlId="subCateg">
-                    <SubCatDropdown
-                      categ={categ}
-                      subCateg={subCateg}
-                      setSubCateg={setSubCateg}
-                      dropdownError={dropdownError}
-                    />
+                    {subCategoryName && (
+                      <SubCatDropdown
+                        categ={categ}
+                        subCateg={subCateg}
+                        setSubCateg={setSubCateg}
+                        subCategoryName={subCategoryName}
+                        dropdownError={dropdownError}
+                      />
+                    )}
                   </Col>
 
                   <Col controlId="discount">
                     <Form.Label>Discount</Form.Label>
                     <Form.Control
                       type="number"
-                      placeholder={discount}
+                      // placeholder={discount}
                       value={discount}
                       onChange={(e) => setDiscount(e.target.value)}
                     />
@@ -378,7 +401,7 @@ const ProductEditScreen = ({ match, history }) => {
                 required
                 as="textarea"
                 rows={3}
-                placeholder={description}
+                // placeholder={description}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
@@ -426,7 +449,11 @@ const ProductEditScreen = ({ match, history }) => {
                 marginBottom: '40px',
               }}
             >
-              <div>OPTION {index + 1}</div>
+              <div
+                style={{ marginBottom: '1.5rem', fontWeight: '600' }}
+              >
+                OPTION {index + 1}
+              </div>
               <Form>
                 <Row>
                   <Col>
@@ -434,10 +461,18 @@ const ProductEditScreen = ({ match, history }) => {
                     <Form.Control
                       required
                       type="text"
-                      placeholder={opt.name}
+                      // placeholder={opt.name}
                       name={opt.name}
+                      value={opt.name}
                       onChange={(e) => {
-                        setOptName(e.target.value);
+                        console.log(optionsInput);
+                        // setOptName(e.target.value);
+                        const m = [...optionsInput];
+                        m[index].name = e.target.value;
+                        setOptionsInput(m);
+                        console.log(m);
+                        console.log(optName);
+                        console.log(e.target.value);
                       }}
                     />
                     <Form.Control.Feedback type="invalid">
@@ -449,10 +484,13 @@ const ProductEditScreen = ({ match, history }) => {
                     <Form.Control
                       required
                       type="number"
-                      placeholder={opt.price}
+                      // placeholder={opt.price}
                       name={opt.price}
+                      value={opt.price}
                       onChange={(e) => {
-                        setOptPrice(e.target.value);
+                        const m = [...optionsInput];
+                        m[index].price = e.target.value;
+                        setOptionsInput(m);
                       }}
                     />
                     <Form.Control.Feedback type="invalid">
@@ -463,10 +501,13 @@ const ProductEditScreen = ({ match, history }) => {
                     <Form.Label>Discount</Form.Label>
                     <Form.Control
                       type="number"
-                      placeholder={opt.discount}
+                      // placeholder={opt.discount}
                       name={opt.discount}
+                      value={opt.discount}
                       onChange={(e) => {
-                        setOptDiscount(e.target.value);
+                        const m = [...optionsInput];
+                        m[index].discount = e.target.value;
+                        setOptionsInput(m);
                       }}
                     />
                   </Col>
@@ -475,10 +516,13 @@ const ProductEditScreen = ({ match, history }) => {
                     <Form.Control
                       required
                       type="number"
-                      placeholder={opt.countInStock}
+                      // placeholder={opt.countInStock}
                       name={opt.countInStock}
+                      value={opt.countInStock}
                       onChange={(e) => {
-                        setOptQty(e.target.value);
+                        const m = [...optionsInput];
+                        m[index].countInStock = e.target.value;
+                        setOptionsInput(m);
                       }}
                     />
                     <Form.Control.Feedback type="invalid">
@@ -504,12 +548,19 @@ const ProductEditScreen = ({ match, history }) => {
               }}
             >
               <div>OPTION {optionsInput.length + index}</div>
+              {/* {optName && optPrice && optDiscount && optQty && */}
               <NewOptions
                 setOptName={setOptName}
                 setOptPrice={setOptPrice}
                 setOptDiscount={setOptDiscount}
                 setOptQty={setOptQty}
+                dropdownError={dropdownError}
+                // optName={optName}
+                // optPrice={optPrice}
+                // optDiscount={optDiscount}
+                // optQty={optQty}
               />
+              {/* } */}
             </div>
           );
         })}

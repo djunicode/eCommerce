@@ -56,7 +56,7 @@ const Option = (props) => {
   );
 };
 
-export const CatDropdown = ({ setCateg, dropdownError }) => {
+export const CatDropdown = (props) => {
 
   const dispatch = useDispatch();
 
@@ -100,20 +100,20 @@ export const CatDropdown = ({ setCateg, dropdownError }) => {
   const handleChange = (newValue) => {
     if (newValue != null) {
       setSelectedCategory(newValue.label);
-      setCateg(newValue.value);
+      props.setCateg(newValue.value);
     }
   };
   const handleInputChange = (inputValue) => {
     console.log(inputValue);
   };
 
-  const createOption = (label) => ({
+  const createCategoryOption = (label) => ({
     label,
     value: createCategory._id,
   });
 
   const handleCreateCategory = (inputValue) => {
-    const newOption = createOption(inputValue);
+    const newOption = createCategoryOption(inputValue);
 
     const queryCreateCategories = `mutation {
             createCategory (name: "${newOption.label}") {
@@ -173,13 +173,14 @@ export const CatDropdown = ({ setCateg, dropdownError }) => {
         components={{ Option }}
         onCreateOption={handleCreateCategory}
         handleDelete={handleDelete}
+        defaultValue={{ label: props.categoryName, value: props.brand }}
       />
-      <Form.Control.Feedback type="invalid" style={{display: `${dropdownError.category}`}}>This field is required</Form.Control.Feedback>
+      <Form.Control.Feedback type="invalid" style={{display: `${props.dropdownError.category}`}}>This field is required</Form.Control.Feedback>
     </>
   );
 };
 
-export const SubCatDropdown = ({ categ, subCateg, setSubCateg, dropdownError }) => {
+export const SubCatDropdown = (props) => {
   const dispatch = useDispatch();
 
   const subCategoryList = useSelector(
@@ -198,17 +199,17 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg, dropdownError }) 
   const { deleteSubcategory } = subCategoryDelete;
 
   const querySub = `query{
-        getSubCategories (categoryId: "${categ}") {
+        getSubCategories (categoryId: "${props.categ}") {
           name
           _id
         }
     }`;
 
   useEffect(() => {
-    if (categ !== '') {
+    if (props.categ !== '') {
       dispatch(listSubCategories(querySub));
     }
-  }, [categ, createSubcategory, deleteSubcategory]);
+  }, [props.categ, createSubcategory, deleteSubcategory]);
 
   const [optionList, setOptionList] = useState([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState('');
@@ -227,14 +228,14 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg, dropdownError }) 
   const handleChange = (newValue) => {
     if (newValue != null) {
       setSelectedSubCategory(newValue.label);
-      setSubCateg(newValue.value);
+      props.setSubCateg(newValue.value);
     }
   };
   const handleInputChange = (inputValue) => {
     console.log(inputValue);
   };
 
-  const createOption = (label) => ({
+  const createSubCategoryOption = (label) => ({
     label,
     value: createSubcategory._id,
   });
@@ -242,16 +243,16 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg, dropdownError }) 
   const [suberrordisplay, setSuberrordisplay] = useState('none')
 
   const handleCreateSubCategory = (inputValue) => {
-    const newOption = createOption(inputValue);
+    const newOption = createSubCategoryOption(inputValue);
 
     const queryCreateSub = `mutation {
-            createSubCategory (name: "${newOption.label}", category: "${categ}") {
+            createSubCategory (name: "${newOption.label}", category: "${props.categ}") {
                 name
                 _id
             }
         }`;
 
-    if(categ === '') {
+    if(props.categ === '') {
       setSuberrordisplay('flex');
     }
     else {
@@ -287,7 +288,7 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg, dropdownError }) 
   return (
     <>
       <SubCategoryEditModal
-        subCateg={subCateg}
+        subCateg={props.subCateg}
         selectedSubCategory={selectedSubCategory}
         editSubCat={editSubCat}
         show={editModalShow}
@@ -296,7 +297,7 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg, dropdownError }) 
       <SubCategoryDeleteModal 
         selectedSubCategory={selectedSubCategory}
         show={deleteModalShow}
-        subCateg={subCateg}
+        subCateg={props.subCateg}
         onHide={() => setDeleteModalShow(false)}
       />
 
@@ -310,14 +311,15 @@ export const SubCatDropdown = ({ categ, subCateg, setSubCateg, dropdownError }) 
         components={{ Option }}
         onCreateOption={handleCreateSubCategory}
         handleDelete={handleDelete}
+        defaultValue={{ label: props.subCategoryName, value: props.subCateg }}
       />
-      <Form.Control.Feedback type="invalid" style={{display: `${dropdownError.subcategory}`}}>This field is required</Form.Control.Feedback>
+      <Form.Control.Feedback type="invalid" style={{display: `${props.dropdownError.subcategory}`}}>This field is required</Form.Control.Feedback>
       <Form.Control.Feedback style={{color: 'red', display: `${suberrordisplay}`}}>Select a category first</Form.Control.Feedback>
     </>
   );
 };
 
-export const BrandDropdown = ({ setBrand, dropdownError }) => {
+export const BrandDropdown = (props) => {
   const dispatch = useDispatch();
 
   const brandList = useSelector((state) => state.brandList);
@@ -357,7 +359,7 @@ export const BrandDropdown = ({ setBrand, dropdownError }) => {
   const handleChangeBrand = (newValue) => {
     if (newValue != null) {
       setSelectedBrand(newValue.label);
-      setBrand(newValue.value);
+      props.setBrand(newValue.value);
     }
   };
   const handleInputChange = (inputValue) => {
@@ -431,8 +433,9 @@ export const BrandDropdown = ({ setBrand, dropdownError }) => {
         components={{ Option }}
         onCreateOption={handleCreateBrand}
         handleDelete={handleDelete}
+        defaultValue={{ label: props.brandName, value: props.brand }}
       />
-      <Form.Control.Feedback type="invalid" style={{display: `${dropdownError.brand}`}}>This field is required</Form.Control.Feedback>
+      <Form.Control.Feedback type="invalid" style={{display: `${props.dropdownError.brand}`}}>This field is required</Form.Control.Feedback>
     </>
   );
 };
