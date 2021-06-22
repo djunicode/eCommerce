@@ -1,4 +1,7 @@
-export const CART_ADD_ITEM = 'CART_ADD_ITEM';
+export const CART_ADD_REQUEST = 'CART_ADD_REQUEST';
+export const CART_ADD_SUCCESS = 'CART_ADD_SUCCESS';
+export const CART_ADD_FAIL = 'CART_ADD_FAIL';
+
 export const CART_CLEAR_ITEMS = 'CART_RESET';
 export const CART_REMOVE_ITEM = 'CART_REMOVE_ITEM';
 export const CART_SAVE_SHIPPING_ADDRESS =

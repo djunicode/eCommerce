@@ -4,7 +4,15 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { Row, Col, Card, Button, Form, Nav } from 'react-bootstrap';
+import {
+  Row,
+  Col,
+  Card,
+  Button,
+  Form,
+  Nav,
+  Spinner,
+} from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import Rating from '../components/Rating';
 import Message from '../components/Message';
@@ -14,6 +22,7 @@ import ReactSlick from '../components/ReactSlick';
 import Questions from '../components/Questions';
 import Ratings from '../components/Ratings';
 import ProductDetails from '../components/ProductDetails';
+import { addToCart } from '../actions/cartActions';
 
 const initialValues = {
   question: '',
@@ -141,35 +150,10 @@ const ProductScreen = () => {
         <Message>{error}</Message>
       ) : (
         <>
-          <Contain
-            style={{
-              backgroundColor: 'white',
-              border: '1px solid #D5D5D5',
-              letterSpacing: '0.5px',
-              height: 'auto',
-            }}
-          >
+          <Contain>
             <Row style={{ height: '100%' }}>
               <Col lg={5} className="mr-4">
                 <div className="img-fluid" style={{ zIndex: '1000' }}>
-                  {/* <ReactImageMagnify
-                    {...{
-                      smallImage: {
-                        alt: 'Wristwatch by Ted Baker London',
-                        isFluidWidth: true,
-                        src: watchImg687,
-                        width: '100%',
-                        height: 'auto',
-                      },
-                      largeImage: {
-                        src: watchImg1200,
-                        width: 1200,
-                        height: 1800,
-                      },
-                      enlargedImagePosition: 'over',
-                    }}
-                    style={{ zIndex: '10000' }}
-                  /> */}
                   <ReactSlick
                     {...{
                       rimProps: {
@@ -404,50 +388,49 @@ const ProductScreen = () => {
                     alignItems: 'center',
                   }}
                 >
-                  <Col xs={12} sm={6}>
+                  <Col
+                    xs={12}
+                    sm={6}
+                    style={{
+                      paddingLeft: '0',
+                      paddingRight: '0',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
                     <ActionButtons
                       disabled={disable}
-                      style={{
-                        padding: '6px 12px',
-                        backgroundColor: '#F05454',
-                        textTransform: 'none',
-                        borderRadius: '3px',
-                      }}
+                      style={{ backgroundColor: '#F05454' }}
                       onClick={() => {
-                        if (localStorage.getItem('cart')) {
-                          const cart = JSON.parse(
-                            localStorage.getItem('cart'),
-                          );
-                          console.log(typeof data);
-                          console.log(cart);
-                          cart.push(data);
-                          localStorage.setItem(
-                            'cart',
-                            JSON.stringify(cart),
-                          );
-                        } else {
-                          const cart = [];
-                          cart.push(data);
-                          localStorage.setItem(
-                            'cart',
-                            JSON.stringify(cart),
-                          );
-                        }
-                        history.push('/cart');
+                        console.log('add to cart');
+                        const option = '';
+                        const mutation = [];
+                        mutation.push(
+                          `{product:${
+                            data._id
+                          },isOptionSelected: false, optionName: ${option}, price: ${12}, quantity: ${qty}}`,
+                        );
+                        dispatch(addToCart(mutation));
                       }}
                     >
                       Add to Cart
                     </ActionButtons>
                   </Col>
-                  <Col xs={12} sm={6}>
+                  <Col
+                    xs={12}
+                    sm={6}
+                    style={{
+                      paddingLeft: '0',
+                      paddingRight: '0',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
                     <ActionButtons
                       disabled={disable}
-                      style={{
-                        padding: '6px 12px',
-                        backgroundColor: '#FC7845',
-                        textTransform: 'none',
-                        borderRadius: '3px',
-                      }}
+                      style={{ backgroundColor: '#fc7845' }}
                       onClick={() => {
                         localStorage.setItem(
                           'buy',
@@ -459,6 +442,20 @@ const ProductScreen = () => {
                       Buy Now
                     </ActionButtons>
                   </Col>
+                  <FlexBox
+                    style={{ position: 'absolute', bottom: '-10px' }}
+                  >
+                    <Spinner
+                      animation="border"
+                      role="status"
+                      style={{
+                        width: '20px',
+                        height: '20px',
+                        margin: 'auto',
+                        display: 'block',
+                      }}
+                    />
+                  </FlexBox>
                 </Row>
                 <Row>
                   <Col xs={12}>
@@ -476,7 +473,8 @@ const ProductScreen = () => {
                           fontWeight: '700',
                         }}
                       >
-                        This product is currently out of stock
+                        {data.countInStock === 0 &&
+                          'This product is currently out of stock'}
                       </span>
                     </div>
                   </Col>
@@ -581,6 +579,11 @@ const Box = styled.div`
 `;
 const Contain = styled.div`
   padding: 3rem;
+  background-color: white;
+  border: 1px solid #d5d5d5;
+  letter-spacing: 0.5px;
+  height: auto;
+  position: relative;
 
   @media screen and (max-width: 991px) {
     margin: 0 4vw;
@@ -635,9 +638,24 @@ const QtyRow = styled(Row)`
 `;
 const ActionButtons = styled(Button)`
   width: 90%;
+  padding: 6px 12px;
+  background-color: #fc7845;
+  text-transform: none;
+  border-radius: 3px;
+
+  &:hover {
+    box-shadow: 3px 5px 12px 2px rgba(0, 0, 0, 0.15);
+  }
 
   @media screen and (max-width: 576px) {
     width: 100%;
     margin-bottom: 30px;
   }
+`;
+
+const FlexBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 `;
