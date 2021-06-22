@@ -47,12 +47,16 @@ const SearchBox = ({ history }) => {
 export default SearchBox;
 
 const StyledForm = styled(Form)`
-  width: 45%;
+  width: 100%;
   justify-content: center;
   margin: auto;
   border: 2px ${LIGHT_PEACH} solid;
   align-items: space-between;
   flex-wrap: nowrap !important;
+
+  @media (max-width: 992px) {
+    width: 90%;
+  }
 `;
 
 const StyledFormControl = styled(Form.Control)`

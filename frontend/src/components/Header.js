@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 import React from 'react';
 import { Link, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,13 +30,18 @@ const Header = () => {
                 <StyledH1>ProShop</StyledH1>
               </Navbar.Brand>
             </LinkContainer>
+            {/* <StyledCartOnSmall
+              className={'fas fa-shopping-cart'}
+            /> */}
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
-              <Route
-                render={({ history }) => (
-                  <SearchBox history={history} />
-                )}
-              />
+              <StyledHideOnMd>
+                <Route
+                  render={({ history }) => (
+                    <SearchBox history={history} />
+                  )}
+                />
+              </StyledHideOnMd>
               <Nav className="ml-auto">
                 <StyledNavLink
                   as={Link}
@@ -88,6 +95,13 @@ const Header = () => {
               </Nav>
             </Navbar.Collapse>
           </Container>
+          <StyledSmallScreenSearchBox>
+            <Route
+              render={({ history }) => (
+                <SearchBox history={history} />
+              )}
+            />
+          </StyledSmallScreenSearchBox>
         </StyledNavbar>
       </header>
     </>
@@ -103,7 +117,7 @@ const StyledNavbar = styled(Navbar)`
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1000 !important;
+  z-index: 7000 !important;
 `;
 
 const StyledH1 = styled.h1`
@@ -111,6 +125,10 @@ const StyledH1 = styled.h1`
   padding: 0;
   margin: 0;
   font-size: 20px;
+
+  @media (max-width: 400px) {
+    font-size: 16px;
+  }
 `;
 
 const StyledNavLink = styled(Nav.Link)`
@@ -148,5 +166,30 @@ const StyledNavDropDownItem = styled(NavDropdown.Item)`
   &:hover {
     background-color: ${LIGHT_PEACH};
     color: ${DARK_BLUE_2};
+  }
+`;
+
+const StyledSmallScreenSearchBox = styled.div`
+  width: 100%;
+  margin-top: 12px;
+  @media (min-width: 992px) {
+    display: none;
+  }
+`;
+
+const StyledHideOnMd = styled.div`
+  width: 45%;
+  text-align: center;
+  margin: auto;
+  @media (max-width: 992px) {
+    display: none;
+  }
+`;
+
+const StyledCartOnSmall = styled.i`
+  justify-self: flex-end !important;
+  color: ${LIGHT_PEACH};
+  @media (min-width: 992px) {
+    display: none;
   }
 `;

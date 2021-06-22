@@ -4,7 +4,7 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-unused-vars */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Row,
   Col,
@@ -55,7 +55,6 @@ const FilterSidebar = ({ page }) => {
 
   const filterData = useSelector((state) => state.filter);
   const { filters } = filterData;
-  console.log(filters);
 
   const [priceRange, setPriceRange] = useState({
     max: Math.max.apply(Math, [
@@ -76,12 +75,20 @@ const FilterSidebar = ({ page }) => {
   };
 
   const brandsHandler = (elem) => {
+    if (selectedRating === Infinity) {
+      selectedRating = [];
+    }
+    console.log(Math.min.apply(Math, selectedRating));
+    const event = elem.target;
     if (selectedBrands.length === 1) {
       if (selectedBrands.includes(elem.target.id)) {
         const filtersSelected = {
           price: priceRange,
           brands,
-          rating: Math.min.apply(Math, selectedRating),
+          rating:
+            Math.min.apply(Math, selectedRating) === Infinity
+              ? 0
+              : Math.min.apply(Math, selectedRating),
         };
         selectedBrands = [];
         dispatch(filter(filtersSelected));
@@ -108,12 +115,30 @@ const FilterSidebar = ({ page }) => {
       }
       filterSubmitHandler();
     }
+    console.log(brandState);
+    if (brandState.includes(event.id)) {
+      let arr = [...brandState];
+      arr = arr.filter((x) => x !== event.id);
+      console.log(arr);
+      setBrandState(arr);
+    } else {
+      setBrandState([...brandState, event.id]);
+    }
   };
 
   const ratingHandler = (elem) => {
     // if (selectedRating.length === ratings.length) {
     //   selectedRating = [];
     // }
+    console.log(ratingState);
+    if (ratingState.includes(elem.target.id)) {
+      let arr = [...ratingState];
+      arr = arr.filter((x) => x !== elem.target.id);
+      console.log(arr);
+      setRatingState(arr);
+    } else {
+      setRatingState([...ratingState, elem.target.id]);
+    }
     selectedRating.includes(elem.target.id)
       ? (selectedRating = selectedRating.filter(
           (item) => item !== elem.target.id,
@@ -142,17 +167,34 @@ const FilterSidebar = ({ page }) => {
   const filterSubmitHandler = () => {
     removeDuplicates(selectedBrands);
     removeDuplicates(selectedRating);
+    if (selectedRating === Infinity) {
+      selectedRating = [];
+    }
     console.log(selectedRating);
     const filtersSelected = {
       price: priceRange,
       brands: selectedBrands,
-      rating: Math.min.apply(Math, selectedRating),
+      rating:
+        Math.min.apply(Math, selectedRating) === Infinity
+          ? 0
+          : Math.min.apply(Math, selectedRating),
     };
     dispatch(filter(filtersSelected));
     console.log(filtersSelected);
   };
 
+  const zeroSelectedBrandsAndRatings = () => {
+    if (selectedBrands.length === brands.length) {
+      selectedBrands = [];
+    }
+    console.log(selectedBrands);
+    if (selectedRating.length === ratings.length) {
+      selectedRating = [];
+    }
+  };
+
   const commonPriceHander = () => {
+    console.log(ratings);
     removeDuplicates(selectedBrands);
     removeDuplicates(selectedRating);
     if (selectedBrands.length === 0) {
@@ -165,6 +207,7 @@ const FilterSidebar = ({ page }) => {
   };
 
   const price1Handler = () => {
+    setPriceState(1);
     commonPriceHander();
     const filtersSelected = {
       price: {
@@ -179,9 +222,11 @@ const FilterSidebar = ({ page }) => {
       min: prices.min,
     });
     dispatch(filter(filtersSelected));
+    zeroSelectedBrandsAndRatings();
   };
 
   const price2Handler = () => {
+    setPriceState(2);
     commonPriceHander();
     const filtersSelected = {
       price: {
@@ -196,9 +241,11 @@ const FilterSidebar = ({ page }) => {
       min: Math.floor(prices.max / 3),
     });
     dispatch(filter(filtersSelected));
+    zeroSelectedBrandsAndRatings();
   };
 
   const price3Handler = () => {
+    setPriceState(3);
     commonPriceHander();
     const filtersSelected = {
       price: {
@@ -213,12 +260,25 @@ const FilterSidebar = ({ page }) => {
       min: Math.floor((2 * prices.max) / 3),
     });
     dispatch(filter(filtersSelected));
+    zeroSelectedBrandsAndRatings();
   };
 
   const [show, setShow] = useState({
     display: true,
     tab: false,
   });
+
+  const [brandState, setBrandState] = useState([]);
+  const [ratingState, setRatingState] = useState([]);
+  const [priceState, setPriceState] = useState();
+
+  useEffect(() => {
+    console.log(brandState);
+  }, [brandState]);
+
+  useEffect(() => {
+    console.log(ratingState);
+  }, [ratingState]);
 
   return (
     <>
@@ -286,14 +346,15 @@ const FilterSidebar = ({ page }) => {
                           onChange={price1Handler}
                           style={{ scale: 100 }}
                           key={1}
-                          defaultChecked={
-                            !!(
-                              Object.keys(filters).length > 0 &&
-                              filters.price.max ===
-                                Math.floor(prices.max / 3) &&
-                              filters.price.min === prices.min
-                            )
-                          }
+                          // defaultChecked={
+                          //   !!(
+                          //     Object.keys(filters).length > 0 &&
+                          //     filters.price.max ===
+                          //       Math.floor(prices.max / 3) &&
+                          //     filters.price.min === prices.min
+                          //   )
+                          // }
+                          checked={priceState === 1}
                           name="priceRadioButton"
                         />
                         <Form.Check
@@ -307,15 +368,16 @@ const FilterSidebar = ({ page }) => {
                           onChange={price2Handler}
                           style={{ scale: 100 }}
                           key={2}
-                          defaultChecked={
-                            !!(
-                              Object.keys(filters).length > 0 &&
-                              filters.price.max ===
-                                Math.floor((2 * prices.max) / 3) &&
-                              filters.price.min ===
-                                Math.floor(prices.max / 3)
-                            )
-                          }
+                          // defaultChecked={
+                          //   !!(
+                          //     Object.keys(filters).length > 0 &&
+                          //     filters.price.max ===
+                          //       Math.floor((2 * prices.max) / 3) &&
+                          //     filters.price.min ===
+                          //       Math.floor(prices.max / 3)
+                          //   )
+                          // }
+                          checked={priceState === 2}
                           name="priceRadioButton"
                         />
                         <Form.Check
@@ -327,14 +389,15 @@ const FilterSidebar = ({ page }) => {
                           onChange={price3Handler}
                           style={{ scale: 100 }}
                           key={3}
-                          defaultChecked={
-                            !!(
-                              Object.keys(filters).length > 0 &&
-                              filters.price.max === prices.max &&
-                              filters.price.min ===
-                                Math.floor((2 * prices.max) / 3)
-                            )
-                          }
+                          // defaultChecked={
+                          //   !!(
+                          //     Object.keys(filters).length > 0 &&
+                          //     filters.price.max === prices.max &&
+                          //     filters.price.min ===
+                          //       Math.floor((2 * prices.max) / 3)
+                          //   )
+                          // }
+                          checked={priceState === 3}
                           name="priceRadioButton"
                         />
                       </Form>
@@ -380,12 +443,7 @@ const FilterSidebar = ({ page }) => {
                         onChange={brandsHandler}
                         style={{ scale: 100 }}
                         key={elem}
-                        defaultChecked={
-                          !!(
-                            Object.keys(filters).length > 0 &&
-                            filters.brands.includes(elem)
-                          )
-                        }
+                        checked={brandState.includes(elem)}
                       />
                     ))}
                   </StyledFormFlexRow>
@@ -435,6 +493,9 @@ const FilterSidebar = ({ page }) => {
                         onChange={ratingHandler}
                         size="lg"
                         key={elem}
+                        checked={ratingState.includes(
+                          elem.toString(),
+                        )}
                       />
                     ))}
                   </Form>
@@ -442,6 +503,24 @@ const FilterSidebar = ({ page }) => {
               </Accordion.Collapse>
             </Card>
           </StyledAccordian>
+        </Row>
+        <Row>
+          <StyledClearFiltersBtn
+            onClick={() => {
+              setBrandState([]);
+              selectedBrands = [];
+              setRatingState([]);
+              selectedRating = [];
+              setPriceState();
+              setPriceRange({
+                max: prices.max,
+                min: prices.min,
+              });
+              dispatch(filter({}));
+            }}
+          >
+            Clear Filters
+          </StyledClearFiltersBtn>
         </Row>
       </StyledLeftSidebar>
     </>
@@ -470,6 +549,10 @@ const StyledTabToggleBtn = styled.button`
   @media (min-width: 900px) {
     display: none;
   }
+
+  @media (max-width: 990px) {
+    top: 145px;
+  }
 `;
 
 const StyledLeftSidebar = styled.div`
@@ -495,6 +578,10 @@ const StyledLeftSidebar = styled.div`
     display: ${(props) =>
       props.display.display && props.display.tab ? '' : 'none'};
     z-index: 2000 !important;
+  }
+
+  @media (max-width: 990px) {
+    top: 145px;
   }
 `;
 
@@ -525,4 +612,20 @@ const StyledFormFlexRow = styled(Form)`
   flex-direction: row;
   justify-content: space-between;
   flex-wrap: wrap;
+`;
+
+const StyledClearFiltersBtn = styled(Button)`
+  width: 90%;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  background-color: ${DARK_BLUE_2};
+  border-radius: 6px;
+
+  :hover {
+    transform: scale(0.98);
+    transition: 0.2s;
+    background-color: ${DARK_BLUE_2};
+  }
 `;

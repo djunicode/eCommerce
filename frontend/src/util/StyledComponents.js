@@ -42,6 +42,14 @@ export const StyledBadgeSortDiv = styled.div`
   @media (max-width: 900px) {
     margin-left: 12px;
     justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 500px) {
+    margin-left: 12px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    align-items: stretch;
   }
 `;
 
@@ -53,6 +61,12 @@ export const StyledBadge = styled.p`
   border: 2px ${DARK_BLUE_2} solid;
   padding: 7px;
   margin: 0 8px;
+
+  @media (max-width: 500px) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
 
 export const StyledDropdownToggle = styled(Dropdown.Toggle)`
@@ -62,6 +76,10 @@ export const StyledDropdownToggle = styled(Dropdown.Toggle)`
   padding: 10px !important;
   font-size: 16px;
   margin: 0 8px;
+
+  @media (max-width: 500px) {
+    margin-top: 8px;
+  }
 `;
 
 export const StyledDropdownItem = styled(Dropdown.Item)`

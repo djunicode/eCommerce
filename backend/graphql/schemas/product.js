@@ -38,6 +38,20 @@ export const ProductSchema = `
         answer: String
     }
 
+    type Content {
+        product: Product
+        isOptionSelected: Boolean
+        optionName: String
+        price: Float
+        quantity: Int
+    }
+
+    type Cart {
+        _id: ID!
+        user: User!
+        contents: [Content]
+    }
+
     input ProductInput {
         name: String!
         discount: Float
@@ -82,5 +96,13 @@ export const ProductSchema = `
     input ProductQ {
         question: String
         answer: String
+    }
+
+    input ContentInput {
+        product: ID!
+        isOptionSelected: Boolean!
+        optionName: String!
+        price: Float!
+        quantity: Int!
     }
 `;

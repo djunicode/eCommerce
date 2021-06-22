@@ -1,5 +1,8 @@
 /* eslint no-return-assign: "error" */
-import React, { useEffect } from 'react';
+/* eslint-disable array-callback-return */
+/* eslint-disable consistent-return */
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
 
@@ -27,7 +30,6 @@ import '../css/card.module.css';
 
 const SearchScreen = () => {
   const { keyword } = useParams();
-  console.log(keyword);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -36,11 +38,11 @@ const SearchScreen = () => {
 
   const searchedProduct = useSelector((state) => state.search);
   const { loading, error, products } = searchedProduct;
-  console.log(products);
 
   const filtersApplied = useSelector((state) => state.filter);
   const { filters } = filtersApplied;
-  console.log(filters);
+
+  let breaker = false;
 
   if (products && products.length === 0 && !loading) {
     return (
@@ -83,6 +85,7 @@ const SearchScreen = () => {
                     onClick={() => {
                       dispatch(search(keyword, 'asc'));
                       if (
+                        filters.brands &&
                         JSON.parse(
                           sessionStorage.getItem(
                             'proshop_brand_length',
@@ -100,6 +103,7 @@ const SearchScreen = () => {
                     onClick={() => {
                       dispatch(search(keyword, 'desc'));
                       if (
+                        filters.brands &&
                         JSON.parse(
                           sessionStorage.getItem(
                             'proshop_brand_length',
@@ -147,13 +151,34 @@ const SearchScreen = () => {
               <>
                 {(noProds = false)}
                 {renderedProds.length === 0 && (
-                  <StyledWarning variant="danger">
-                    No Products Found
-                  </StyledWarning>
+                  <>
+                    <StyledWarning variant="danger">
+                      No Products Found
+                    </StyledWarning>
+                    {/* <StyledSimilarProdsH1>
+                    Similar Products
+                  </StyledSimilarProdsH1> */}
+                  </>
                 )}
-                <StyledSimilarProdsH1>
-                  Similar Products
-                </StyledSimilarProdsH1>
+                {/* {renderedProds.length === 0 && (
+                  <StyledSimilarProdsH1>
+                    Similar Products xxx
+                  </StyledSimilarProdsH1>
+                )} */}
+                {products.map((product) => {
+                  if (
+                    !breaker &&
+                    filters.brands.includes(product.brand.name) &&
+                    !renderedProds.includes(product)
+                  ) {
+                    breaker = true;
+                    return (
+                      <StyledSimilarProdsH1>
+                        Similar Products
+                      </StyledSimilarProdsH1>
+                    );
+                  }
+                })}
                 <StyledGridDiv>
                   {products.map(
                     (product) =>

@@ -1,4 +1,6 @@
 /* eslint no-return-assign: "error" */
+/* eslint-disable array-callback-return */
+/* eslint-disable consistent-return */
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
@@ -44,6 +46,8 @@ const CategoryScreen = () => {
   const { filters } = filtersApplied;
   console.log(filters);
 
+  let breaker = false;
+
   let noProds = true;
   let renderedProds = [];
   useEffect(() => {
@@ -88,6 +92,7 @@ const CategoryScreen = () => {
                     onClick={() => {
                       dispatch(getProductByCategory(id, 'asc'));
                       if (
+                        filters.brands &&
                         JSON.parse(
                           sessionStorage.getItem(
                             'proshop_brand_length',
@@ -105,6 +110,7 @@ const CategoryScreen = () => {
                     onClick={() => {
                       dispatch(getProductByCategory(id, 'desc'));
                       if (
+                        filters.brands &&
                         JSON.parse(
                           sessionStorage.getItem(
                             'proshop_brand_length',
@@ -155,9 +161,23 @@ const CategoryScreen = () => {
                     No Products Found
                   </StyledWarning>
                 )}
-                <StyledSimilarProdsH1>
+                {/* <StyledSimilarProdsH1>
                   Similar Products
-                </StyledSimilarProdsH1>
+                </StyledSimilarProdsH1> */}
+                {products.map((product) => {
+                  if (
+                    !breaker &&
+                    filters.brands.includes(product.brand.name) &&
+                    !renderedProds.includes(product)
+                  ) {
+                    breaker = true;
+                    return (
+                      <StyledSimilarProdsH1>
+                        Similar Products
+                      </StyledSimilarProdsH1>
+                    );
+                  }
+                })}
                 <StyledGridDiv>
                   {products.map(
                     (product) =>
