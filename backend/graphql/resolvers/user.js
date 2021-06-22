@@ -1,6 +1,7 @@
 import User from '../../models/userModel.js';
 import { loggedin, admin } from '../../utils/verifyUser.js';
 import generateToken from '../../utils/generateToken.js';
+import { sendEmail } from '../../utils/mailer.js';
 
 // Auth user & get token
 // Public
@@ -40,6 +41,7 @@ const registerUser = async (args, { req, redis }) => {
     });
 
     if (user) {
+      sendEmail(user.name, user.email, 'Registeration Successful!', 'You have successfully registered in the system.')
       return {
         ...user._doc,
         token: generateToken(user._id),

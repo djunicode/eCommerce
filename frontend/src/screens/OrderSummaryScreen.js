@@ -20,7 +20,7 @@ const myDescription = 'Description goes here';
 const myColor = '#30475E';
 
 const paymentHandler = async (e) => {
-  const API_URL = 'http://localhost:5000/';
+  const API_URL = 'http://localhost:5000/payment/';
   e.preventDefault();
   const orderUrl = `${API_URL}order`;
   const response = await axios.get(orderUrl, {
