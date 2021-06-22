@@ -33,6 +33,11 @@ const Product = ({ product }) => {
         </StyledBrand>
 
         <StyledPrice as="b">Rs {product.price} /-</StyledPrice>
+        {product.countInStock === 0 && (
+          <StyledOutOfStock as="p">
+            <i>Out of Stock</i>
+          </StyledOutOfStock>
+        )}
       </StyledCardBody>
     </StyledCard>
   );
@@ -60,8 +65,8 @@ const StyledImg = styled(Card.Img)`
 
 const StyledDiscount = styled(Card.Text)`
   position: absolute;
-  right: 10px;
-  top: 10px;
+  right: 20px;
+  top: 20px;
   background-color: #d9534f;
   color: white;
   padding: 6px;
@@ -85,4 +90,20 @@ const StyledPrice = styled(Card.Text)`
   font-weight: bold;
   color: grey;
   margin-bottom: 0;
+`;
+
+const StyledOutOfStock = styled.p`
+  color: red;
+  font-size: 9px;
+  float: right;
+  background-color: #ffcdd2;
+  opacity: 0.8;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px red solid;
+
+  @media (max-width: 445px) {
+    float: none;
+    text-align: center;
+  }
 `;
