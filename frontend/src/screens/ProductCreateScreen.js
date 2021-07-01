@@ -212,7 +212,12 @@ const ProductCreateScreen = ({ history }) => {
           >
             <Row style={{ marginBottom: '1rem' }}>
               <Col>
-                <Row style={{ marginBottom: '1rem' }}>
+                <Row
+                  style={{ marginBottom: '1rem' }}
+                  xs={1}
+                  md={2}
+                  lg={4}
+                >
                   <Col>
                     <Form.Label>Name</Form.Label>
                     <Form.Control

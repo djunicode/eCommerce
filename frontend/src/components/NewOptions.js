@@ -5,7 +5,7 @@ import { Form, Row, Col } from 'react-bootstrap';
 function NewOptions(props) {
   return (
     <Form>
-      <Row>
+      <Row xs={1} md={2} lg={4}>
         <Col>
           <Form.Label>Name</Form.Label>
           <Form.Control

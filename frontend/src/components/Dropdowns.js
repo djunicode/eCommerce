@@ -78,8 +78,6 @@ export const CatDropdown = (props) => {
 
   useEffect(() => {
     dispatch(listCategories(queryCategories));
-    console.log(createCategory);
-    console.log(deleteCategory);
   }, [dispatch, createCategory, deleteCategory]);
 
   const [optionList, setOptionList] = useState([]);
@@ -173,7 +171,7 @@ export const CatDropdown = (props) => {
         components={{ Option }}
         onCreateOption={handleCreateCategory}
         handleDelete={handleDelete}
-        defaultValue={{ label: props.categoryName, value: props.brand }}
+        defaultValue={{ label: props.categoryName, value: props.categ }}
       />
       <Form.Control.Feedback type="invalid" style={{display: `${props.dropdownError.category}`}}>This field is required</Form.Control.Feedback>
     </>

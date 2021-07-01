@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Button, Col, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { updateProduct } from '../actions/productActions';
@@ -53,18 +54,13 @@ const ProductEditScreen = ({ match, history }) => {
     }
   }`;
 
-  // const initialValues = {
-  //   name: '',
-  //   image: '',
-  //   brand: '',
-  //   price: 0,
-  //   discount: 0,
-  //   countInStock: 0,
-  //   category: '',
-  //   subCategory: '',
-  //   description: '',
-  //   options: [],
-  // };
+  const [shouldRender, setShouldRender] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShouldRender(true);
+    }, 500);
+  }, []);
 
   useEffect(() => {
     dispatch(getProduct(queryProductDetails));
@@ -121,10 +117,6 @@ const ProductEditScreen = ({ match, history }) => {
       console.log(optionsInput);
     }
   }, [data, optionsInput]);
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
   const productUpdate = useSelector((state) => state.productUpdate);
   const {
@@ -265,11 +257,15 @@ const ProductEditScreen = ({ match, history }) => {
   // }, [optionsInput]);
 
   return (
-    <div style={{ padding: '0 4rem' }}>
+    <Wrapper>
       <Link
         to="/admin/productlist"
         className="btn btn-light my-3"
         style={{ border: '1px solid #D4D4D4' }}
+        onClick={() => {
+          console.log(categ);
+          console.log(categoryName);
+        }}
       >
         Go Back
       </Link>
@@ -283,6 +279,8 @@ const ProductEditScreen = ({ match, history }) => {
         <Loader />
       ) : error ? (
         <Message variant="danger">{error}</Message>
+      ) : !shouldRender ? (
+        <Loader />
       ) : (
         <>
           <Form
@@ -296,7 +294,12 @@ const ProductEditScreen = ({ match, history }) => {
           >
             <Row style={{ marginBottom: '1rem' }}>
               <Col>
-                <Row style={{ marginBottom: '1rem' }}>
+                <Row
+                  style={{ marginBottom: '1rem' }}
+                  xs={1}
+                  md={2}
+                  lg={4}
+                >
                   <Col controlId="name">
                     <Form.Label>Name</Form.Label>
                     <Form.Control
@@ -340,21 +343,19 @@ const ProductEditScreen = ({ match, history }) => {
                   </Col>
 
                   <Col>
-                    <Form.Group as={Col} controlId="countInStock">
-                      <Form.Label>Quantity</Form.Label>
-                      <Form.Control
-                        required
-                        type="number"
-                        // placeholder={countInStock}
-                        value={countInStock}
-                        onChange={(e) =>
-                          setCountInStock(e.target.value)
-                        }
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        This field is required
-                      </Form.Control.Feedback>
-                    </Form.Group>
+                    <Form.Label>Quantity</Form.Label>
+                    <Form.Control
+                      required
+                      type="number"
+                      // placeholder={countInStock}
+                      value={countInStock}
+                      onChange={(e) =>
+                        setCountInStock(e.target.value)
+                      }
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      This field is required
+                    </Form.Control.Feedback>
                   </Col>
                 </Row>
 
@@ -437,157 +438,170 @@ const ProductEditScreen = ({ match, history }) => {
             </Form.Group>
             */}
           </Form>
+          <div>
+            {optionsInput.map((opt, index) => {
+              return (
+                <div
+                  style={{
+                    background: '#F9F9F9',
+                    padding: '3rem',
+                    marginBottom: '40px',
+                  }}
+                >
+                  <div
+                    style={{
+                      marginBottom: '1.5rem',
+                      fontWeight: '600',
+                    }}
+                  >
+                    OPTION {index + 1}
+                  </div>
+                  <Form>
+                    <Row xs={1} md={2} lg={4}>
+                      <Col>
+                        <Form.Label>Name</Form.Label>
+                        <Form.Control
+                          required
+                          type="text"
+                          // placeholder={opt.name}
+                          name={opt.name}
+                          value={opt.name}
+                          onChange={(e) => {
+                            console.log(optionsInput);
+                            // setOptName(e.target.value);
+                            const m = [...optionsInput];
+                            m[index].name = e.target.value;
+                            setOptionsInput(m);
+                            console.log(m);
+                            console.log(optName);
+                            console.log(e.target.value);
+                          }}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          This field is required
+                        </Form.Control.Feedback>
+                      </Col>
+                      <Col>
+                        <Form.Label>Price</Form.Label>
+                        <Form.Control
+                          required
+                          type="number"
+                          // placeholder={opt.price}
+                          name={opt.price}
+                          value={opt.price}
+                          onChange={(e) => {
+                            const m = [...optionsInput];
+                            m[index].price = e.target.value;
+                            setOptionsInput(m);
+                          }}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          This field is required
+                        </Form.Control.Feedback>
+                      </Col>
+                      <Col>
+                        <Form.Label>Discount</Form.Label>
+                        <Form.Control
+                          type="number"
+                          // placeholder={opt.discount}
+                          name={opt.discount}
+                          value={opt.discount}
+                          onChange={(e) => {
+                            const m = [...optionsInput];
+                            m[index].discount = e.target.value;
+                            setOptionsInput(m);
+                          }}
+                        />
+                      </Col>
+                      <Col>
+                        <Form.Label>Quantity</Form.Label>
+                        <Form.Control
+                          required
+                          type="number"
+                          // placeholder={opt.countInStock}
+                          name={opt.countInStock}
+                          value={opt.countInStock}
+                          onChange={(e) => {
+                            const m = [...optionsInput];
+                            m[index].countInStock = e.target.value;
+                            setOptionsInput(m);
+                          }}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          This field is required
+                        </Form.Control.Feedback>
+                      </Col>
+                    </Row>
+                  </Form>
+                </div>
+              );
+            })}
+            {click.map((c, index) => {
+              if (index === 0) {
+                return <div />;
+              }
+              return (
+                <div
+                  style={{
+                    background: '#F9F9F9',
+                    padding: '3rem',
+                    marginBottom: '40px',
+                  }}
+                >
+                  <div>OPTION {optionsInput.length + index}</div>
+                  {/* {optName && optPrice && optDiscount && optQty && */}
+                  <NewOptions
+                    setOptName={setOptName}
+                    setOptPrice={setOptPrice}
+                    setOptDiscount={setOptDiscount}
+                    setOptQty={setOptQty}
+                    dropdownError={dropdownError}
+                    // optName={optName}
+                    // optPrice={optPrice}
+                    // optDiscount={optDiscount}
+                    // optQty={optQty}
+                  />
+                  {/* } */}
+                </div>
+              );
+            })}
+          </div>
+          <div
+            style={{
+              background: '#F9F9F9',
+              padding: '2rem 3rem',
+              marginBottom: '40px',
+              color: '#30475E',
+              fontWeight: '600',
+            }}
+            onClick={addNew}
+          >
+            <i
+              className="fas fa-plus"
+              style={{ marginRight: '15px' }}
+            />{' '}
+            ADD A NEW OPTION
+          </div>
+          <Col className="text-right">
+            <Button
+              style={{ background: '#F05454' }}
+              onClick={updateProductHandler}
+            >
+              Save Changes
+            </Button>
+          </Col>
         </>
       )}
-      <div>
-        {optionsInput.map((opt, index) => {
-          return (
-            <div
-              style={{
-                background: '#F9F9F9',
-                padding: '3rem',
-                marginBottom: '40px',
-              }}
-            >
-              <div
-                style={{ marginBottom: '1.5rem', fontWeight: '600' }}
-              >
-                OPTION {index + 1}
-              </div>
-              <Form>
-                <Row>
-                  <Col>
-                    <Form.Label>Name</Form.Label>
-                    <Form.Control
-                      required
-                      type="text"
-                      // placeholder={opt.name}
-                      name={opt.name}
-                      value={opt.name}
-                      onChange={(e) => {
-                        console.log(optionsInput);
-                        // setOptName(e.target.value);
-                        const m = [...optionsInput];
-                        m[index].name = e.target.value;
-                        setOptionsInput(m);
-                        console.log(m);
-                        console.log(optName);
-                        console.log(e.target.value);
-                      }}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      This field is required
-                    </Form.Control.Feedback>
-                  </Col>
-                  <Col>
-                    <Form.Label>Price</Form.Label>
-                    <Form.Control
-                      required
-                      type="number"
-                      // placeholder={opt.price}
-                      name={opt.price}
-                      value={opt.price}
-                      onChange={(e) => {
-                        const m = [...optionsInput];
-                        m[index].price = e.target.value;
-                        setOptionsInput(m);
-                      }}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      This field is required
-                    </Form.Control.Feedback>
-                  </Col>
-                  <Col>
-                    <Form.Label>Discount</Form.Label>
-                    <Form.Control
-                      type="number"
-                      // placeholder={opt.discount}
-                      name={opt.discount}
-                      value={opt.discount}
-                      onChange={(e) => {
-                        const m = [...optionsInput];
-                        m[index].discount = e.target.value;
-                        setOptionsInput(m);
-                      }}
-                    />
-                  </Col>
-                  <Col>
-                    <Form.Label>Quantity</Form.Label>
-                    <Form.Control
-                      required
-                      type="number"
-                      // placeholder={opt.countInStock}
-                      name={opt.countInStock}
-                      value={opt.countInStock}
-                      onChange={(e) => {
-                        const m = [...optionsInput];
-                        m[index].countInStock = e.target.value;
-                        setOptionsInput(m);
-                      }}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      This field is required
-                    </Form.Control.Feedback>
-                  </Col>
-                </Row>
-              </Form>
-            </div>
-          );
-        })}
-        {click.map((c, index) => {
-          if (index === 0) {
-            return <div />;
-          }
-
-          return (
-            <div
-              style={{
-                background: '#F9F9F9',
-                padding: '3rem',
-                marginBottom: '40px',
-              }}
-            >
-              <div>OPTION {optionsInput.length + index}</div>
-              {/* {optName && optPrice && optDiscount && optQty && */}
-              <NewOptions
-                setOptName={setOptName}
-                setOptPrice={setOptPrice}
-                setOptDiscount={setOptDiscount}
-                setOptQty={setOptQty}
-                dropdownError={dropdownError}
-                // optName={optName}
-                // optPrice={optPrice}
-                // optDiscount={optDiscount}
-                // optQty={optQty}
-              />
-              {/* } */}
-            </div>
-          );
-        })}
-      </div>
-      <div
-        style={{
-          background: '#F9F9F9',
-          padding: '2rem 3rem',
-          marginBottom: '40px',
-          color: '#30475E',
-          fontWeight: '600',
-        }}
-        onClick={addNew}
-      >
-        <i className="fas fa-plus" style={{ marginRight: '15px' }} />{' '}
-        ADD A NEW OPTION
-      </div>
-      <Col className="text-right">
-        <Button
-          style={{ background: '#F05454' }}
-          onClick={updateProductHandler}
-        >
-          Save Changes
-        </Button>
-      </Col>
-    </div>
+    </Wrapper>
   );
 };
 
 export default ProductEditScreen;
+
+const Wrapper = styled.div`
+  padding: 0 4rem;
+
+  @media screen and (max-width: 600px) {
+    padding: 0;
+  }
+`;

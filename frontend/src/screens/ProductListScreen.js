@@ -159,10 +159,10 @@ const ProductListScreen = ({ history }) => {
     dispatch(searchProducts(search));
   }, [searchProd]);
 
-  useEffect(() => {
-    console.log(searchproducts);
-    // dispatch(searchProducts(search));
-  }, [searchproducts]);
+  // useEffect(() => {
+  //   console.log(searchproducts);
+  //   // dispatch(searchProducts(search));
+  // }, [searchproducts]);
 
   useEffect(() => {
     dispatch(listCategories(queryCategories));
@@ -283,7 +283,7 @@ const ProductListScreen = ({ history }) => {
                   ) : (
                     <td style={{ padding: '7.4px', height: '70px' }}>
                       <LinkContainer
-                        to={`/admin/prodbycatoduct/${prodbycat._id}/edit`}
+                        to={`/admin/product/${prodbycat._id}/edit`}
                       >
                         <ActionButton className="btn-sm">
                           <i className="fas fa-edit" />
@@ -321,7 +321,7 @@ const ProductListScreen = ({ history }) => {
                   ) : (
                     <td style={{ padding: '7.4px', height: '70px' }}>
                       <LinkContainer
-                        to={`/admin/prodbysubcatoduct/${prodbysubcat._id}/edit`}
+                        to={`/admin/product/${prodbysubcat._id}/edit`}
                       >
                         <ActionButton className="btn-sm">
                           <i className="fas fa-edit" />
@@ -358,7 +358,7 @@ const ProductListScreen = ({ history }) => {
                 ) : (
                   <td style={{ padding: '7.4px', height: '70px' }}>
                     <LinkContainer
-                      to={`/admin/sroduct/${sr._id}/edit`}
+                      to={`/admin/product/${sr._id}/edit`}
                     >
                       <ActionButton className="btn-sm">
                         <i className="fas fa-edit" />
