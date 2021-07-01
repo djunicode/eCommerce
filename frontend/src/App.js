@@ -17,6 +17,7 @@ import UserListScreen from './screens/UserListScreen';
 import UserEditScreen from './screens/UserEditScreen';
 import ProductListScreen from './screens/ProductListScreen';
 import ProductEditScreen from './screens/ProductEditScreen';
+import ProductCreateScreen from './screens/ProductCreateScreen';
 import OrderListScreen from './screens/OrderListScreen';
 import OrderSummaryScreen from './screens/OrderSummaryScreen';
 import OrdersScreen from './adminscreens/OrdersScreen';
@@ -41,6 +42,7 @@ const App = () => {
           <Route path="/product/:id" component={ProductScreen} />
           <Route path="/cart/:id?" component={CartScreen} />
           <Route path="/category/:id" component={CategoryScreen} />
+
           <Route path="/admin/userlist" component={UserListScreen} />
           <Route
             path="/admin/user/:id/edit"
@@ -61,25 +63,35 @@ const App = () => {
             component={ProductEditScreen}
           />
           <Route
+            path="/admin/product/create"
+            component={ProductCreateScreen}
+          />
+          <Route
             path="/admin/orderlist"
             component={OrderListScreen}
           />
+          <Route
+            path="/admin/orderdetails/:id"
+            component={OrderDetailsAdmin}
+          />
           <Route path="/admin/chatbot" component={ChatbotAdmin} />
+
           <Route
             path="/search/:keyword"
             component={SearchScreen}
             exact
           />
-          <Route
+          {/* <Route
             path="/page/:pageNumber"
             component={HomeScreen}
             exact
-          />
-          <Route
+          /> */}
+          {/* <Route
             path="/search/:keyword/page/:pageNumber"
             component={HomeScreen}
             exact
-          />
+          /> */}
+          <Route path="/" component={HomeScreen} exact />
           <Route
             path="/admin/orderdetails/:id"
             component={OrderDetailsAdmin}
@@ -88,7 +100,6 @@ const App = () => {
             path="/OrderSummaryScreen"
             component={OrderSummaryScreen}
           />
-          <Route path="/" component={HomeScreen} exact />
           <Route path="/orderscreen" component={OrdersScreen} />
         </Container>
       </main>

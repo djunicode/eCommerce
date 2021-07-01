@@ -10,6 +10,9 @@ import {
   productUpdateReducer,
   productReviewCreateReducer,
   productTopRatedReducer,
+  productSearchReducer,
+  productByCategoryReducer,
+  productBySubCategoryReducer,
 } from './reducers/productReducers';
 import cartReducer from './reducers/cartReducers';
 import {
@@ -38,9 +41,21 @@ import {
 import { productidReducer } from './reducers/productidReducers';
 import {
   productsByCategoryIdReducer,
+  categoryCreateReducer,
+  categoryDeleteReducer,
+  categoryEditReducer,
   categoryListReducer,
+  subCategoryCreateReducer,
+  subCategoryDeleteReducer,
+  subCategoryEditReducer,
   subCategoryListReducer,
 } from './reducers/categoryReducers';
+import {
+  brandCreateReducer,
+  brandDeleteReducer,
+  brandEditReducer,
+  brandListReducer,
+} from './reducers/brandReducers';
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -71,6 +86,19 @@ const reducer = combineReducers({
   productsByCategory: productsByCategoryIdReducer,
   categoryList: categoryListReducer,
   subCategoryList: subCategoryListReducer,
+  productSearch: productSearchReducer,
+  productByCategory: productByCategoryReducer,
+  productBySubCategory: productBySubCategoryReducer,
+  categoryCreate: categoryCreateReducer,
+  categoryEdit: categoryEditReducer,
+  categoryDelete: categoryDeleteReducer,
+  subCategoryCreate: subCategoryCreateReducer,
+  subCategoryEdit: subCategoryEditReducer,
+  subCategoryDelete: subCategoryDeleteReducer,
+  brandList: brandListReducer,
+  brandCreate: brandCreateReducer,
+  brandDelete: brandDeleteReducer,
+  brandEdit: brandEditReducer,
   updateChatbot,
 });
 
