@@ -17,7 +17,7 @@ import { useHistory } from 'react-router-dom';
 import Rating from '../components/Rating';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import { getProduct } from '../actions/productidAction';
+import { getProduct, postPincode } from '../actions/productidAction';
 import ReactSlick from '../components/ReactSlick';
 import Questions from '../components/Questions';
 import Ratings from '../components/Ratings';
@@ -43,12 +43,47 @@ const ProductScreen = () => {
   ]);
   const [war, setWar] = useState(false);
   const [disable, setDisable] = useState(false);
+  const [pincode, setPincode] = useState('');
+  const [message, setMessage] = useState({
+    color: 'red',
+    message: '',
+  });
 
   const dispatch = useDispatch();
+  const history = useHistory();
+
   const { loading, data, error } = useSelector(
     (state) => state.productid,
   );
-  const history = useHistory();
+  const { isDeliverable, pincodeLoading } = useSelector(
+    (state) => state.checkPincode,
+  );
+  const { cartLoading, cartData } = useSelector(
+    (state) => state.cartAdd,
+  );
+
+  useEffect(() => {
+    if (cartData.status === 200) {
+      setMessage({
+        color: 'green',
+        message: 'Added To cart',
+      });
+    }
+  }, [cartData]);
+
+  useEffect(() => {
+    if (isDeliverable === false) {
+      setMessage({
+        color: 'red',
+        message: 'This product cannot be delivered to your location',
+      });
+    } else if (isDeliverable === true) {
+      setMessage({
+        color: 'green',
+        message: 'This product can be delivered to your location',
+      });
+    }
+  }, [isDeliverable]);
 
   const handleTab = (e) => {
     if (e.target.name === 'pd') {
@@ -120,6 +155,25 @@ const ProductScreen = () => {
     }
     console.log(data);
   }, [data]);
+
+  const cartAdd = () => {
+    if (isDeliverable === true) {
+      const option = '';
+      const mutation = [];
+      mutation.push(
+        `{product:"${
+          data._id
+        }",isOptionSelected: false, optionName: "${option}", price: ${12}, quantity: ${qty}}`,
+      );
+      dispatch(addToCart(mutation));
+    } else {
+      setMessage({
+        color: 'red',
+        message:
+          'Please check if this product can be delivered to your location by entering your pincode',
+      });
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -359,20 +413,23 @@ const ProductScreen = () => {
                         backgroundColor: '#eceeef',
                         marginBottom: '0.5rem',
                       }}
+                      value={pincode}
+                      onChange={(e) => setPincode(e.target.value)}
                     />
-                    <Button
-                      style={{
-                        width: '30%',
-                        height: '40px',
-                        padding: '0px',
-                        display: 'inline',
-                        backgroundColor: '#f7f7f9',
-                        color: 'black',
-                        border: '1px solid #eceeef',
+                    <Check
+                      onClick={() => {
+                        if (pincode) {
+                          dispatch(postPincode(pincode));
+                        } else {
+                          setMessage({
+                            color: 'red',
+                            message: 'Please enter your Pincode',
+                          });
+                        }
                       }}
                     >
                       CHECK
-                    </Button>
+                    </Check>
                     <br />
                     <span style={{ fontSize: '0.7rem' }}>
                       Enter pincode to check whether delivery is
@@ -380,54 +437,17 @@ const ProductScreen = () => {
                     </span>
                   </span>
                 </Row>
-                <Row
-                  className="mt-5 mb-4"
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Col
-                    xs={12}
-                    sm={6}
-                    style={{
-                      paddingLeft: '0',
-                      paddingRight: '0',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
+                <FlexBoxRow className="mt-5 mb-4">
+                  <FlexBoxCol xs={12} sm={6}>
                     <ActionButtons
                       disabled={disable}
                       style={{ backgroundColor: '#F05454' }}
-                      onClick={() => {
-                        console.log('add to cart');
-                        const option = '';
-                        const mutation = [];
-                        mutation.push(
-                          `{product:"${
-                            data._id
-                          }",isOptionSelected: false, optionName: "${option}", price: ${12}, quantity: ${qty}}`,
-                        );
-                        dispatch(addToCart(mutation));
-                      }}
+                      onClick={() => cartAdd()}
                     >
                       Add to Cart
                     </ActionButtons>
-                  </Col>
-                  <Col
-                    xs={12}
-                    sm={6}
-                    style={{
-                      paddingLeft: '0',
-                      paddingRight: '0',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
+                  </FlexBoxCol>
+                  <FlexBoxCol xs={12} sm={6}>
                     <ActionButtons
                       disabled={disable}
                       style={{ backgroundColor: '#fc7845' }}
@@ -441,22 +461,33 @@ const ProductScreen = () => {
                     >
                       Buy Now
                     </ActionButtons>
-                  </Col>
+                  </FlexBoxCol>
                   <FlexBox
-                    style={{ position: 'absolute', bottom: '-10px' }}
+                    style={{
+                      position: 'absolute',
+                      bottom: '-50px',
+                      flexDirection: 'column',
+                    }}
                   >
-                    <Spinner
-                      animation="border"
-                      role="status"
-                      style={{
-                        width: '20px',
-                        height: '20px',
-                        margin: 'auto',
-                        display: 'block',
-                      }}
-                    />
+                    <small style={{ color: `${message.color}` }}>
+                      {message.message}
+                    </small>
+                    {(pincodeLoading || cartLoading) && (
+                      <Spinner
+                        animation="border"
+                        role="status"
+                        style={{
+                          width: '20px',
+                          height: '20px',
+                          margin: 'auto',
+                          display: 'block',
+                          position: 'absolute',
+                          bottom: '-50px',
+                        }}
+                      />
+                    )}
                   </FlexBox>
-                </Row>
+                </FlexBoxRow>
                 <Row>
                   <Col xs={12}>
                     <div
@@ -658,4 +689,29 @@ const FlexBox = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
+`;
+
+const FlexBoxRow = styled(Row)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+`;
+
+const FlexBoxCol = styled(Col)`
+  padding-left: 0;
+  padding-right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Check = styled(Button)`
+  width: 30%;
+  height: 40px;
+  padding: 0px;
+  display: inline;
+  background-color: #f7f7f9;
+  color: black;
+  border: 1px solid #eceeef;
 `;

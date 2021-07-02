@@ -31,16 +31,24 @@ export const productidReducer = (
 };
 
 export const pincodeReducer = (
-  state = { loading: false, data: [], error: '' },
+  state = { pincodeLoading: false, isDeliverable: [], error: '' },
   action,
 ) => {
   switch (action.type) {
     case PINCODE_CHECK_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, pincodeLoading: true };
     case PINCODE_CHECK_SUCCESS:
-      return { ...state, loading: false, data: action.payload };
+      return {
+        ...state,
+        pincodeLoading: false,
+        isDeliverable: action.payload,
+      };
     case PINCODE_CHECK_FAIL:
-      return { ...state, loading: false, error: action.payload };
+      return {
+        ...state,
+        pincodeLoading: false,
+        error: action.payload,
+      };
     default:
       return state;
   }

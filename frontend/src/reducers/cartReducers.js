@@ -12,21 +12,21 @@ import {
 } from '../constants/cartConstants';
 
 export const cartAddReducer = (
-  state = { loading: false, data: [], error: false },
+  state = { cartLoading: false, cartData: [], error: false },
   action,
 ) => {
   switch (action.type) {
     case CART_ADD_REQUEST:
-      return { ...state, loading: true, error: false };
+      return { ...state, cartLoading: true, error: false };
     case CART_ADD_SUCCESS:
       return {
         ...state,
-        loading: false,
+        cartLoading: false,
         error: false,
-        data: action.payload,
+        cartData: action.payload,
       };
     case CART_ADD_FAIL:
-      return { ...state, loading: false, error: action.payload };
+      return { ...state, cartLoading: false, error: action.payload };
     default:
       return { ...state };
   }
