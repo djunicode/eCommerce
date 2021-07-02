@@ -407,9 +407,9 @@ const ProductScreen = () => {
                         const option = '';
                         const mutation = [];
                         mutation.push(
-                          `{product:${
+                          `{product:"${
                             data._id
-                          },isOptionSelected: false, optionName: ${option}, price: ${12}, quantity: ${qty}}`,
+                          }",isOptionSelected: false, optionName: "${option}", price: ${12}, quantity: ${qty}}`,
                         );
                         dispatch(addToCart(mutation));
                       }}
