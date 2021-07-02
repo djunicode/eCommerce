@@ -21,30 +21,54 @@ import {
   PRODUCT_TOP_REQUEST,
   PRODUCT_TOP_SUCCESS,
   PRODUCT_TOP_FAIL,
+  PRODUCT_SEARCH_REQUEST,
+  PRODUCT_SEARCH_SUCCESS,
+  PRODUCT_SEARCH_FAIL,
+  PRODUCT_BY_CATEGORY_REQUEST,
+  PRODUCT_BY_CATEGORY_SUCCESS,
+  PRODUCT_BY_CATEGORY_FAIL,
+  PRODUCT_BY_SUBCATEGORY_REQUEST,
+  PRODUCT_BY_SUBCATEGORY_SUCCESS,
+  PRODUCT_BY_SUBCATEGORY_FAIL,
 } from '../constants/productConstants';
 import { logout } from './userActions';
 
-export const listProducts = (keyword = '', pageNumber = '') => async (
-  dispatch,
-) => {
+export const listProducts = (query) => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_LIST_REQUEST });
 
-    const { data } = await axios.get(
-      `/api/products?keyword=${keyword}&pageNumber=${pageNumber}`,
-    );
+    const userinfo = JSON.parse(localStorage.getItem('userInfo'));
+
+    const request = {
+      method: 'post',
+      url: 'http://localhost:5000/graphql',
+      data: {
+        query,
+      },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userinfo.token}`,
+      },
+    };
+
+    const { data } = await axios(request);
 
     dispatch({
       type: PRODUCT_LIST_SUCCESS,
-      payload: data,
+      payload: data.data.getProducts,
     });
   } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    // if (message === 'Not authorized, token failed') {
+    //   dispatch(logout());
+    // }
+    console.log(message);
     dispatch({
       type: PRODUCT_LIST_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      payload: message,
     });
   }
 };
@@ -70,35 +94,39 @@ export const listProductDetails = (id) => async (dispatch) => {
   }
 };
 
-export const deleteProduct = (id) => async (dispatch, getState) => {
+export const deleteProduct = (query) => async (dispatch) => {
   try {
     dispatch({
       type: PRODUCT_DELETE_REQUEST,
     });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
+    const userinfo = JSON.parse(localStorage.getItem('userInfo'));
 
     const config = {
       headers: {
-        Authorization: `Bearer ${userInfo.token}`,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userinfo.token}`,
       },
     };
 
-    await axios.delete(`/api/products/${id}`, config);
+    const { data } = await axios.post(
+      'http://localhost:5000/graphql',
+      { query },
+      config,
+    );
 
     dispatch({
       type: PRODUCT_DELETE_SUCCESS,
+      payload: data.data.deleteProduct,
     });
   } catch (error) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
         : error.message;
-    if (message === 'Not authorized, token failed') {
-      dispatch(logout());
-    }
+    // if (message === 'Not authorized, token failed') {
+    //   dispatch(logout());
+    // }
     dispatch({
       type: PRODUCT_DELETE_FAIL,
       payload: message,
@@ -106,36 +134,42 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
   }
 };
 
-export const createProduct = () => async (dispatch, getState) => {
+export const createProduct = (query) => async (dispatch) => {
+  console.log('this works');
   try {
     dispatch({
       type: PRODUCT_CREATE_REQUEST,
     });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
+    const userinfo = JSON.parse(localStorage.getItem('userInfo'));
 
     const config = {
       headers: {
-        Authorization: `Bearer ${userInfo.token}`,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userinfo.token}`,
       },
     };
+    console.log(config);
 
-    const { data } = await axios.post(`/api/products`, {}, config);
+    const { data } = await axios.post(
+      'http://localhost:5000/graphql',
+      { query },
+      config,
+    );
 
     dispatch({
       type: PRODUCT_CREATE_SUCCESS,
-      payload: data,
+      payload: data.data.createProduct,
     });
   } catch (error) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
         : error.message;
-    if (message === 'Not authorized, token failed') {
-      dispatch(logout());
-    }
+    // if (message === 'Not authorized, token failed') {
+    //   dispatch(logout());
+    // }
+    console.log(message);
     dispatch({
       type: PRODUCT_CREATE_FAIL,
       payload: message,
@@ -143,45 +177,40 @@ export const createProduct = () => async (dispatch, getState) => {
   }
 };
 
-export const updateProduct = (product) => async (
-  dispatch,
-  getState,
-) => {
+export const updateProduct = (query) => async (dispatch) => {
   try {
     dispatch({
       type: PRODUCT_UPDATE_REQUEST,
     });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
+    const userinfo = JSON.parse(localStorage.getItem('userInfo'));
 
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userinfo.token}`,
       },
     };
 
-    const { data } = await axios.put(
-      `/api/products/${product._id}`,
-      product,
+    const { data } = await axios.post(
+      'http://localhost:5000/graphql',
+      { query },
       config,
     );
 
     dispatch({
       type: PRODUCT_UPDATE_SUCCESS,
-      payload: data,
+      payload: data.data.updateProduct,
     });
-    dispatch({ type: PRODUCT_DETAILS_SUCCESS, payload: data });
+    // dispatch({ type: PRODUCT_DETAILS_SUCCESS, payload: data });
   } catch (error) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
         : error.message;
-    if (message === 'Not authorized, token failed') {
-      dispatch(logout());
-    }
+    // if (message === 'Not authorized, token failed') {
+    //   dispatch(logout());
+    // }
     dispatch({
       type: PRODUCT_UPDATE_FAIL,
       payload: message,
@@ -255,6 +284,98 @@ export const listTopProducts = (query) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: PRODUCT_TOP_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const searchProducts = (query) => async (dispatch) => {
+  try {
+    dispatch({ type: PRODUCT_SEARCH_REQUEST });
+
+    const request = {
+      method: 'post',
+      url: 'http://localhost:5000/graphql',
+      data: {
+        query,
+      },
+      headers: { 'Content-Type': 'application/json' },
+    };
+
+    const { data } = await axios(request);
+
+    dispatch({
+      type: PRODUCT_SEARCH_SUCCESS,
+      payload: data.data.searchProduct,
+    });
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_SEARCH_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const listProductByCategory = (query) => async (dispatch) => {
+  try {
+    dispatch({ type: PRODUCT_BY_CATEGORY_REQUEST });
+
+    const request = {
+      method: 'post',
+      url: 'http://localhost:5000/graphql',
+      data: {
+        query,
+      },
+      headers: { 'Content-Type': 'application/json' },
+    };
+
+    const { data } = await axios(request);
+
+    dispatch({
+      type: PRODUCT_BY_CATEGORY_SUCCESS,
+      payload: data.data.getProductByCategory,
+    });
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_BY_CATEGORY_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const listProductBySubCategory = (query) => async (
+  dispatch,
+) => {
+  try {
+    dispatch({ type: PRODUCT_BY_SUBCATEGORY_REQUEST });
+
+    const request = {
+      method: 'post',
+      url: 'http://localhost:5000/graphql',
+      data: {
+        query,
+      },
+      headers: { 'Content-Type': 'application/json' },
+    };
+
+    const { data } = await axios(request);
+
+    dispatch({
+      type: PRODUCT_BY_SUBCATEGORY_SUCCESS,
+      payload: data.data.getProductBySubCategory,
+    });
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_BY_SUBCATEGORY_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

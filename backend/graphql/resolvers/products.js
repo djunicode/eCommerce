@@ -3,8 +3,10 @@ import { admin, loggedin } from '../../utils/verifyUser.js';
 
 // Create new product
 // private/admin
-const createProduct = async (args, req) => {
+const createProduct = async (args, {req}) => {
   try {
+    console.log(req);
+    console.log(req.user);
     if (admin(req)) {
       const product = new Product({
         name: args.productInput.name,
