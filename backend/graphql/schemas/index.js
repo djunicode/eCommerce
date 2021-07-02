@@ -46,7 +46,7 @@ export default buildSchema(`
         getProductReviews(productId: ID!): [productReview]!
         getProductQnAs(productId: ID!): [productQ]
         
-        isDeliverable(shippingAddressInput: ShippingAddressInput): Boolean!,
+        isDeliverable(postalCode: String!): Boolean!,
         
         searchProduct(searchTerm: String!): [Product!]!
         filterProducts(searchTerm: String!, filters: FilterInput): [Product!]!
