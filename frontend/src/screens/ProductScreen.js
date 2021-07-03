@@ -157,8 +157,16 @@ const ProductScreen = () => {
   }, [data]);
 
   const cartAdd = () => {
+    if (!localStorage.getItem('userInfo')) {
+      history.push({
+        pathname: '/login',
+        state: {
+          redirect: `/${window.location.pathname}`,
+        },
+      });
+    }
     if (isDeliverable === true) {
-      const option = '';
+      const option = 'Chair 1';
       const mutation = [];
       mutation.push(
         `{product:"${
@@ -450,7 +458,10 @@ const ProductScreen = () => {
                   <FlexBoxCol xs={12} sm={6}>
                     <ActionButtons
                       disabled={disable}
-                      style={{ backgroundColor: '#fc7845' }}
+                      style={{
+                        backgroundColor: '#fc7845',
+                        marginBottom: '0',
+                      }}
                       onClick={() => {
                         localStorage.setItem(
                           'buy',
@@ -465,11 +476,16 @@ const ProductScreen = () => {
                   <FlexBox
                     style={{
                       position: 'absolute',
-                      bottom: '-50px',
+                      bottom: '-40px',
                       flexDirection: 'column',
                     }}
                   >
-                    <small style={{ color: `${message.color}` }}>
+                    <small
+                      style={{
+                        color: `${message.color}`,
+                        textAlign: 'center',
+                      }}
+                    >
                       {message.message}
                     </small>
                     {(pincodeLoading || cartLoading) && (
