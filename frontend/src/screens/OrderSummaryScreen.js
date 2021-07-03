@@ -12,7 +12,7 @@ import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import axios from 'axios';
 // import { set } from 'mongoose';
-// import { useLocation } from 'react-router';
+import { useLocation } from 'react-router';
 import Loader from '../components/Loader';
 import OrderItem from '../components/OrderItem';
 
@@ -76,16 +76,20 @@ function OrderSummaryScreen() {
   const [loading, setLoading] = useState(true);
   const [amount, setAmount] = useState(0);
 
-  // const location = useLocation();
+  const location = useLocation();
 
   useEffect(() => {
-    // if (location.state) {
-    //   const c = JSON.parse(localStorage.getItem('buy'));
-    // }
-    const c = JSON.parse(localStorage.getItem('cart'));
-    console.log(c);
-    setCart(c);
-    setLoading(false);
+    if (location.state) {
+      const c = JSON.parse(localStorage.getItem('buy'));
+      console.log(c);
+      setCart(c);
+      setLoading(false);
+    } else {
+      const c = JSON.parse(localStorage.getItem('cart'));
+      console.log(c);
+      setCart(c);
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {

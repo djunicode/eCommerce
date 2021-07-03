@@ -51,6 +51,7 @@ const ProductScreen = () => {
   });
   const [options, setOptions] = useState('');
   const [price, setPrice] = useState();
+  const [maxQty, setMaxQty] = useState();
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -149,6 +150,7 @@ const ProductScreen = () => {
         setDisable(true);
       }
       setPrice(data.price);
+      setMaxQty(data.countInStock);
     }
   }, [data]);
 
@@ -157,6 +159,8 @@ const ProductScreen = () => {
     data.options.forEach((option, index) => {
       if (option.name === e.target.value) {
         setPrice(data.options[index].price);
+        setMaxQty(data.options[index].countInStock);
+        setQty(1);
       }
     });
   };
@@ -169,13 +173,17 @@ const ProductScreen = () => {
           redirect: `${window.location.pathname}`,
         },
       });
+    } else if (isDeliverable === true) {
+      const mutation = [];
+      mutation.push(
+        `{product:"${data._id}",isOptionSelected: false, optionName: "${options}", price: ${price}, quantity: ${qty}}`,
+      );
+      dispatch(addToCart(mutation));
     } else {
-      localStorage.setItem('buy', JSON.stringify(data));
-      history.push({
-        pathname: '/OrderSummaryScreen',
-        state: {
-          type: 'buy',
-        },
+      setMessage({
+        color: 'red',
+        message:
+          'Please check if this product can be delivered to your location by entering your pincode',
       });
     }
   };
@@ -188,13 +196,10 @@ const ProductScreen = () => {
           redirect: `${window.location.pathname}`,
         },
       });
-    }
-    if (isDeliverable === true) {
+    } else if (isDeliverable === true) {
       const mutation = [];
       mutation.push(
-        `{product:"${
-          data._id
-        }",isOptionSelected: false, optionName: "${options}", price: ${12}, quantity: ${qty}}`,
+        `{product:"${data._id}",isOptionSelected: false, optionName: "${options}", price: ${price}, quantity: ${qty}}`,
       );
       dispatch(addToCart(mutation));
     } else {
@@ -293,7 +298,7 @@ const ProductScreen = () => {
                 </div>
                 <Row className="mt-5">
                   {data.options && data.options.length !== 0 ? (
-                    <Col xs={12} sm={6}>
+                    <Col xs={12} md={6}>
                       <Row
                         className="pl-3"
                         style={{
@@ -342,7 +347,7 @@ const ProductScreen = () => {
                       </Row>
                     </Col>
                   ) : null}
-                  <Col xs={12} sm={6}>
+                  <Col xs={12} md={6}>
                     <QtyRow>
                       <Parameters
                         className="mr-2"
@@ -410,12 +415,10 @@ const ProductScreen = () => {
                             margin: '0.4rem',
                             width: '1.8rem',
                           }}
-                          disabled={
-                            qty === data.countInStock || disable
-                          }
+                          disabled={qty === maxQty || disable}
                           onClick={() => {
                             setQty((qt) =>
-                              qt < data.countInStock ? qt + 1 : qt,
+                              qt < maxQty ? qt + 1 : qt,
                             );
                           }}
                         >
@@ -704,8 +707,9 @@ const QtyRow = styled(Row)`
   align-items: center;
   flex-direction: col;
   justify-content: center;
+  margin-right: 0;
 
-  @media screen and (max-width: 576px) {
+  @media screen and (max-width: 768px) {
     padding-left: 1rem;
     justify-content: start;
     margin-top: 2rem;
