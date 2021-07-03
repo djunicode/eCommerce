@@ -112,6 +112,7 @@ const ProductScreen = () => {
     console.log(id);
     const query = ` query{
       getProductById (id: "${id}") {
+        _id
         name
         image
         brand {
@@ -147,7 +148,6 @@ const ProductScreen = () => {
         setDisable(true);
       }
     }
-    console.log(data);
   }, [data]);
 
   const buyNow = () => {
@@ -174,11 +174,12 @@ const ProductScreen = () => {
       });
     }
     if (isDeliverable === true) {
+      const option = 'Chair 1';
       const mutation = [];
       mutation.push(
         `{product:"${
           data._id
-        }",isOptionSelected: false, optionName: "${options}", price: ${12}, quantity: ${qty}}`,
+        }",isOptionSelected: false, optionName: "${option}", price: ${12}, quantity: ${qty}}`,
       );
       dispatch(addToCart(mutation));
     } else {
