@@ -50,6 +50,7 @@ const ProductScreen = () => {
     message: '',
   });
   const [options, setOptions] = useState('');
+  const [price, setPrice] = useState();
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -147,8 +148,18 @@ const ProductScreen = () => {
       if (data.countInStock === 0) {
         setDisable(true);
       }
+      setPrice(data.price);
     }
   }, [data]);
+
+  const handleOption = (e) => {
+    setOptions(e.target.value);
+    data.options.forEach((option, index) => {
+      if (option.name === e.target.value) {
+        setPrice(data.options[index].price);
+      }
+    });
+  };
 
   const buyNow = () => {
     if (!localStorage.getItem('userInfo')) {
@@ -158,10 +169,15 @@ const ProductScreen = () => {
           redirect: `${window.location.pathname}`,
         },
       });
+    } else {
+      localStorage.setItem('buy', JSON.stringify(data));
+      history.push({
+        pathname: '/OrderSummaryScreen',
+        state: {
+          type: 'buy',
+        },
+      });
     }
-
-    localStorage.setItem('buy', JSON.stringify(data));
-    history.push('/OrderSummaryScreen');
   };
 
   const cartAdd = () => {
@@ -174,12 +190,11 @@ const ProductScreen = () => {
       });
     }
     if (isDeliverable === true) {
-      const option = 'Chair 1';
       const mutation = [];
       mutation.push(
         `{product:"${
           data._id
-        }",isOptionSelected: false, optionName: "${option}", price: ${12}, quantity: ${qty}}`,
+        }",isOptionSelected: false, optionName: "${options}", price: ${12}, quantity: ${qty}}`,
       );
       dispatch(addToCart(mutation));
     } else {
@@ -271,7 +286,7 @@ const ProductScreen = () => {
                     fontWeight: '1000',
                   }}
                 >
-                  Rs {data.price}
+                  Rs {price}
                 </Price>
                 <div className="mt-4" style={{ fontWeight: '450' }}>
                   {data.description}
@@ -308,13 +323,18 @@ const ProductScreen = () => {
                           }}
                           id="size"
                           value={options}
-                          onChange={(e) => setOptions(e.target.value)}
+                          onChange={(e) => {
+                            handleOption(e);
+                          }}
                         >
-                          {data.optitons &&
+                          <option hidden default>
+                            Select Option
+                          </option>
+                          {data.options &&
                             data.options.map((p, index) => {
                               return (
-                                <option value={p} key={index}>
-                                  {p}
+                                <option value={p.name} key={index}>
+                                  {p.name}
                                 </option>
                               );
                             })}

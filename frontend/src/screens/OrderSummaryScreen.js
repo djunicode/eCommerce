@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable no-shadow */
 /* eslint-disable no-use-before-define */
@@ -11,8 +12,10 @@ import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import axios from 'axios';
 // import { set } from 'mongoose';
+// import { useLocation } from 'react-router';
 import Loader from '../components/Loader';
 import OrderItem from '../components/OrderItem';
+
 // these can be changed
 const orderAmount = 50;
 const myAppName = 'PROSHOP';
@@ -73,7 +76,12 @@ function OrderSummaryScreen() {
   const [loading, setLoading] = useState(true);
   const [amount, setAmount] = useState(0);
 
+  // const location = useLocation();
+
   useEffect(() => {
+    // if (location.state) {
+    //   const c = JSON.parse(localStorage.getItem('buy'));
+    // }
     const c = JSON.parse(localStorage.getItem('cart'));
     console.log(c);
     setCart(c);
