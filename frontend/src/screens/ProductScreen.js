@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
@@ -48,6 +49,7 @@ const ProductScreen = () => {
     color: 'red',
     message: '',
   });
+  const [options, setOptions] = useState('');
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -110,40 +112,32 @@ const ProductScreen = () => {
     console.log(id);
     const query = ` query{
       getProductById (id: "${id}") {
-          _id
+        name
+        image
+        brand {
           name
-          discount
+          _id
+        }
+        price
+        discount
+        description
+        countInStock
+        category {
+          name
+          _id
+        }
+        subcategory {
+          name
+          _id
+        }
+        options {
+          name
           price
-          user {
-              _id
-              name
-              phoneNo
-              email
-              password
-              isAdmin
-              token
-          }
-          image
-          category {
-              _id
-              name
-          }
-          subcategory {
-              _id
-              name
-          }
-          new
+          discount
           countInStock
-          numReviews
-          reviews {
-              name
-              rating
-              comment
-              user
-          }
-          description
+        }
       }
-  }`;
+    }`;
     dispatch(getProduct(query));
   }, []);
 
@@ -156,6 +150,20 @@ const ProductScreen = () => {
     console.log(data);
   }, [data]);
 
+  const buyNow = () => {
+    if (!localStorage.getItem('userInfo')) {
+      history.push({
+        pathname: '/login',
+        state: {
+          redirect: `${window.location.pathname}`,
+        },
+      });
+    }
+
+    localStorage.setItem('buy', JSON.stringify(data));
+    history.push('/OrderSummaryScreen');
+  };
+
   const cartAdd = () => {
     if (!localStorage.getItem('userInfo')) {
       history.push({
@@ -166,12 +174,11 @@ const ProductScreen = () => {
       });
     }
     if (isDeliverable === true) {
-      const option = 'Chair 1';
       const mutation = [];
       mutation.push(
         `{product:"${
           data._id
-        }",isOptionSelected: false, optionName: "${option}", price: ${12}, quantity: ${qty}}`,
+        }",isOptionSelected: false, optionName: "${options}", price: ${12}, quantity: ${qty}}`,
       );
       dispatch(addToCart(mutation));
     } else {
@@ -269,45 +276,51 @@ const ProductScreen = () => {
                   {data.description}
                 </div>
                 <Row className="mt-5">
-                  <Col xs={12} sm={6}>
-                    <Row
-                      className="pl-3"
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        flexDirection: 'col',
-                      }}
-                    >
-                      <Parameters
-                        className="mr-2"
+                  {data.options && data.options.length !== 0 ? (
+                    <Col xs={12} sm={6}>
+                      <Row
+                        className="pl-3"
                         style={{
-                          color: 'black',
-                          fontWeight: '700',
+                          display: 'flex',
+                          alignItems: 'center',
+                          flexDirection: 'col',
                         }}
-                        htmlFor="size"
                       >
-                        Size:
-                      </Parameters>
-                      <Form.Control
-                        as="select"
-                        value={4}
-                        onChange={(e) => setQty(e.target.value)}
-                        style={{
-                          width: 'auto',
-                          height: '35px',
-                          paddingTop: '0px',
-                          paddingBottom: '0px',
-                          backgroundColor: '#eceeef',
-                        }}
-                        id="size"
-                      >
-                        <option value={1}>1</option>
-                        <option value={2}>2</option>
-                        <option value={3}>3</option>
-                        <option value={4}>4</option>
-                      </Form.Control>
-                    </Row>
-                  </Col>
+                        <Parameters
+                          className="mr-2"
+                          style={{
+                            color: 'black',
+                            fontWeight: '700',
+                          }}
+                          htmlFor="size"
+                        >
+                          Options:
+                        </Parameters>
+                        <Form.Control
+                          as="select"
+                          style={{
+                            width: 'auto',
+                            height: '35px',
+                            paddingTop: '0px',
+                            paddingBottom: '0px',
+                            backgroundColor: '#eceeef',
+                          }}
+                          id="size"
+                          value={options}
+                          onChange={(e) => setOptions(e.target.value)}
+                        >
+                          {data.optitons &&
+                            data.options.map((p, index) => {
+                              return (
+                                <option value={p} key={index}>
+                                  {p}
+                                </option>
+                              );
+                            })}
+                        </Form.Control>
+                      </Row>
+                    </Col>
+                  ) : null}
                   <Col xs={12} sm={6}>
                     <QtyRow>
                       <Parameters
@@ -462,13 +475,7 @@ const ProductScreen = () => {
                         backgroundColor: '#fc7845',
                         marginBottom: '0',
                       }}
-                      onClick={() => {
-                        localStorage.setItem(
-                          'buy',
-                          JSON.stringify(data),
-                        );
-                        history.push('/OrderSummaryScreen');
-                      }}
+                      onClick={() => buyNow()}
                     >
                       Buy Now
                     </ActionButtons>
@@ -730,4 +737,5 @@ const Check = styled(Button)`
   background-color: #f7f7f9;
   color: black;
   border: 1px solid #eceeef;
+  transform: translateY(-2.5px);
 `;
