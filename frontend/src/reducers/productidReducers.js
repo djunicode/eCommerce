@@ -36,7 +36,7 @@ export const pincodeReducer = (
 ) => {
   switch (action.type) {
     case PINCODE_CHECK_REQUEST:
-      return { ...state, pincodeLoading: true };
+      return { ...state, pincodeLoading: true, isDeliverable: [] };
     case PINCODE_CHECK_SUCCESS:
       return {
         ...state,
@@ -48,6 +48,7 @@ export const pincodeReducer = (
         ...state,
         pincodeLoading: false,
         error: action.payload,
+        isDeliverable: [],
       };
     default:
       return state;

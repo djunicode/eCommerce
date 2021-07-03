@@ -161,7 +161,7 @@ const ProductScreen = () => {
       history.push({
         pathname: '/login',
         state: {
-          redirect: `/${window.location.pathname}`,
+          redirect: `${window.location.pathname}`,
         },
       });
     }
