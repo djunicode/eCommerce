@@ -12,7 +12,7 @@ import {
 } from '../constants/cartConstants';
 
 export const cartAddReducer = (
-  state = { cartLoading: false, cartData: [], error: false },
+  state = { cartLoading: false, cartData: {}, error: false },
   action,
 ) => {
   switch (action.type) {
