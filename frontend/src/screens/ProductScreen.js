@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
@@ -11,21 +12,18 @@ import {
   Button,
   Form,
   Nav,
-  // Jumbotron,
+  Spinner,
 } from 'react-bootstrap';
-// import ReactImageMagnify from 'react-image-magnify';
-// import { set } from 'mongoose';
 import { useHistory } from 'react-router-dom';
 import Rating from '../components/Rating';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-// import watchImg687 from '../images/wristwatch_687.jpg';
-// import watchImg1200 from '../images/wristwatch_1200.jpg';
-import { getProduct } from '../actions/productidAction';
-import Review from '../components/Review';
-import Question from '../components/Question';
-// import ReactSlickIntegration from '../components/ReactSlickIntegration';
+import { getProduct, postPincode } from '../actions/productidAction';
 import ReactSlick from '../components/ReactSlick';
+import Questions from '../components/Questions';
+import Ratings from '../components/Ratings';
+import ProductDetails from '../components/ProductDetails';
+import { addToCart } from '../actions/cartActions';
 
 const initialValues = {
   question: '',
@@ -45,12 +43,51 @@ const ProductScreen = () => {
     { question: 'Is it durable ?', answer: 'Yes' },
   ]);
   const [war, setWar] = useState(false);
+  const [disable, setDisable] = useState(false);
+  const [pincode, setPincode] = useState('');
+  const [message, setMessage] = useState({
+    color: 'red',
+    message: '',
+  });
+  const [options, setOptions] = useState('');
+  const [price, setPrice] = useState();
+  const [maxQty, setMaxQty] = useState();
 
   const dispatch = useDispatch();
+  const history = useHistory();
+
   const { loading, data, error } = useSelector(
     (state) => state.productid,
   );
-  const history = useHistory();
+  const { isDeliverable, pincodeLoading } = useSelector(
+    (state) => state.checkPincode,
+  );
+  const { cartLoading, cartData } = useSelector(
+    (state) => state.cartAdd,
+  );
+
+  useEffect(() => {
+    if (cartData.status === 200) {
+      setMessage({
+        color: 'green',
+        message: 'Added To cart',
+      });
+    }
+  }, [cartData]);
+
+  useEffect(() => {
+    if (isDeliverable === false) {
+      setMessage({
+        color: 'red',
+        message: 'This product cannot be delivered to your location',
+      });
+    } else if (isDeliverable === true) {
+      setMessage({
+        color: 'green',
+        message: 'This product can be delivered to your location',
+      });
+    }
+  }, [isDeliverable]);
 
   const handleTab = (e) => {
     if (e.target.name === 'pd') {
@@ -77,52 +114,102 @@ const ProductScreen = () => {
     console.log(id);
     const query = ` query{
       getProductById (id: "${id}") {
-          _id
+        _id
+        name
+        image
+        brand {
           name
-          discount
+          _id
+        }
+        price
+        discount
+        description
+        countInStock
+        category {
+          name
+          _id
+        }
+        subcategory {
+          name
+          _id
+        }
+        options {
+          name
           price
-          user {
-              _id
-              name
-              phoneNo
-              email
-              password
-              isAdmin
-              token
-          }
-          image
-          brand {
-              _id
-              name
-          }
-          category {
-              _id
-              name
-          }
-          subcategory {
-              _id
-              name
-          }
-          new
+          discount
           countInStock
-          numReviews
-          reviews {
-              name
-              rating
-              comment
-              user
-          }
-          description
+        }
       }
-  }`;
+    }`;
     dispatch(getProduct(query));
   }, []);
 
   useEffect(() => {
-    if (data.brand) {
-      console.log(data.brand.name);
+    if (data._id) {
+      if (data.countInStock === 0) {
+        setDisable(true);
+      }
+      setPrice(data.price);
+      setMaxQty(data.countInStock);
     }
   }, [data]);
+
+  const handleOption = (e) => {
+    setOptions(e.target.value);
+    data.options.forEach((option, index) => {
+      if (option.name === e.target.value) {
+        setPrice(data.options[index].price);
+        setMaxQty(data.options[index].countInStock);
+        setQty(1);
+      }
+    });
+  };
+
+  const buyNow = () => {
+    if (!localStorage.getItem('userInfo')) {
+      history.push({
+        pathname: '/login',
+        state: {
+          redirect: `${window.location.pathname}`,
+        },
+      });
+    } else if (isDeliverable === true) {
+      const mutation = [];
+      mutation.push(
+        `{product:"${data._id}",isOptionSelected: false, optionName: "${options}", price: ${price}, quantity: ${qty}}`,
+      );
+      dispatch(addToCart(mutation));
+    } else {
+      setMessage({
+        color: 'red',
+        message:
+          'Please check if this product can be delivered to your location by entering your pincode',
+      });
+    }
+  };
+
+  const cartAdd = () => {
+    if (!localStorage.getItem('userInfo')) {
+      history.push({
+        pathname: '/login',
+        state: {
+          redirect: `${window.location.pathname}`,
+        },
+      });
+    } else if (isDeliverable === true) {
+      const mutation = [];
+      mutation.push(
+        `{product:"${data._id}",isOptionSelected: false, optionName: "${options}", price: ${price}, quantity: ${qty}}`,
+      );
+      dispatch(addToCart(mutation));
+    } else {
+      setMessage({
+        color: 'red',
+        message:
+          'Please check if this product can be delivered to your location by entering your pincode',
+      });
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -153,35 +240,10 @@ const ProductScreen = () => {
         <Message>{error}</Message>
       ) : (
         <>
-          <Contain
-            style={{
-              backgroundColor: 'white',
-              border: '1px solid #D5D5D5',
-              letterSpacing: '0.5px',
-              height: 'auto',
-            }}
-          >
+          <Contain>
             <Row style={{ height: '100%' }}>
-              <Col md={5} className="mr-4">
+              <Col lg={5} className="mr-4">
                 <div className="img-fluid" style={{ zIndex: '1000' }}>
-                  {/* <ReactImageMagnify
-                    {...{
-                      smallImage: {
-                        alt: 'Wristwatch by Ted Baker London',
-                        isFluidWidth: true,
-                        src: watchImg687,
-                        width: '100%',
-                        height: 'auto',
-                      },
-                      largeImage: {
-                        src: watchImg1200,
-                        width: 1200,
-                        height: 1800,
-                      },
-                      enlargedImagePosition: 'over',
-                    }}
-                    style={{ zIndex: '10000' }}
-                  /> */}
                   <ReactSlick
                     {...{
                       rimProps: {
@@ -201,7 +263,7 @@ const ProductScreen = () => {
                   transform: 'translateY(1.8%)',
                 }}
               />
-              <Col md={6} className="fluid_instructions">
+              <Col lg={6} className="fluid_instructions">
                 <Heading
                   style={{
                     letterSpacing: '0',
@@ -229,52 +291,63 @@ const ProductScreen = () => {
                     fontWeight: '1000',
                   }}
                 >
-                  Rs {data.price}
+                  Rs {price}
                 </Price>
                 <div className="mt-4" style={{ fontWeight: '450' }}>
                   {data.description}
                 </div>
                 <Row className="mt-5">
-                  <Col xs={12} sm={6}>
-                    <Row
-                      className="pl-3"
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        flexDirection: 'col',
-                      }}
-                    >
-                      <Parameters
-                        className="mr-2"
+                  {data.options && data.options.length !== 0 ? (
+                    <Col xs={12} md={6}>
+                      <Row
+                        className="pl-3"
                         style={{
-                          color: 'black',
-                          fontWeight: '700',
+                          display: 'flex',
+                          alignItems: 'center',
+                          flexDirection: 'col',
                         }}
-                        htmlFor="size"
                       >
-                        Size:
-                      </Parameters>
-                      <Form.Control
-                        as="select"
-                        value={4}
-                        onChange={(e) => setQty(e.target.value)}
-                        style={{
-                          width: 'auto',
-                          height: '35px',
-                          paddingTop: '0px',
-                          paddingBottom: '0px',
-                          backgroundColor: '#eceeef',
-                        }}
-                        id="size"
-                      >
-                        <option value={1}>1</option>
-                        <option value={2}>2</option>
-                        <option value={3}>3</option>
-                        <option value={4}>4</option>
-                      </Form.Control>
-                    </Row>
-                  </Col>
-                  <Col xs={12} sm={6}>
+                        <Parameters
+                          className="mr-2"
+                          style={{
+                            color: 'black',
+                            fontWeight: '700',
+                          }}
+                          htmlFor="size"
+                        >
+                          Options:
+                        </Parameters>
+                        <Form.Control
+                          as="select"
+                          style={{
+                            width: 'auto',
+                            height: '35px',
+                            paddingTop: '0px',
+                            paddingBottom: '0px',
+                            backgroundColor: '#eceeef',
+                          }}
+                          id="size"
+                          value={options}
+                          onChange={(e) => {
+                            handleOption(e);
+                          }}
+                        >
+                          <option hidden default>
+                            Select Option
+                          </option>
+                          {data.options &&
+                            data.options.map((p, index) => {
+                              return (
+                                <option value={p.name} key={index}>
+                                  {p.name}
+                                </option>
+                              );
+                            })}
+                        </Form.Control>
+                      </Row>
+                    </Col>
+                  ) : null}
+                  <Col xs={12} md={6}>
                     <QtyRow>
                       <Parameters
                         className="mr-2"
@@ -295,16 +368,6 @@ const ProductScreen = () => {
                           justifyContent: 'center',
                         }}
                       >
-                        {/* <i
-                          className="fas fa-minus-square"
-                          style={{
-                            fontSize: '2rem',
-                            color: '#5EAAA8',
-                          }}
-                          onClick={() => {
-                            setQty((qt) => (qt > 1 ? qt - 1 : qt));
-                          }}
-                        /> */}
                         <Button
                           style={{
                             fontSize: '1.5rem',
@@ -313,7 +376,7 @@ const ProductScreen = () => {
                             margin: '0.4rem',
                             width: '1.8rem',
                           }}
-                          disabled={qty === 1}
+                          disabled={qty === 1 || disable}
                           onClick={() => {
                             setQty((qt) => (qt > 1 ? qt - 1 : qt));
                           }}
@@ -344,18 +407,6 @@ const ProductScreen = () => {
                           textAlign: 'center',
                         }}
                       >
-                        {/* <i
-                          className="fas fa-plus-square"
-                          style={{
-                            fontSize: '2rem',
-                            color: '#5EAAA8',
-                          }}
-                          onClick={() => {
-                            setQty((qt) =>
-                              qt < data.countInStock ? qt + 1 : qt,
-                            );
-                          }}
-                        /> */}
                         <Button
                           style={{
                             fontSize: '1.5rem',
@@ -364,10 +415,10 @@ const ProductScreen = () => {
                             margin: '0.4rem',
                             width: '1.8rem',
                           }}
-                          disabled={qty === data.countInStock}
+                          disabled={qty === maxQty || disable}
                           onClick={() => {
                             setQty((qt) =>
-                              qt < data.countInStock ? qt + 1 : qt,
+                              qt < maxQty ? qt + 1 : qt,
                             );
                           }}
                         >
@@ -407,20 +458,23 @@ const ProductScreen = () => {
                         backgroundColor: '#eceeef',
                         marginBottom: '0.5rem',
                       }}
+                      value={pincode}
+                      onChange={(e) => setPincode(e.target.value)}
                     />
-                    <Button
-                      style={{
-                        width: '30%',
-                        height: '40px',
-                        padding: '0px',
-                        display: 'inline',
-                        backgroundColor: '#f7f7f9',
-                        color: 'black',
-                        border: '1px solid #eceeef',
+                    <Check
+                      onClick={() => {
+                        if (pincode) {
+                          dispatch(postPincode(pincode));
+                        } else {
+                          setMessage({
+                            color: 'red',
+                            message: 'Please enter your Pincode',
+                          });
+                        }
                       }}
                     >
                       CHECK
-                    </Button>
+                    </Check>
                     <br />
                     <span style={{ fontSize: '0.7rem' }}>
                       Enter pincode to check whether delivery is
@@ -428,66 +482,79 @@ const ProductScreen = () => {
                     </span>
                   </span>
                 </Row>
-                <Row
-                  className="mt-5 mb-4"
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Col xs={12} sm={6}>
+                <FlexBoxRow className="mt-5 mb-4">
+                  <FlexBoxCol xs={12} sm={6}>
                     <ActionButtons
-                      style={{
-                        padding: '6px 12px',
-                        backgroundColor: '#F05454',
-                        textTransform: 'none',
-                        borderRadius: '3px',
-                      }}
-                      onClick={() => {
-                        if (localStorage.getItem('cart')) {
-                          const cart = JSON.parse(
-                            localStorage.getItem('cart'),
-                          );
-                          console.log(typeof data);
-                          console.log(cart);
-                          cart.push(data);
-                          localStorage.setItem(
-                            'cart',
-                            JSON.stringify(cart),
-                          );
-                        } else {
-                          const cart = [];
-                          cart.push(data);
-                          localStorage.setItem(
-                            'cart',
-                            JSON.stringify(cart),
-                          );
-                        }
-                        history.push('/cart');
-                      }}
+                      disabled={disable}
+                      style={{ backgroundColor: '#F05454' }}
+                      onClick={() => cartAdd()}
                     >
                       Add to Cart
                     </ActionButtons>
-                  </Col>
-                  <Col xs={12} sm={6}>
+                  </FlexBoxCol>
+                  <FlexBoxCol xs={12} sm={6}>
                     <ActionButtons
+                      disabled={disable}
                       style={{
-                        padding: '6px 12px',
-                        backgroundColor: '#FC7845',
-                        textTransform: 'none',
-                        borderRadius: '3px',
+                        backgroundColor: '#fc7845',
+                        marginBottom: '0',
                       }}
-                      onClick={() => {
-                        localStorage.setItem(
-                          'buy',
-                          JSON.stringify(data),
-                        );
-                        history.push('/OrderSummaryScreen');
-                      }}
+                      onClick={() => buyNow()}
                     >
                       Buy Now
                     </ActionButtons>
+                  </FlexBoxCol>
+                  <FlexBox
+                    style={{
+                      position: 'absolute',
+                      bottom: '-40px',
+                      flexDirection: 'column',
+                    }}
+                  >
+                    <small
+                      style={{
+                        color: `${message.color}`,
+                        textAlign: 'center',
+                      }}
+                    >
+                      {message.message}
+                    </small>
+                    {(pincodeLoading || cartLoading) && (
+                      <Spinner
+                        animation="border"
+                        role="status"
+                        style={{
+                          width: '20px',
+                          height: '20px',
+                          margin: 'auto',
+                          display: 'block',
+                          position: 'absolute',
+                          bottom: '-50px',
+                        }}
+                      />
+                    )}
+                  </FlexBox>
+                </FlexBoxRow>
+                <Row>
+                  <Col xs={12}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <span
+                        className="text-danger"
+                        style={{
+                          fontSize: '0.8rem',
+                          fontWeight: '700',
+                        }}
+                      >
+                        {data.countInStock === 0 &&
+                          'This product is currently out of stock'}
+                      </span>
+                    </div>
                   </Col>
                 </Row>
               </Col>
@@ -551,270 +618,28 @@ const ProductScreen = () => {
               className="p-4"
               style={{ backgroundColor: '#F9F9F9', border: 'none' }}
             >
-              {pd && (
-                <>
-                  <span
-                    style={{
-                      color: '#30475E',
-                      letterSpacing: '0',
-                      fontWeight: '600',
-                    }}
-                  >
-                    GENERAL
-                  </span>
-                  <Row className="mt-3">
-                    <Col md={2} xs={5} style={{ color: '#5F5F5F' }}>
-                      Ideal For
-                    </Col>
-                    <Col
-                      xs={7}
-                      md={10}
-                      style={{ color: 'black', fontWeight: '600' }}
-                    >
-                      Men and women, boys, girls, unisex
-                    </Col>
-                  </Row>
-                  <Row className="my-1">
-                    <Col md={2} xs={5} style={{ color: '#5F5F5F' }}>
-                      Shape
-                    </Col>
-                    <Col
-                      xs={7}
-                      md={10}
-                      style={{ color: 'black', fontWeight: '600' }}
-                    >
-                      Rectangle
-                    </Col>
-                  </Row>
-                  <Row className="my-1">
-                    <Col md={2} xs={5} style={{ color: '#5F5F5F' }}>
-                      Cover Material
-                    </Col>
-                    <Col
-                      xs={7}
-                      md={10}
-                      style={{ color: 'black', fontWeight: '600' }}
-                    >
-                      No cover
-                    </Col>
-                  </Row>
-                  <Row className="my-1">
-                    <Col md={2} xs={5} style={{ color: '#5F5F5F' }}>
-                      Filling Material
-                    </Col>
-                    <Col
-                      xs={7}
-                      md={10}
-                      style={{ color: 'black', fontWeight: '600' }}
-                    >
-                      EVA
-                    </Col>
-                  </Row>
-                  <Row className="my-1">
-                    <Col md={2} xs={5} style={{ color: '#5F5F5F' }}>
-                      Other Features
-                    </Col>
-                    <Col
-                      xs={7}
-                      md={10}
-                      style={{ color: 'black', fontWeight: '600' }}
-                    >
-                      Lorem ipsum dolor sit, amet consectetur
-                      adipisicing elit. Exercitationem harum nihil
-                      illo nam praesentium, voluptate illum explicabo
-                      accusantium doloremque. Minima corrupti culpa,
-                      odio maiores beatae pariatur voluptatem dolorem
-                      optio necessitatibus.
-                    </Col>
-                  </Row>
-                  <hr />
-                  <span
-                    style={{
-                      color: '#30475E',
-                      letterSpacing: '0',
-                      fontWeight: '600',
-                    }}
-                  >
-                    DIMENSIONS
-                  </span>
-                  <Row className="mt-3">
-                    <Col md={2} xs={5} style={{ color: '#5F5F5F' }}>
-                      Width
-                    </Col>
-                    <Col
-                      xs={7}
-                      md={10}
-                      style={{ color: 'black', fontWeight: '600' }}
-                    >
-                      24 inch
-                    </Col>
-                  </Row>
-                  <Row className="my-1">
-                    <Col md={2} xs={5} style={{ color: '#5F5F5F' }}>
-                      Height
-                    </Col>
-                    <Col
-                      xs={7}
-                      md={10}
-                      style={{ color: 'black', fontWeight: '600' }}
-                    >
-                      72 inch
-                    </Col>
-                  </Row>
-                  <Row className="my-1">
-                    <Col md={2} xs={5} style={{ color: '#5F5F5F' }}>
-                      Thickness
-                    </Col>
-                    <Col
-                      xs={7}
-                      md={10}
-                      style={{ color: 'black', fontWeight: '600' }}
-                    >
-                      6 mm
-                    </Col>
-                  </Row>
-                  <Row className="my-1">
-                    <Col md={2} xs={5} style={{ color: '#5F5F5F' }}>
-                      Weight
-                    </Col>
-                    <Col
-                      xs={7}
-                      md={10}
-                      style={{ color: 'black', fontWeight: '600' }}
-                    >
-                      500 g
-                    </Col>
-                  </Row>
-                </>
-              )}
+              {pd && <ProductDetails />}
               {rr && (
-                <>
-                  <span
-                    style={{ color: '#30475E', cursor: 'pointer' }}
-                    onClick={() => {
-                      setWar((t) => !t);
-                    }}
-                  >
-                    <i
-                      className="far fa-edit"
-                      style={{
-                        display: 'inline',
-                        fontSize: '20px',
-                        color: '#30475E',
-                      }}
-                    />
-                    &nbsp;
-                    <span style={{ display: 'inline' }}>
-                      Write a Review
-                    </span>
-                  </span>
-                  {war && (
-                    <>
-                      <hr />
-                      <label htmlFor="question">Review</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="question"
-                        placeholder="Enter your Qustion"
-                        name="question"
-                        style={{ backgroundColor: 'white' }}
-                        onChange={(e) => {
-                          handleInputChange(e);
-                        }}
-                        value={values.question}
-                      />
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}
-                      >
-                        <Button
-                          className="btn btn-success rounded mt-2 px-2 py-1"
-                          style={{ fontWeight: '1000' }}
-                          onClick={() => {
-                            handleDone();
-                          }}
-                        >
-                          Done
-                        </Button>
-                      </div>
-                    </>
-                  )}
-                  <Review />
-                </>
+                <Ratings
+                  war={war}
+                  setWar={setWar}
+                  handleInputChange={handleInputChange}
+                  values={values}
+                  handleDone={handleDone}
+                />
               )}
               {q && (
-                <>
-                  <span
-                    style={{ color: '#30475E', cursor: 'pointer' }}
-                    onClick={() => {
-                      setAaq((t) => !t);
-                    }}
-                  >
-                    <i
-                      className="far fa-edit"
-                      style={{
-                        display: 'inline',
-                        fontSize: '20px',
-                        color: '#30475E',
-                      }}
-                    />
-                    &nbsp;
-                    <span style={{ display: 'inline' }}>
-                      ASK A QUESTION
-                    </span>
-                  </span>
-                  {aaq && (
-                    <>
-                      <hr />
-                      <label htmlFor="question">Question</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="question"
-                        placeholder="Enter your Qustion"
-                        name="question"
-                        style={{ backgroundColor: 'white' }}
-                        onChange={(e) => {
-                          handleInputChange(e);
-                        }}
-                        value={values.question}
-                      />
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}
-                      >
-                        <Button
-                          className="btn btn-success rounded mt-2 px-2 py-1"
-                          style={{ fontWeight: '1000' }}
-                          onClick={() => {
-                            handleDone();
-                          }}
-                        >
-                          Done
-                        </Button>
-                      </div>
-                    </>
-                  )}
-                  {questions.map((question) => {
-                    return (
-                      <Question
-                        question={question.question}
-                        answer={question.answer}
-                      />
-                    );
-                  })}
-                </>
+                <Questions
+                  aaq={aaq}
+                  setAaq={setAaq}
+                  handleInputChange={handleInputChange}
+                  handleDone={handleDone}
+                  values={values}
+                  questions={questions}
+                />
               )}
             </Card>
           </Contain>
-          {/* <Chatbot /> */}
         </>
       )}
     </Box>
@@ -832,6 +657,11 @@ const Box = styled.div`
 `;
 const Contain = styled.div`
   padding: 3rem;
+  background-color: white;
+  border: 1px solid #d5d5d5;
+  letter-spacing: 0.5px;
+  height: auto;
+  position: relative;
 
   @media screen and (max-width: 991px) {
     margin: 0 4vw;
@@ -844,7 +674,7 @@ const Contain = styled.div`
 const Heading = styled.h1`
   margin-top: 0;
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 992px) {
     margin-top: 5rem;
   }
   @media screen and (max-width: 420px) {
@@ -877,8 +707,9 @@ const QtyRow = styled(Row)`
   align-items: center;
   flex-direction: col;
   justify-content: center;
+  margin-right: 0;
 
-  @media screen and (max-width: 576px) {
+  @media screen and (max-width: 768px) {
     padding-left: 1rem;
     justify-content: start;
     margin-top: 2rem;
@@ -886,9 +717,50 @@ const QtyRow = styled(Row)`
 `;
 const ActionButtons = styled(Button)`
   width: 90%;
+  padding: 6px 12px;
+  background-color: #fc7845;
+  text-transform: none;
+  border-radius: 3px;
+
+  &:hover {
+    box-shadow: 3px 5px 12px 2px rgba(0, 0, 0, 0.15);
+  }
 
   @media screen and (max-width: 576px) {
     width: 100%;
     margin-bottom: 30px;
   }
+`;
+
+const FlexBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+
+const FlexBoxRow = styled(Row)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+`;
+
+const FlexBoxCol = styled(Col)`
+  padding-left: 0;
+  padding-right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Check = styled(Button)`
+  width: 30%;
+  height: 40px;
+  padding: 0px;
+  display: inline;
+  background-color: #f7f7f9;
+  color: black;
+  border: 1px solid #eceeef;
+  transform: translateY(-2.5px);
 `;

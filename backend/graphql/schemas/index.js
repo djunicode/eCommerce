@@ -47,7 +47,7 @@ export default buildSchema(`
         getProductQnAs(productId: ID!): [productQ]
         getCart: Cart
         
-        isDeliverable(shippingAddressInput: ShippingAddressInput): Boolean!,
+        isDeliverable(postalCode: String!): Boolean!,
         
         searchProduct(searchTerm: String!): [Product!]!
         filterProducts(searchTerm: String!, filters: FilterInput): [Product!]!
