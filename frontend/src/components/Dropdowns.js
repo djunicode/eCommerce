@@ -161,7 +161,6 @@ export const CatDropdown = (props) => {
         onHide={() => setDeleteModalShow(false)}
       />
 
-      <Form.Label>Category</Form.Label>
       <CreatableSelect
         handleModal={handleModal}
         isClearable
@@ -299,7 +298,6 @@ export const SubCatDropdown = (props) => {
         onHide={() => setDeleteModalShow(false)}
       />
 
-      <Form.Label>Sub Category</Form.Label>
       <CreatableSelect
         handleModal={handleModal}
         isClearable
@@ -421,7 +419,6 @@ export const BrandDropdown = (props) => {
         onHide={() => setDeleteModalShow(false)}
       />
 
-      <Form.Label>Brand</Form.Label>
       <CreatableSelect
         handleModal={handleModal}
         isClearable

@@ -318,6 +318,7 @@ const ProductEditScreen = ({ match, history }) => {
                   </Column>
 
                   <Column controlId="brand">
+                    <Form.Label>Brand</Form.Label>
                     {brandName && (
                       <BrandDropdown
                         brand={brand}
@@ -361,6 +362,7 @@ const ProductEditScreen = ({ match, history }) => {
 
                 <Row style={{ marginBottom: '1rem' }}>
                   <Column controlId="categ">
+                    <Form.Label>Category</Form.Label>
                     {categoryName && (
                       <CatDropdown
                         categ={categ}
@@ -372,6 +374,7 @@ const ProductEditScreen = ({ match, history }) => {
                   </Column>
 
                   <Column controlId="subCateg">
+                    <Form.Label>Sub Category</Form.Label>
                     {subCategoryName && (
                       <SubCatDropdown
                         categ={categ}

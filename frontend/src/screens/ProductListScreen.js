@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Component } from 'react';
+import Select from 'react-select';
 import { VariableSizeGrid as Grid } from 'react-window';
 import { LinkContainer } from 'react-router-bootstrap';
 import styled from 'styled-components';
@@ -19,11 +20,20 @@ import {
   listCategories,
   listSubCategories,
 } from '../actions/categoryActions';
+import { CatDropdown, SubCatDropdown } from '../components/Dropdowns';
 
 const ProductListScreen = ({ history }) => {
   const [searchProd, setSearchProd] = useState('');
   const [category, setCategory] = useState('');
   const [subCategory, setSubCategory] = useState('');
+  const [dropdownError, setDropdownError] = useState({
+    brand: 'none',
+    category: 'none',
+    subcategory: 'none',
+    optionname: 'none',
+    optionprice: 'none',
+    optionqty: 'none',
+  });
 
   const dispatch = useDispatch();
 
@@ -191,6 +201,49 @@ const ProductListScreen = ({ history }) => {
       window.confirm('Are you sure you want to delete this product?')
     ) {
       dispatch(deleteProduct(queryDeleteProduct));
+    }
+  };
+
+
+  const [categoryOptions, setCategoryOptions] = useState([]);
+  const [subCategoryOptions, setSubCategoryOptions] = useState([]);
+
+  useEffect(() => {
+    if (categories) {
+      const optionsTwo = [];
+      categories.map((cat) => {
+        const optionsTemp = { label: cat.name, value: cat._id };
+        optionsTwo.push(optionsTemp);
+      });
+      setCategoryOptions(optionsTwo);
+    }
+  }, [categories]);
+
+  useEffect(() => {
+    if (subcategories) {
+      const optionsTwo = [];
+      subcategories.map((subCat) => {
+        const optionsTemp = { label: subCat.name, value: subCat._id };
+        optionsTwo.push(optionsTemp);
+      });
+      setSubCategoryOptions(optionsTwo);
+    }
+  }, [subcategories]);
+
+  const handleCategoryChange = (newValue) => {
+    if (newValue != null) {
+      setCategory(newValue.value);
+    }
+    if (newValue == null) {
+      window.location.reload();
+    }
+  };
+  const handleSubCategoryChange = (newValue) => {
+    if (newValue != null) {
+      setSubCategory(newValue.value);
+    }
+    if (newValue == null) {
+      window.location.reload();
     }
   };
 
@@ -411,7 +464,7 @@ const ProductListScreen = ({ history }) => {
         </Column>
         <Column>
           <Form.Label>Filter by Category</Form.Label>
-          <Form.Control
+          {/* <Form.Control
             as="select"
             defaultValue="Filter by Category"
             // value={category}
@@ -423,11 +476,23 @@ const ProductListScreen = ({ history }) => {
             {categories.map((cat) => (
               <option value={cat._id}>{cat.name}</option>
             ))}
-          </Form.Control>
+          </Form.Control> */}
+          <div style={{ border: '1px solid #929293' }}>
+          {/* <CatDropdown 
+            categ = {category}
+            setCateg = {setCategory}
+            dropdownError = {dropdownError}
+          /> */}
+          <Select 
+              isClearable
+              onChange={handleCategoryChange}
+              options={categoryOptions}
+            />
+          </div>
         </Column>
         <Column controlId="subCategory">
           <Form.Label>Filter by Sub Category</Form.Label>
-          <Form.Control
+          {/* <Form.Control
             as="select"
             defaultValue="Filter by Sub Category"
             onChange={(e) => {
@@ -438,7 +503,21 @@ const ProductListScreen = ({ history }) => {
             {subcategories.map((sub) => (
               <option value={sub._id}>{sub.name}</option>
             ))}
-          </Form.Control>
+          </Form.Control> */}
+          <div style={{ border: '1px solid #929293' }}>
+            {/* <SubCatDropdown 
+              categ = {category}
+              setCateg = {setCategory}
+              subCateg = {subCategory}
+              setSubCateg = {setSubCategory}
+              dropdownError = {dropdownError}
+            /> */}
+            <Select 
+              isClearable
+              onChange={handleSubCategoryChange}
+              options={subCategoryOptions}
+            />
+          </div>
         </Column>
         <Column className="text-right">
           <Link to="/admin/product/create">
@@ -477,34 +556,7 @@ const ProductListScreen = ({ history }) => {
             >
               {Cell}
             </Grid>
-          </div>
-
-          {/* <tbody>
-              {products.map((product) => (
-                <tr key={product._id}>
-                  <td>{product.name}</td>
-                  <td>{product.category}</td>
-                  <td>{product.subcategory}</td>
-                  <td>{product._id}</td>
-                  <td>
-                    <LinkContainer
-                      to={`/admin/product/${product._id}/edit`}
-                    >
-                      <ActionButton className="btn-sm">
-                        <i className="fas fa-edit" />
-                      </ActionButton>
-                    </LinkContainer>
-                    <ActionButton
-                      className="btn-sm"
-                      onClick={() => deleteHandler(product._id)}
-                    >
-                      <i className="fas fa-trash" />
-                    </ActionButton>
-                  </td>
-                </tr>
-              ))}
-              </tbody> */}
-          {/* </Table>  */}
+          </div>          
         </>
       )}
     </Wrapper>

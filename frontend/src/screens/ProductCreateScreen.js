@@ -234,6 +234,7 @@ const ProductCreateScreen = ({ history }) => {
                   </Column>
 
                   <Column>
+                    <Form.Label>Brand</Form.Label>
                     <BrandDropdown
                       brand={brand}
                       setBrand={setBrand}
@@ -275,6 +276,7 @@ const ProductCreateScreen = ({ history }) => {
 
                 <Row style={{ marginBottom: '1rem' }} xs={1} md={2} lg={4}>
                   <Column>
+                    <Form.Label>Category</Form.Label>
                     <CatDropdown
                       categ={categ}
                       setCateg={setCateg}
@@ -284,6 +286,7 @@ const ProductCreateScreen = ({ history }) => {
                   </Column>
 
                   <Column>
+                    <Form.Label>Sub Category</Form.Label>
                     <SubCatDropdown
                       categ={categ}
                       subCateg={subCateg}
