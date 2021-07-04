@@ -114,6 +114,7 @@ export default {
   createOrder: addOrderItems,
   updateOrderToPaid: updateOrderToPaid,
   updateOrderToDelivered: updateOrderToDelivered,
+  isDeliverable: isDeliverable,
   //chatbot
   questions: questions,
   question: question,

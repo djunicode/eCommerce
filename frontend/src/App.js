@@ -20,7 +20,7 @@ import ProductEditScreen from './screens/ProductEditScreen';
 import ProductCreateScreen from './screens/ProductCreateScreen';
 import OrderListScreen from './screens/OrderListScreen';
 import OrderSummaryScreen from './screens/OrderSummaryScreen';
-import OrdersScreen from './adminscreens/OrdersScreen';
+import OrdersScreen from './screens/OrdersScreen';
 import SearchScreen from './screens/SearchScreen';
 import CategoryScreen from './screens/CategoryScreen';
 import ChatbotAdmin from './screens/ChatbotAdmin';

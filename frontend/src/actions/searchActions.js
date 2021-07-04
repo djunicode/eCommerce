@@ -88,9 +88,6 @@ export const search = (searchTerm, sort = 'none') => async (
       );
     } catch (err) {}
 
-    console.log('searchActions.js');
-    console.log(sortedData);
-
     dispatch({
       type: SEARCH_LIST_SUCCESS,
       payload: sortedData,

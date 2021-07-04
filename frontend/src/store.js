@@ -14,7 +14,7 @@ import {
   productByCategoryReducer,
   productBySubCategoryReducer,
 } from './reducers/productReducers';
-import cartReducer from './reducers/cartReducers';
+import cartReducer, { cartAddReducer } from './reducers/cartReducers';
 import {
   userLoginReducer,
   userRegisterReducer,
@@ -38,7 +38,10 @@ import {
   chatbotReducer,
   updateChatbot,
 } from './reducers/chatbotReducers';
-import { productidReducer } from './reducers/productidReducers';
+import {
+  productidReducer,
+  pincodeReducer,
+} from './reducers/productidReducers';
 import {
   productsByCategoryIdReducer,
   categoryCreateReducer,
@@ -100,6 +103,8 @@ const reducer = combineReducers({
   brandDelete: brandDeleteReducer,
   brandEdit: brandEditReducer,
   updateChatbot,
+  checkPincode: pincodeReducer,
+  cartAdd: cartAddReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem('cartItems')

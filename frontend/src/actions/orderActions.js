@@ -103,11 +103,8 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
             phoneNo
           }
           orderItems{
-            name
             qty
-            image
             price
-            qty
             product{
               _id
               name
@@ -309,17 +306,66 @@ export const listOrders = () => async (dispatch, getState) => {
       userLogin: { userInfo },
     } = getState();
 
+    const userinfo = JSON.parse(localStorage.getItem('userInfo'));
+
+    const Data = JSON.stringify({
+      query: `query orders {
+        orders {
+            _id
+            user {
+                  _id
+                  name
+                  phoneNo
+                  email
+                  password
+                  isAdmin
+                  token
+              }
+            orderItems {
+                qty
+                price
+            }
+            shippingAddress {
+                address
+                city
+                postalCode
+                country
+            }
+            paymentMethod
+            paymentResult {
+                id
+                status
+                update_time
+                email_address
+            }
+            taxPrice
+            shippingPrice
+            totalPrice
+            isPaid
+            paidAt
+            isDelivered
+            deliveredAt
+        }
+    }`,
+      variables: {},
+    });
+
     const config = {
+      method: 'post',
+      url: 'http://localhost:5000/graphql',
       headers: {
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userinfo.token}`,
+        'Content-Type': 'application/json',
       },
+      data: Data,
     };
 
-    const { data } = await axios.get(`/api/orders`, config);
+    const { data } = await axios(config);
+    console.log(data.data.orders);
 
     dispatch({
       type: ORDER_LIST_SUCCESS,
-      payload: data,
+      payload: data.data.orders,
     });
   } catch (error) {
     const message =
