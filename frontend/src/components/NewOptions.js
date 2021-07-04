@@ -1,12 +1,13 @@
 /* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
+import styled from 'styled-components';
 
 function NewOptions(props) {
   return (
     <Form>
       <Row xs={1} md={2} lg={4}>
-        <Col>
+        <Column>
           <Form.Label>Name</Form.Label>
           <Form.Control
             required
@@ -23,8 +24,8 @@ function NewOptions(props) {
           >
             This field is required
           </Form.Control.Feedback>
-        </Col>
-        <Col>
+        </Column>
+        <Column>
           <Form.Label>Price</Form.Label>
           <Form.Control
             required
@@ -43,8 +44,8 @@ function NewOptions(props) {
           >
             This field is required
           </Form.Control.Feedback>
-        </Col>
-        <Col>
+        </Column>
+        <Column>
           <Form.Label>Discount</Form.Label>
           <Form.Control
             type="number"
@@ -56,8 +57,8 @@ function NewOptions(props) {
               props.setOptDiscount(e.target.value);
             }}
           />
-        </Col>
-        <Col>
+        </Column>
+        <Column>
           <Form.Label>Quantity</Form.Label>
           <Form.Control
             required
@@ -76,10 +77,16 @@ function NewOptions(props) {
           >
             This field is required
           </Form.Control.Feedback>
-        </Col>
+        </Column>
       </Row>
     </Form>
   );
 }
 
 export default NewOptions;
+
+const Column = styled(Col) `
+  @media screen and (max-width: 600px) {
+    margin-bottom: 20px;
+  }
+`;

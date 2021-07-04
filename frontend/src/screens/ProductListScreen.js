@@ -381,9 +381,9 @@ const ProductListScreen = ({ history }) => {
   );
 
   return (
-    <div style={{ padding: '0 4rem' }}>
-      <Row>
-        <Col>
+    <Wrapper>
+      <Row xs={1} sm={2} lg={4}>
+        <Column>
           <Form.Label>Search Products</Form.Label>
           <Form
             style={{
@@ -408,8 +408,8 @@ const ProductListScreen = ({ history }) => {
               }}
             />
           </Form>
-        </Col>
-        <Col>
+        </Column>
+        <Column>
           <Form.Label>Filter by Category</Form.Label>
           <Form.Control
             as="select"
@@ -424,8 +424,8 @@ const ProductListScreen = ({ history }) => {
               <option value={cat._id}>{cat.name}</option>
             ))}
           </Form.Control>
-        </Col>
-        <Col controlId="subCategory">
+        </Column>
+        <Column controlId="subCategory">
           <Form.Label>Filter by Sub Category</Form.Label>
           <Form.Control
             as="select"
@@ -439,8 +439,8 @@ const ProductListScreen = ({ history }) => {
               <option value={sub._id}>{sub.name}</option>
             ))}
           </Form.Control>
-        </Col>
-        <Col className="text-right">
+        </Column>
+        <Column className="text-right">
           <Link to="/admin/product/create">
             <Button
               className="my-3"
@@ -449,7 +449,7 @@ const ProductListScreen = ({ history }) => {
               <i className="fas fa-plus" /> Create Product
             </Button>
           </Link>
-        </Col>
+        </Column>
       </Row>
       {loadingDelete && <Loader />}
       {errorDelete && (
@@ -466,8 +466,6 @@ const ProductListScreen = ({ history }) => {
       ) : (
         <>
           <div style={{ overflowX: 'auto', marginTop: '35px' }}>
-            {/* <AutoSizer>
-              {({ height, width }) => ( */}
             <Grid
               className="Grid"
               columnCount={5}
@@ -479,8 +477,6 @@ const ProductListScreen = ({ history }) => {
             >
               {Cell}
             </Grid>
-            {/* )}
-            </AutoSizer> */}
           </div>
 
           {/* <tbody>
@@ -511,16 +507,31 @@ const ProductListScreen = ({ history }) => {
           {/* </Table>  */}
         </>
       )}
-    </div>
+    </Wrapper>
   );
 };
 
 export default ProductListScreen;
 
-const GridHeadings = styled.th`
+const Wrapper = styled.div`
+  padding: 0 4rem;
+
+  @media screen and (max-width: 600px) {
+    padding: 0;
+  }
+`;
+
+const Column = styled(Col) `
+  @media screen and (max-width: 600px) {
+    margin-bottom: 20px;
+  }
+`;
+
+const GridHeadings = styled.td`
   text-transform: uppercase;
   color: #5eaaa8;
   font-size: 1rem;
+  font-weight: 600;
 `;
 const ActionButton = styled(Button)`
   background: none;

@@ -293,14 +293,14 @@ const ProductEditScreen = ({ match, history }) => {
             validated={validated}
           >
             <Row style={{ marginBottom: '1rem' }}>
-              <Col>
+              <Column>
                 <Row
                   style={{ marginBottom: '1rem' }}
                   xs={1}
                   md={2}
                   lg={4}
                 >
-                  <Col controlId="name">
+                  <Column controlId="name">
                     <Form.Label>Name</Form.Label>
                     <Form.Control
                       required
@@ -315,9 +315,9 @@ const ProductEditScreen = ({ match, history }) => {
                     >
                       This field is required
                     </Form.Control.Feedback>
-                  </Col>
+                  </Column>
 
-                  <Col controlId="brand">
+                  <Column controlId="brand">
                     {brandName && (
                       <BrandDropdown
                         brand={brand}
@@ -326,9 +326,9 @@ const ProductEditScreen = ({ match, history }) => {
                         dropdownError={dropdownError}
                       />
                     )}
-                  </Col>
+                  </Column>
 
-                  <Col controlId="price">
+                  <Column controlId="price">
                     <Form.Label>Price</Form.Label>
                     <Form.Control
                       required
@@ -340,9 +340,9 @@ const ProductEditScreen = ({ match, history }) => {
                     <Form.Control.Feedback type="invalid">
                       This field is required
                     </Form.Control.Feedback>
-                  </Col>
+                  </Column>
 
-                  <Col>
+                  <Column>
                     <Form.Label>Quantity</Form.Label>
                     <Form.Control
                       required
@@ -356,11 +356,11 @@ const ProductEditScreen = ({ match, history }) => {
                     <Form.Control.Feedback type="invalid">
                       This field is required
                     </Form.Control.Feedback>
-                  </Col>
+                  </Column>
                 </Row>
 
                 <Row style={{ marginBottom: '1rem' }}>
-                  <Col controlId="categ">
+                  <Column controlId="categ">
                     {categoryName && (
                       <CatDropdown
                         categ={categ}
@@ -369,9 +369,9 @@ const ProductEditScreen = ({ match, history }) => {
                         dropdownError={dropdownError}
                       />
                     )}
-                  </Col>
+                  </Column>
 
-                  <Col controlId="subCateg">
+                  <Column controlId="subCateg">
                     {subCategoryName && (
                       <SubCatDropdown
                         categ={categ}
@@ -381,9 +381,9 @@ const ProductEditScreen = ({ match, history }) => {
                         dropdownError={dropdownError}
                       />
                     )}
-                  </Col>
+                  </Column>
 
-                  <Col controlId="discount">
+                  <Column controlId="discount">
                     <Form.Label>Discount</Form.Label>
                     <Form.Control
                       type="number"
@@ -391,9 +391,9 @@ const ProductEditScreen = ({ match, history }) => {
                       value={discount}
                       onChange={(e) => setDiscount(e.target.value)}
                     />
-                  </Col>
+                  </Column>
                 </Row>
-              </Col>
+              </Column>
             </Row>
 
             <Form.Group controlId="description">
@@ -458,7 +458,7 @@ const ProductEditScreen = ({ match, history }) => {
                   </div>
                   <Form>
                     <Row xs={1} md={2} lg={4}>
-                      <Col>
+                      <Column>
                         <Form.Label>Name</Form.Label>
                         <Form.Control
                           required
@@ -480,8 +480,8 @@ const ProductEditScreen = ({ match, history }) => {
                         <Form.Control.Feedback type="invalid">
                           This field is required
                         </Form.Control.Feedback>
-                      </Col>
-                      <Col>
+                      </Column>
+                      <Column>
                         <Form.Label>Price</Form.Label>
                         <Form.Control
                           required
@@ -498,8 +498,8 @@ const ProductEditScreen = ({ match, history }) => {
                         <Form.Control.Feedback type="invalid">
                           This field is required
                         </Form.Control.Feedback>
-                      </Col>
-                      <Col>
+                      </Column>
+                      <Column>
                         <Form.Label>Discount</Form.Label>
                         <Form.Control
                           type="number"
@@ -512,8 +512,8 @@ const ProductEditScreen = ({ match, history }) => {
                             setOptionsInput(m);
                           }}
                         />
-                      </Col>
-                      <Col>
+                      </Column>
+                      <Column>
                         <Form.Label>Quantity</Form.Label>
                         <Form.Control
                           required
@@ -530,7 +530,7 @@ const ProductEditScreen = ({ match, history }) => {
                         <Form.Control.Feedback type="invalid">
                           This field is required
                         </Form.Control.Feedback>
-                      </Col>
+                      </Column>
                     </Row>
                   </Form>
                 </div>
@@ -603,5 +603,11 @@ const Wrapper = styled.div`
 
   @media screen and (max-width: 600px) {
     padding: 0;
+  }
+`;
+
+const Column = styled(Col) `
+  @media screen and (max-width: 600px) {
+    margin-bottom: 20px;
   }
 `;
