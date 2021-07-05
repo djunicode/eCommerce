@@ -14,6 +14,7 @@ import {
   listCategories,
 } from '../actions/categoryActions';
 import Chatbot from '../components/Chatbot/Chatbot';
+import PushNotifBtn from '../components/PushNotifBtn';
 
 function HomeScreen() {
   // const { keyword } = match.params;
@@ -100,6 +101,7 @@ function HomeScreen() {
 
   return (
     <Container>
+      <PushNotifBtn />
       <Meta />
 
       <h1>New Arrivals</h1>

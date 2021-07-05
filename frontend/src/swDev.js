@@ -1,12 +1,39 @@
+/* eslint-disable no-use-before-define */
+/* eslint-disable consistent-return */
 /* eslint-disable no-plusplus */
-/* eslint-disable func-names */
 
 export default function () {
+  const subscriptionButton = document.getElementById(
+    'subscriptionButton',
+  );
+  const notificationButton = document.getElementById(
+    'notificationButton',
+  );
+  console.log(subscriptionButton);
   const authtoken = JSON.parse(localStorage.getItem('userInfo'))
     ? JSON.parse(localStorage.getItem('userInfo')).token
     : '';
+  console.log(authtoken);
 
   if (authtoken.length > 0) {
+    navigator.serviceWorker.register(`service-worker.js`);
+
+    navigator.serviceWorker.ready
+      .then((registration) => {
+        console.log('service worker registered');
+        subscriptionButton.removeAttribute('disabled');
+
+        return registration.pushManager.getSubscription();
+      })
+      .then((subscription) => {
+        if (subscription) {
+          console.log('Already subscribed', subscription.endpoint);
+          setUnsubscribeButton();
+        } else {
+          setSubscribeButton();
+        }
+      });
+
     const urlBase64ToUint8Array = (base64String) => {
       const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
       const base64 = (base64String + padding)
@@ -22,38 +49,101 @@ export default function () {
       return outputArray;
     };
 
-    const key = async () => {
-      const response = await fetch(
-        'http://localhost:5000/notifications/vapidPublicKey',
-        {
-          method: 'GET',
-          withCredentials: true,
-          credentials: 'include',
-          headers: {
-            Authorization: `Bearer ${authtoken}`,
-          },
-        },
-      );
-      const vapidPublicKey = await response.text();
-      console.log(vapidPublicKey);
+    const subscribe = () => {
+      console.log('onClick');
+      navigator.serviceWorker.ready
+        .then(async (registration) => {
+          const response = await fetch(
+            'http://localhost:5000/notifications/vapidPublicKey',
+            {
+              method: 'GET',
+              withCredentials: true,
+              credentials: 'include',
+              headers: {
+                Authorization: `Bearer ${authtoken}`,
+              },
+            },
+          );
+          const vapidPublicKey = await response.text();
 
-      return urlBase64ToUint8Array(vapidPublicKey);
+          const convertedVapidKey = urlBase64ToUint8Array(
+            vapidPublicKey,
+          );
+
+          return registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: convertedVapidKey,
+          });
+        })
+        .then((subscription) => {
+          console.log('Subscribed', subscription.endpoint);
+          return fetch(
+            'http://localhost:5000/notifications/register',
+            {
+              method: 'POST',
+              withCredentials: true,
+              credentials: 'include',
+              headers: {
+                Authorization: `Bearer ${authtoken}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(subscription),
+            },
+          );
+        })
+        .then(setUnsubscribeButton);
     };
 
-    navigator.serviceWorker
-      .register(`${process.env.PUBLIC_URL}/service-worker.js`)
-      .then((response) => {
-        console.warn('Response', response);
-        return response.pushManager
-          .getSubscription()
-          .then(async function (subscription) {
-            console.log(subscription);
-            return response.pushManager.subscribe({
-              userVisibleOnly: true,
-              applicationServerKey: await key(),
-            });
-          });
-      });
+    const unsubscribe = () => {
+      navigator.serviceWorker.ready
+        .then((registration) => {
+          return registration.pushManager.getSubscription();
+        })
+        .then((subscription) => {
+          console.log('Unsubscribed', subscription.endpoint);
+          return subscription.unsubscribe();
+        })
+        .then(setSubscribeButton);
+    };
+
+    const notify = () => {
+      navigator.serviceWorker.ready
+        .then((registration) => {
+          return registration.pushManager.getSubscription();
+        })
+        .then((subscription) => {
+          if (!subscription) {
+            console.log('Please subscribe first');
+            return;
+          }
+          console.log('Notification sent');
+          return fetch(
+            'http://localhost:5000/notifications/sendNotification',
+            {
+              method: 'POST',
+              withCredentials: true,
+              credentials: 'include',
+              headers: {
+                Authorization: `Bearer ${authtoken}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ message: 'Hi this is Jazib!' }),
+            },
+          );
+        });
+    };
+
+    notificationButton.onclick = notify;
+
+    const setSubscribeButton = () => {
+      subscriptionButton.onclick = subscribe;
+      subscriptionButton.textContent = 'Subscribe!';
+    };
+
+    const setUnsubscribeButton = () => {
+      subscriptionButton.onclick = unsubscribe;
+      subscriptionButton.textContent = 'Unsubscribe!';
+    };
   } else {
     window.alert('UNABLE TO SEND PUSH NOTIFS');
   }

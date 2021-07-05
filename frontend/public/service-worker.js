@@ -4,11 +4,10 @@
 
 console.log('Service Worker in public');
 // change the authtoken variable in line 28 according to redux state
-// var authtoken =
-// 	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwNGM3NTgzYTVmNjJiMmZmMDc5NTQzMCIsImlhdCI6MTYyNTQ3NjIxNCwiZXhwIjoxNjI1NDc5ODE0fQ.YRgigwn57SG8zzRdJiw3DhCBV3F9BR5j67X8hZBwV2M';
+const authtoken =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwNGM3NTgzYTVmNjJiMmZmMDc5NTQzMCIsImlhdCI6MTYyNTQ5NjE3NSwiZXhwIjoxNjI1NDk5Nzc1fQ.uCr23T0lwF7ksBCyAk_6FpPb1F7_VI6Kii_tzKhSBJ4';
 
-self.addEventListener('fetch', function (event) {
-  console.log(event.data);
+self.addEventListener('push', function (event) {
   event.waitUntil(
     self.registration.showNotification('E-Commerce', {
       body: event.data.text(),
