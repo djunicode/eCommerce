@@ -38,6 +38,25 @@ function HomeScreen() {
 
   const content = [];
 
+  const homeCategories = {
+    'Stainless Steel Utensils': 'StainlessSteelUtensils',
+    'Copper And Brass Utensils': 'CopperAndBrassUtensils',
+    'Plastic Household Items': 'PlasticHouseholdItems',
+    'Furniture Household': 'FurnitureHousehold',
+    'Thermoware Items': 'ThermowareItems',
+    'Non Stick Items': 'NonStickItems',
+    'Home Appliances': 'HomeAppliances',
+    'Crockery and Melamine': 'CrockeryandMelamine',
+    Cutlery: 'Cutlery',
+    'Gas Stoves and Cookers': 'GasStovesandCookers',
+    'Cleaning and SanitaryItems': 'CleaningandSanitaryItems',
+    'Use and throw Items(Non reusable Items)':
+      'UseandthrowItems(NonreusableItems)',
+    'Fancy Organizers': 'FancyOrganizers',
+    'Baking Items': 'BakingItems',
+    Miscellaneous: 'Miscellaneous',
+  };
+
   if (categories) {
     content.push(
       <Row className="justify-content-center" key="1">
@@ -46,8 +65,11 @@ function HomeScreen() {
             <CatCard>
               <Overlay />
               <Card.Img
-                src={`../uploads/${homecategories.name}.jpg`}
+                src={`${process.env.PUBLIC_URL}/uploads/${
+                  homeCategories[homecategories.name]
+                }.jpg`}
                 alt={homecategories.name}
+                loading="lazy"
               />
               <Card.ImgOverlay>
                 <Ctitle className="ctitle">
