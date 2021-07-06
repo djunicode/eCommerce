@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Button, Col, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { createProduct } from '../actions/productActions';
@@ -13,7 +14,6 @@ import {
   CatDropdown,
   SubCatDropdown,
 } from '../components/Dropdowns';
-import styled from 'styled-components';
 import NewOptions from '../components/NewOptions';
 
 const ProductCreateScreen = ({ history }) => {
@@ -274,7 +274,12 @@ const ProductCreateScreen = ({ history }) => {
                   </Column>
                 </Row>
 
-                <Row style={{ marginBottom: '1rem' }} xs={1} md={2} lg={4}>
+                <Row
+                  style={{ marginBottom: '1rem' }}
+                  xs={1}
+                  md={2}
+                  lg={4}
+                >
                   <Column>
                     <Form.Label>Category</Form.Label>
                     <CatDropdown
@@ -416,7 +421,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Column = styled(Col) `
+const Column = styled(Col)`
   @media screen and (max-width: 600px) {
     margin-bottom: 20px;
   }

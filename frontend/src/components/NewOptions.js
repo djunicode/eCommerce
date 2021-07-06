@@ -85,7 +85,7 @@ function NewOptions(props) {
 
 export default NewOptions;
 
-const Column = styled(Col) `
+const Column = styled(Col)`
   @media screen and (max-width: 600px) {
     margin-bottom: 20px;
   }

@@ -1,4 +1,5 @@
-import React, { useEffect, useState, Component } from 'react';
+/* eslint-disable array-callback-return */
+import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import { VariableSizeGrid as Grid } from 'react-window';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -6,7 +7,6 @@ import styled from 'styled-components';
 import { Table, Button, Row, Col, Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-// import AutoSizer from "react-virtualized-auto-sizer";
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import {
@@ -20,20 +20,11 @@ import {
   listCategories,
   listSubCategories,
 } from '../actions/categoryActions';
-import { CatDropdown, SubCatDropdown } from '../components/Dropdowns';
 
 const ProductListScreen = ({ history }) => {
   const [searchProd, setSearchProd] = useState('');
   const [category, setCategory] = useState('');
   const [subCategory, setSubCategory] = useState('');
-  const [dropdownError, setDropdownError] = useState({
-    brand: 'none',
-    category: 'none',
-    subcategory: 'none',
-    optionname: 'none',
-    optionprice: 'none',
-    optionqty: 'none',
-  });
 
   const dispatch = useDispatch();
 
@@ -203,7 +194,6 @@ const ProductListScreen = ({ history }) => {
       dispatch(deleteProduct(queryDeleteProduct));
     }
   };
-
 
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [subCategoryOptions, setSubCategoryOptions] = useState([]);
@@ -464,26 +454,8 @@ const ProductListScreen = ({ history }) => {
         </Column>
         <Column>
           <Form.Label>Filter by Category</Form.Label>
-          {/* <Form.Control
-            as="select"
-            defaultValue="Filter by Category"
-            // value={category}
-            onChange={(e) => {
-              setCategory(e.target.value);
-            }}
-            style={{ border: '1px solid #929293' }}
-          >
-            {categories.map((cat) => (
-              <option value={cat._id}>{cat.name}</option>
-            ))}
-          </Form.Control> */}
           <div style={{ border: '1px solid #929293' }}>
-          {/* <CatDropdown 
-            categ = {category}
-            setCateg = {setCategory}
-            dropdownError = {dropdownError}
-          /> */}
-          <Select 
+            <Select
               isClearable
               onChange={handleCategoryChange}
               options={categoryOptions}
@@ -492,27 +464,8 @@ const ProductListScreen = ({ history }) => {
         </Column>
         <Column controlId="subCategory">
           <Form.Label>Filter by Sub Category</Form.Label>
-          {/* <Form.Control
-            as="select"
-            defaultValue="Filter by Sub Category"
-            onChange={(e) => {
-              setSubCategory(e.target.value);
-            }}
-            style={{ border: '1px solid #929293' }}
-          >
-            {subcategories.map((sub) => (
-              <option value={sub._id}>{sub.name}</option>
-            ))}
-          </Form.Control> */}
           <div style={{ border: '1px solid #929293' }}>
-            {/* <SubCatDropdown 
-              categ = {category}
-              setCateg = {setCategory}
-              subCateg = {subCategory}
-              setSubCateg = {setSubCategory}
-              dropdownError = {dropdownError}
-            /> */}
-            <Select 
+            <Select
               isClearable
               onChange={handleSubCategoryChange}
               options={subCategoryOptions}
@@ -556,7 +509,7 @@ const ProductListScreen = ({ history }) => {
             >
               {Cell}
             </Grid>
-          </div>          
+          </div>
         </>
       )}
     </Wrapper>
@@ -573,7 +526,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Column = styled(Col) `
+const Column = styled(Col)`
   @media screen and (max-width: 600px) {
     margin-bottom: 20px;
   }

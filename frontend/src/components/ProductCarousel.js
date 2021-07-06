@@ -14,7 +14,6 @@ import styled from 'styled-components';
 import Loader from './Loader';
 import Message from './Message';
 import { listTopProducts } from '../actions/productActions';
-import { BACKGROUND } from '../util/colors';
 
 const ProductCarousel = () => {
   const dispatch = useDispatch();
