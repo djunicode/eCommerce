@@ -146,6 +146,7 @@ const ProductScreen = () => {
 
   useEffect(() => {
     if (data._id) {
+      console.log(data);
       if (data.countInStock === 0) {
         setDisable(true);
       }
@@ -174,11 +175,12 @@ const ProductScreen = () => {
         },
       });
     } else if (isDeliverable === true) {
-      const mutation = [];
-      mutation.push(
-        `{product:"${data._id}",isOptionSelected: false, optionName: "${options}", price: ${price}, quantity: ${qty}}`,
-      );
-      dispatch(addToCart(mutation));
+      const temp = { ...data };
+      temp.price = price;
+      temp.name = options;
+      console.log(temp);
+      localStorage.setItem('cart', JSON.stringify([temp]));
+      history.push('/OrderSummaryScreen');
     } else {
       setMessage({
         color: 'red',
@@ -706,8 +708,8 @@ const QtyRow = styled(Row)`
   display: flex;
   align-items: center;
   flex-direction: col;
-  justify-content: center;
   margin-right: 0;
+  padding-left: 1rem;
 
   @media screen and (max-width: 768px) {
     padding-left: 1rem;
