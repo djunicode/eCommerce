@@ -177,7 +177,7 @@ const ProductScreen = () => {
     } else if (isDeliverable === true) {
       const temp = { ...data };
       temp.price = price;
-      temp.name = options;
+      temp.name = options !== '' ? options : data.name;
       console.log(temp);
       localStorage.setItem('cart', JSON.stringify([temp]));
       history.push('/OrderSummaryScreen');
