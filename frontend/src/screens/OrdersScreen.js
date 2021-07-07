@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState, useEffect } from 'react';
@@ -26,6 +27,10 @@ function OrdersScreen() {
   useEffect(() => {
     dispatch(listOrders());
   }, [dispatch]);
+
+  useEffect(() => {
+    console.log(filtered);
+  }, [filtered]);
 
   useEffect(() => {
     if (data) {
@@ -92,8 +97,8 @@ function OrdersScreen() {
               )
             ) : columnIndex === 0 ? (
               <tbody>
-                {filtered.map((product) => (
-                  <tr>
+                {filtered.map((product, index) => (
+                  <tr key={index}>
                     <td>
                       {product._id}
                       <br />
@@ -104,8 +109,8 @@ function OrdersScreen() {
               </tbody>
             ) : columnIndex === 1 ? (
               <tbody>
-                {filtered.map((product) => (
-                  <tr>
+                {filtered.map((product, index) => (
+                  <tr key={index}>
                     <td>
                       {product.user.name}
                       <br />
@@ -123,7 +128,7 @@ function OrdersScreen() {
               </tbody>
             ) : columnIndex === 2 ? (
               <tbody>
-                {filtered.map((product) => {
+                {filtered.map((product, index) => {
                   let date;
                   if (completed) {
                     date = new Date(product.deliveredAt);
@@ -131,7 +136,7 @@ function OrdersScreen() {
                     date = new Date(product.paidAt);
                   }
                   return (
-                    <tr>
+                    <tr key={index}>
                       <td>
                         {`${date.getFullYear()}-${
                           date.getMonth() + 1
@@ -162,9 +167,9 @@ function OrdersScreen() {
               </tbody>
             ) : (
               <tbody>
-                {products.map((product) => {
+                {filtered.map((product, index) => {
                   return (
-                    <tr>
+                    <tr key={index}>
                       <td>
                         {product.totalPrice} Rs
                         <br />
@@ -211,8 +216,8 @@ function OrdersScreen() {
             )
           ) : columnIndex === 0 ? (
             <tbody>
-              {products.map((product) => (
-                <tr>
+              {products.map((product, index) => (
+                <tr key={index}>
                   <td>
                     {product._id}
                     <br />
@@ -223,8 +228,8 @@ function OrdersScreen() {
             </tbody>
           ) : columnIndex === 1 ? (
             <tbody>
-              {products.map((product) => (
-                <tr>
+              {products.map((product, index) => (
+                <tr key={index}>
                   <td>
                     {product.user.name}
                     <br />
@@ -242,7 +247,7 @@ function OrdersScreen() {
             </tbody>
           ) : columnIndex === 2 ? (
             <tbody>
-              {products.map((product) => {
+              {products.map((product, index) => {
                 let date;
                 if (completed) {
                   date = new Date(product.deliveredAt);
@@ -250,7 +255,7 @@ function OrdersScreen() {
                   date = new Date(product.paidAt);
                 }
                 return (
-                  <tr>
+                  <tr key={index}>
                     <td>
                       {`${date.getFullYear()}-${
                         date.getMonth() + 1
@@ -285,9 +290,9 @@ function OrdersScreen() {
             </tbody>
           ) : (
             <tbody>
-              {products.map((product) => {
+              {products.map((product, index) => {
                 return (
-                  <tr>
+                  <tr key={index}>
                     <td>
                       {product.totalPrice} Rs
                       <br />

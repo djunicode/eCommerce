@@ -12,8 +12,10 @@ import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import axios from 'axios';
 // import { set } from 'mongoose';
+import { useDispatch } from 'react-redux';
 import Loader from '../components/Loader';
 import OrderItem from '../components/OrderItem';
+import { getAddresses } from '../actions/checkOutActions';
 
 // these can be changed
 const orderAmount = 50;
@@ -75,11 +77,14 @@ function OrderSummaryScreen() {
   const [loading, setLoading] = useState(true);
   const [amount, setAmount] = useState(0);
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const c = JSON.parse(localStorage.getItem('cart'));
     console.log(c);
     setCart(c);
     setLoading(false);
+    dispatch(getAddresses());
   }, []);
 
   useEffect(() => {
