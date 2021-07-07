@@ -3,7 +3,6 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-unused-vars */
 
-import useNotification from './hooks/useNotification';
 import useSubscribe from './hooks/useSubscribe';
 
 export default function () {
@@ -23,11 +22,5 @@ export default function () {
       .then((subscription) => {
         useSubscribe();
       });
-
-    setInterval(() => {
-      useNotification();
-    }, 5000);
-  } else {
-    window.alert('UNABLE TO SEND PUSH NOTIFS');
   }
 }

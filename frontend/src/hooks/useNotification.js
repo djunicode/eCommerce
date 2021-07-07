@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-const useNotification = () => {
+const useNotification = (message = 'General Notification') => {
   const authtoken = JSON.parse(localStorage.getItem('userInfo'))
     ? JSON.parse(localStorage.getItem('userInfo')).token
     : '';
@@ -25,7 +25,7 @@ const useNotification = () => {
             Authorization: `Bearer ${authtoken}`,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ message: 'Hi this is Jazib!' }),
+          body: JSON.stringify({ message }),
         },
       );
     });
