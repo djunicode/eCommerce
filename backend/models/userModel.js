@@ -20,11 +20,32 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    subscriptionDetails: {
+      type: String,
+    },
     isAdmin: {
       type: Boolean,
       required: true,
       default: false,
     },
+    userAddress: [{
+      address: {
+        type: String,
+        default: null,
+      },
+      city: {
+        type: String,
+        default: null,
+      },
+      postalCode: {
+        type: String,
+        default: null,
+      },
+      country: {
+        type: String,
+        default: null,
+      },
+    }]
   },
   {
     timestamps: true,

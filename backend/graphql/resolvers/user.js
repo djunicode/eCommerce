@@ -1,6 +1,7 @@
 import User from '../../models/userModel.js';
 import { loggedin, admin } from '../../utils/verifyUser.js';
 import generateToken from '../../utils/generateToken.js';
+import { sendEmail } from '../../utils/mailer.js';
 
 // Auth user & get token
 // Public
@@ -40,6 +41,7 @@ const registerUser = async (args, { req, redis }) => {
     });
 
     if (user) {
+      sendEmail(user.name, user.email, 'Registeration Successful!', 'You have successfully registered in the system.')
       return {
         ...user._doc,
         token: generateToken(user._id),
@@ -189,6 +191,51 @@ const updateUser = async (args, { req, redis }) => {
   }
 };
 
+const addUserAddress = async (args, { req, redis }) => {
+  try {
+    if(loggedin(req)) {
+      const user = await User.findById(req.user._id);
+      if(user) {
+        const newAddress = {
+          address: args.userAddressInput.address,
+          city: args.userAddressInput.city,
+          postalCode: args.userAddressInput.postalCode,
+          country: args.userAddressInput.country
+        };
+        user.userAddress.push(newAddress);
+        const updatedUser = await user.save();
+        return updatedUser;
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+const deleteUserAddress = async (args, { req, redis }) => {
+  try {
+    if(loggedin(req)) {
+      const user = await User.findById(req.user._id);
+      if(user) {
+        const removal = args.id;
+        let index = user.userAddress.findIndex(item => item.id === removal);
+        if(index!=-1) {
+          user.userAddress.splice(index, 1);
+          const updatedUser = await user.save();
+          return updatedUser;
+        } else {
+          console.log('No Address Found!');
+          return user;
+        }
+      }
+    }
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
 export {
   authUser,
   registerUser,
@@ -198,4 +245,6 @@ export {
   deleteUser,
   getUserById,
   updateUser,
+  addUserAddress,
+  deleteUserAddress,
 };

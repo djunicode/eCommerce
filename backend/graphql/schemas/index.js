@@ -26,6 +26,8 @@ export default buildSchema(`
         questions: [Question]
         question(level: String!, index: String!): Question
         
+        getBrands: [Brand]
+
         getCategories: [Category!]!
         
         getSubCategories(categoryId: ID!): [SubCategory!]!
@@ -43,8 +45,9 @@ export default buildSchema(`
         deleteProduct(id: ID!): Product!
         getProductReviews(productId: ID!): [productReview]!
         getProductQnAs(productId: ID!): [productQ]
+        getCart: Cart
         
-        isDeliverable(shippingAddressInput: ShippingAddressInput): Boolean!,
+        isDeliverable(postalCode: String!): Boolean!,
         
         searchProduct(searchTerm: String!): [Product!]!
         filterProducts(searchTerm: String!, filters: FilterInput): [Product!]!
@@ -55,6 +58,10 @@ export default buildSchema(`
         updateOrderToDelivered(orderId: ID!): Order!
 
         editQuestions(details: [QuestionInput]!): Response!
+
+        createBrand(name: String!): Brand!
+        updateBrand(name: String!, newName: String!): Response!
+        deleteBrand(name: String!): Response!
 
         createCategory(name: String!): Category!
         updateCategory(name: String!, newName: String!): Response!
@@ -68,12 +75,16 @@ export default buildSchema(`
         updateUserProfile(userInput: UpdateUserInput!): User!
         updateUser(userId: ID!, userInput: UpdateUserInput!): User!
         deleteUser(userId: ID!): Response!
+        addUserAddress(userAddressInput: userAddressInput): User!
+        deleteUserAddress(id: ID!): User!
 
         createProduct(productInput: ProductInput):  Product!
         updateProduct(productId: ID!, updateProduct: updateProduct): Product!
         createProductReview(productId: ID!, productReview: ProductReview!): Product!
         createProductQuestion(productId: ID!, question: String!): Product!
         createProductAnswer(productId: ID!, answer: String!, Qindex: Int!): Product!
+
+        updateCart(contents: [ContentInput]): Response!
     }
     schema {
         query: rootQuery

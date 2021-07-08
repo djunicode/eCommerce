@@ -1,3 +1,5 @@
+/* eslint-disable import/no-named-as-default */
+/* eslint-disable import/no-named-as-default-member */
 /* eslint-disable no-else-return */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -6,6 +8,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Card, Container } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import ReactDom from 'react-dom';
 import Buttons from './components/Buttons';
 import Message from './components/Message';
 import Robot from './components/Robot';
@@ -83,6 +86,15 @@ export default function Chatbot() {
           return value.level === '1';
         }),
       );
+      const tfmsg = chatbot.data.filter((value) => {
+        if (value.level === '0') {
+          return value;
+        }
+        return null;
+      });
+      if (tfmsg.length !== 0) {
+        setChats([{ type: 'robot', message: tfmsg[0].msg }]);
+      }
       const filtered = chatbot.data.filter((value) => {
         return value.level === '1';
       });
@@ -98,7 +110,7 @@ export default function Chatbot() {
     scrollToBottom();
   }, [chats]);
 
-  return (
+  return ReactDom.createPortal(
     <>
       <MODAL_STYLES2>
         <CARD_STYLES
@@ -163,8 +175,8 @@ export default function Chatbot() {
                 })}
             {}
           </Container>
-          <FOOTER_STYLES className="ml-2 mb-2">
-            <small className="ml-2">
+          <FOOTER_STYLES className="mb-2">
+            <small>
               {options.length === 0
                 ? ''
                 : 'Choose from one of the replies below'}
@@ -174,7 +186,7 @@ export default function Chatbot() {
               style={{
                 whiteSpace: 'nowrap',
                 overflowX: 'auto',
-                width: '90%',
+                width: '98%',
               }}
             >
               {options.map((option) => {
@@ -217,7 +229,8 @@ export default function Chatbot() {
           </MESSAGE_ICON>
         </div>
       </MODAL_STYLES>
-    </>
+    </>,
+    document.getElementById('portal'),
   );
 }
 
@@ -250,7 +263,7 @@ const CARD_STYLES = styled(Card)`
   margin: 0px;
   height: 497px;
   width: 348px;
-  box-shadow: 5px 5px 5px;
+  box-shadow: 2px 2px 15px;
   position: relative;
 `;
 
@@ -270,6 +283,7 @@ const MODAL_STYLES2 = styled.div`
   transform: translate(6.5%, -8.6%);
   background-color: transparent;
   padding: 0px;
+  z-index: 2;
 `;
 
 const FOOTER_STYLES = styled.div`

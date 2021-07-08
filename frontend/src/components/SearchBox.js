@@ -1,18 +1,31 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
 import { DARK_BLUE_2, LIGHT_PEACH } from '../util/colors';
+
+import { search } from '../actions/searchActions';
+import { filter } from '../actions/filterActions';
 
 const SearchBox = ({ history }) => {
   const [keyword, setKeyword] = useState('');
 
+  const dispatch = useDispatch();
+
+  // Apply once data received from backend
+  // const searchState = useSelector((state) => state.search);
+  // const { loading, error, products } = searchState;
+
   const submitHandler = (e) => {
     e.preventDefault();
+    dispatch(search(keyword));
+    dispatch(filter({}));
     if (keyword.trim()) {
       history.push(`/search/${keyword}`);
     } else {
       history.push('/');
     }
+    console.log(keyword);
   };
 
   return (
@@ -34,12 +47,16 @@ const SearchBox = ({ history }) => {
 export default SearchBox;
 
 const StyledForm = styled(Form)`
-  width: 45%;
+  width: 100%;
   justify-content: center;
   margin: auto;
   border: 2px ${LIGHT_PEACH} solid;
   align-items: space-between;
   flex-wrap: nowrap !important;
+
+  @media (max-width: 992px) {
+    width: 90%;
+  }
 `;
 
 const StyledFormControl = styled(Form.Control)`

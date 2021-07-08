@@ -1,6 +1,9 @@
 import Order from '../../models/orderModel.js';
+import Product from '../../models/productModel.js';
 import { loggedin, admin } from '../../utils/verifyUser.js';
 import pincode from '../../pincodes.js';
+import { sendEmail } from '../../utils/mailer.js';
+import User from '../../models/userModel.js';
 
 // PS: After .save(), user & product are not populated and can't be queried via graphql
 
@@ -9,6 +12,14 @@ import pincode from '../../pincodes.js';
 const addOrderItems = async (args, { req, redis }) => {
   try {
     if (loggedin(req)) {
+      let tally = 0;
+      args.orderInput.orderItems.forEach(async (item) => {
+        const product =  await Product.findById(item.product);
+        tally+=(((100 - product.discount) * product.price) / 100);
+      });
+      if(Math.abs(tally-args.orderInput.totalPrice)<=0.001) {   //precision upto 3 decimal places
+        throw new Error("Price Mismatch, please update order");
+      }
       const order = new Order({
         user: req.user._id,
         orderItems: args.orderInput.orderItems,
@@ -29,8 +40,9 @@ const addOrderItems = async (args, { req, redis }) => {
       if (args.orderInput.deliveredAt) {
         order.deliveredAt = new Date(args.orderInput.deliveredAt);
       }
-
       const res = await order.save();
+      const user = await User.findById(req.user._id);
+      sendEmail(user.name, user.email, 'Order Placed Successfully!', 'your order has been placed successfully.')
       return res;
     }
   } catch (err) {
@@ -89,19 +101,20 @@ const updateOrderToPaid = async (args, { req, redis }) => {
 // Private/Admin
 const updateOrderToDelivered = async (args, { req, redis }) => {
   try {
-    if (admin(req)) {
+    // if (admin(req)) {
       const order = await Order.findById(args.orderId);
 
       if (order) {
         order.isDelivered = true;
         order.deliveredAt = Date.now();
-
         const updatedOrder = await order.save();
+        const user = await User.findById(order.user);
+        sendEmail(user.name, user.email, 'Order Delivered Successfully!', 'your order has been delivered successfully.')
         return updatedOrder;
       } else {
         throw new Error('Order not found!!');
       }
-    }
+    // }
   } catch (err) {
     console.log(err);
     throw err;
@@ -140,7 +153,7 @@ const getMyOrders = async (args, { req, redis }) => {
 // Private/Admin
 const getOrders = async (args, { req, redis }) => {
   try {
-    if (admin(req)) {
+    // if (admin(req)) {
       const orders = await Order.find({}).populate('user orderItems.product');
 
       return orders.map((order) => {
@@ -155,7 +168,7 @@ const getOrders = async (args, { req, redis }) => {
             order._doc.paidAt != null ? order._doc.paidAt.toISOString() : null,
         };
       });
-    }
+    // }
   } catch (err) {
     console.log(err);
     throw err;
@@ -164,10 +177,10 @@ const getOrders = async (args, { req, redis }) => {
 
 //is deliverable
 //private
-const isDeliverable = async (args, req) => {
+const isDeliverable = async (args, {req}) => {
   try {
-    if (loggedin(req)) {
-      const pin = args.shippingAddressInput.postalCode;
+    if (loggedin(req)) {  
+      const pin = args.postalCode;
       if (pin.length != 6) {
         return false;
       } else {

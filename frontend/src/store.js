@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -9,8 +10,11 @@ import {
   productUpdateReducer,
   productReviewCreateReducer,
   productTopRatedReducer,
+  productSearchReducer,
+  productByCategoryReducer,
+  productBySubCategoryReducer,
 } from './reducers/productReducers';
-import cartReducer from './reducers/cartReducers';
+import cartReducer, { cartAddReducer } from './reducers/cartReducers';
 import {
   userLoginReducer,
   userRegisterReducer,
@@ -28,11 +32,33 @@ import {
   orderListMyReducer,
   orderListReducer,
 } from './reducers/orderReducers';
-import { chatbotReducer } from './reducers/chatbotReducers';
+import { searchReducer } from './reducers/searchReducers';
+import { filterReducer } from './reducers/filterReducers';
 import {
+  chatbotReducer,
+  updateChatbot,
+} from './reducers/chatbotReducers';
+import {
+  productidReducer,
+  pincodeReducer,
+} from './reducers/productidReducers';
+import {
+  productsByCategoryIdReducer,
+  categoryCreateReducer,
+  categoryDeleteReducer,
+  categoryEditReducer,
   categoryListReducer,
+  subCategoryCreateReducer,
+  subCategoryDeleteReducer,
+  subCategoryEditReducer,
   subCategoryListReducer,
 } from './reducers/categoryReducers';
+import {
+  brandCreateReducer,
+  brandDeleteReducer,
+  brandEditReducer,
+  brandListReducer,
+} from './reducers/brandReducers';
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -56,9 +82,29 @@ const reducer = combineReducers({
   orderDeliver: orderDeliverReducer,
   orderListMy: orderListMyReducer,
   orderList: orderListReducer,
+  search: searchReducer,
+  filter: filterReducer,
   chatbot: chatbotReducer,
+  productid: productidReducer,
+  productsByCategory: productsByCategoryIdReducer,
   categoryList: categoryListReducer,
   subCategoryList: subCategoryListReducer,
+  productSearch: productSearchReducer,
+  productByCategory: productByCategoryReducer,
+  productBySubCategory: productBySubCategoryReducer,
+  categoryCreate: categoryCreateReducer,
+  categoryEdit: categoryEditReducer,
+  categoryDelete: categoryDeleteReducer,
+  subCategoryCreate: subCategoryCreateReducer,
+  subCategoryEdit: subCategoryEditReducer,
+  subCategoryDelete: subCategoryDeleteReducer,
+  brandList: brandListReducer,
+  brandCreate: brandCreateReducer,
+  brandDelete: brandDeleteReducer,
+  brandEdit: brandEditReducer,
+  updateChatbot,
+  checkPincode: pincodeReducer,
+  cartAdd: cartAddReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem('cartItems')
