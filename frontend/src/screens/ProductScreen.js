@@ -198,10 +198,12 @@ const ProductScreen = () => {
       });
     } else if (isDeliverable === true) {
       const mutation = [];
+      console.log(`${data._id}sjsks`);
       mutation.push(
         `{product:"${data._id}",isOptionSelected: false, optionName: "${options}", price: ${price}, quantity: ${qty}}`,
       );
       dispatch(addToCart(mutation));
+      // console.log(mutation);
     } else {
       setMessage({
         color: 'red',
