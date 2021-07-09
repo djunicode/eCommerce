@@ -344,7 +344,7 @@ const ProfileScreen = ({ history }) => {
               <ListGroup.Item style={classes.addresses}>
                 {addresses.map((address, index) =>
                   isEditing ? (
-                    <div key={index}>
+                    <div key={address.address}>
                       <div>
                         <div
                           style={{ width: '85%', fontSize: '1.1rem' }}
@@ -418,7 +418,10 @@ const ProfileScreen = ({ history }) => {
                       {index !== addresses.length - 1 && <hr />}
                     </div>
                   ) : (
-                    <div key={index} style={{ fontSize: '1.05rem' }}>
+                    <div
+                      key={address.address}
+                      style={{ fontSize: '1.05rem' }}
+                    >
                       {address &&
                         `${address.address && address.address}, ${
                           address.city && address.city
@@ -467,9 +470,9 @@ const ProfileScreen = ({ history }) => {
           <Message variant="danger">{errorOrders}</Message>
         ) : (
           <>
-            {myOrders.map((myOrder, index) => (
+            {myOrders.map((myOrder) => (
               <div>
-                <ListGroup key={index}>
+                <ListGroup key={myOrder._id}>
                   <ListGroup.Item style={classes.orderItemHeader}>
                     <Link
                       to={`/order/${myOrder._id}`}
@@ -482,8 +485,8 @@ const ProfileScreen = ({ history }) => {
                     </div>
                   </ListGroup.Item>
 
-                  {myOrder.orderItems.map((orderItem, index) => (
-                    <ListGroup.Item key={index}>
+                  {myOrder.orderItems.map((orderItem) => (
+                    <ListGroup.Item key={orderItem.product._id}>
                       <div style={classes.productName}>
                         {orderItem.product.name}
                       </div>
