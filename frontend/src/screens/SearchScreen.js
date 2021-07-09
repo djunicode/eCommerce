@@ -102,8 +102,9 @@ const SearchScreen = () => {
                       // ) {
                       //   dispatch(filter({}));
                       // }
+                      const temp = [...localProducts];
                       setLocalProducts(
-                        localProducts.sort((a, b) => {
+                        temp.sort((a, b) => {
                           return a.price - b.price;
                         }),
                       );
@@ -131,8 +132,9 @@ const SearchScreen = () => {
                       // ) {
                       //   dispatch(filter({}));
                       // }
+                      const temp = [...localProducts];
                       setLocalProducts(
-                        localProducts.sort((a, b) => {
+                        temp.sort((a, b) => {
                           return b.price - a.price;
                         }),
                       );

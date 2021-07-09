@@ -1,4 +1,5 @@
 import axios from 'axios';
+import localforage from 'localforage';
 import {
   USER_DETAILS_FAIL,
   USER_DETAILS_REQUEST,
@@ -78,6 +79,13 @@ export const login = (email, password) => async (dispatch) => {
       'userInfo',
       JSON.stringify(reconstructedData),
     );
+
+    localforage.setDriver([localforage.INDEXEDDB]);
+    localforage.setItem(
+      'userInfo',
+      JSON.stringify(reconstructedData),
+    );
+    console.log(JSON.parse(localforage.getItem('userInfo')));
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,
