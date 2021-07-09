@@ -87,6 +87,7 @@ const updateUserProfile = async (args, { req, redis }) => {
         user.name = args.userInput.name || user.name;
         user.email = args.userInput.email || user.email;
         user.phoneNo = args.userInput.phoneNo || user.phoneNo;
+        user.userAddress = args.userInput.userAddress || user.userAddress;
 
         if (args.userInput.password) {
           user.password = args.userInput.password;
