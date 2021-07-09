@@ -271,15 +271,39 @@ export const listMyOrders = () => async (dispatch, getState) => {
 
     const config = {
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
-    const { data } = await axios.get(`/api/orders/myorders`, config);
+    const data = await axios.post(
+      'http://localhost:5000/graphql',
+      {
+        query: `
+        query {
+          myorders {
+            _id
+            orderItems {
+              qty
+              price
+              product {
+                _id
+                name
+              }
+            }
+            totalPrice
+          }
+        }
+        `,
+      },
+      config,
+    );
+
+    const reconData = data.data.data.myorders;
 
     dispatch({
       type: ORDER_LIST_MY_SUCCESS,
-      payload: data,
+      payload: reconData,
     });
   } catch (error) {
     const message =
