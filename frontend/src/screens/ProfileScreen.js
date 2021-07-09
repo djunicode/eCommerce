@@ -237,11 +237,17 @@ const ProfileScreen = ({ history }) => {
                       onClick={() => {
                         submitHandler();
                       }}
+                      onKeyDown={() => {}}
+                      role="textbox"
+                      tabIndex={0}
                     />
                     <i
                       className="fas fa-times"
                       style={{ cursor: 'pointer' }}
                       onClick={() => setEditing(false)}
+                      onKeyDown={() => {}}
+                      role="textbox"
+                      tabIndex={0}
                     />
                   </div>
                 ) : (
@@ -250,6 +256,9 @@ const ProfileScreen = ({ history }) => {
                       className="fas fa-edit"
                       style={classes.icon}
                       onClick={() => setEditing(true)}
+                      onKeyDown={() => {}}
+                      role="textbox"
+                      tabIndex={0}
                     />
                   </>
                 )}
@@ -400,6 +409,9 @@ const ProfileScreen = ({ history }) => {
                           className="far fa-minus-square fa-2x"
                           style={classes.icon3}
                           onClick={() => handleRemoveAddress(index)}
+                          onKeyDown={() => {}}
+                          role="textbox"
+                          tabIndex={0}
                         />
                       </div>
 
@@ -436,6 +448,9 @@ const ProfileScreen = ({ history }) => {
                           },
                         ])
                       }
+                      onKeyDown={() => {}}
+                      role="textbox"
+                      tabIndex={0}
                     />
                   </div>
                 )}
