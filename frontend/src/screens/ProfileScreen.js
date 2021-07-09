@@ -92,8 +92,13 @@ const classes = {
   },
   icon3: {
     float: 'right',
-    marginTop: '25px',
+    marginTop: '-100px',
     cursor: 'pointer',
+  },
+  textbox: { 
+    display: 'inline-block', 
+    width: '100%', 
+    marginTop: '7px', 
   },
 };
 
@@ -144,14 +149,28 @@ const ProfileScreen = ({ history }) => {
       if (orders) {
         setMyOrders(orders);
       } else {
-        setMyOrders([]); // Empty address is saved as None
+        setMyOrders([]); // Empty orders is saved as None
       }
     }
   }, [dispatch, history, userInfo, user, success, isEditing, orders]);
 
-  const handleAddressChange = (index, value) => {
+  const handleAddressChange = (index, value, type) => {
     setAddresses((prev) => {
-      prev[index] = value;
+      let newAd = {...prev[index]};
+      
+      switch(type) {
+        case 'address': newAd.address = value;
+                        break;
+        case 'city': newAd.city = value;
+                      break;
+        case 'code': newAd.postalCode = value;
+                      break;
+        case 'country': newAd.country = value;
+                      break;
+        default: break;
+      }
+
+      prev[index] = newAd;
 
       return [...prev];
     });
@@ -168,14 +187,16 @@ const ProfileScreen = ({ history }) => {
     if (password !== confirmPassword) {
       setMessage('Passwords do not match');
     } else {
+      let userAddressInput = addresses.map((ad) => {
+        return `{address:"${ad.address}",city:"${ad.city}",country:"${ad.country}",postalCode:"${ad.postalCode}"}`
+      })
       dispatch(
         updateUserProfile({
-          id: user._id,
           name,
           email,
           phoneNo,
           password,
-          userAddress: addresses,
+          userAddressInput,
         }),
       );
       setEditing(false);
@@ -206,20 +227,20 @@ const ProfileScreen = ({ history }) => {
               <ListGroup.Item style={classes.mainHeading}>
                 USER DETAILS
                 {isEditing ? (
-                  <>
-                    <i
-                      className="fas fa-times"
-                      style={classes.icon2}
-                      onClick={() => setEditing(false)}
-                    />
+                  <div style={{ float: 'right' }}>
                     <i
                       className="fas fa-check"
-                      style={classes.icon}
+                      style={{ marginLeft: '10px', marginRight: '15px', cursor: 'pointer' }}
                       onClick={() => {
                         submitHandler();
                       }}
                     />
-                  </>
+                    <i
+                      className="fas fa-times"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => setEditing(false)}
+                    />
+                  </div>
                 ) : (
                   <>
                     <i
@@ -240,6 +261,7 @@ const ProfileScreen = ({ history }) => {
                         placeholder="Enter name"
                         onChange={(e) => setName(e.target.value)}
                         value={name}
+                        style={{ width: '100%' }}
                       />
                     </div>
                     <div style={classes.userDetails}>
@@ -249,6 +271,7 @@ const ProfileScreen = ({ history }) => {
                         placeholder="Enter phone no"
                         onChange={(e) => setPhoneNo(e.target.value)}
                         value={phoneNo}
+                        style={{ width: '100%' }}
                       />
                     </div>
                     <div style={classes.userDetails}>
@@ -258,6 +281,7 @@ const ProfileScreen = ({ history }) => {
                         placeholder="Enter email"
                         onChange={(e) => setEmail(e.target.value)}
                         value={email}
+                        style={{ width: '100%' }}
                       />
                     </div>
                     <div style={classes.userDetails}>
@@ -266,6 +290,7 @@ const ProfileScreen = ({ history }) => {
                         type="password"
                         placeholder="Enter password"
                         onChange={(e) => setPassword(e.target.value)}
+                        style={{ width: '100%' }}
                       />
                     </div>
                     <div style={classes.userDetails}>
@@ -276,6 +301,7 @@ const ProfileScreen = ({ history }) => {
                         onChange={(e) =>
                           setConfirmPassword(e.target.value)
                         }
+                        style={{ width: '100%' }}
                       />
                     </div>
                   </>
@@ -306,16 +332,33 @@ const ProfileScreen = ({ history }) => {
               <ListGroup.Item style={classes.addresses}>
                 {addresses.map((address, index) =>
                   isEditing ? (
-                    <>
+                    <div key={index}>
                       <div>
-                        <textarea
-                          key={index}
-                          value={address}
-                          onChange={(e) =>
-                            handleAddressChange(index, e.target.value)
-                          }
-                          style={{ width: '85%', minHeight: '80px' }}
-                        />
+                        <div style={{ width: '85%', fontSize: '1.1rem' }}>
+                          <textarea
+                            placeholder="Enter address"
+                            value={address.address}
+                            onChange={(e) =>
+                              handleAddressChange(index, e.target.value, 'address')
+                            }
+                            style={{ display: 'inline-block', width: '100%', minHeight: '80px' }}
+                          />
+                            <input type="text" style={classes.textbox} placeholder="Enter City" value={address.city} 
+                            onChange={(e) =>
+                              handleAddressChange(index, e.target.value, 'city')
+                            }
+                            />
+                            <input type="text" style={classes.textbox} placeholder="Enter Postal Code" value={address.postalCode} 
+                            onChange={(e) =>
+                              handleAddressChange(index, e.target.value, 'code')
+                            }
+                            />
+                            <input type="text" style={classes.textbox} placeholder="Enter Country" value={address.country} 
+                            onChange={(e) =>
+                              handleAddressChange(index, e.target.value, 'country')
+                            }
+                            />
+                          </div>
                         <i
                           className="far fa-minus-square fa-2x"
                           style={classes.icon3}
@@ -324,17 +367,17 @@ const ProfileScreen = ({ history }) => {
                       </div>
 
                       {index !== addresses.length - 1 && <hr />}
-                    </>
+                    </div>
                   ) : (
-                    <>
-                      <div
-                        key={index}
-                        style={{ fontSize: '1.05rem' }}
-                      >
-                        {address}
-                        {index !== addresses.length - 1 && <hr />}
-                      </div>
-                    </>
+                    <div
+                      key={index}
+                      style={{ fontSize: '1.05rem' }}
+                    >
+                      {address && 
+                        `${address.address && address.address}, ${address.city && address.city}, ${address.postalCode && address.postalCode}, ${address.country && address.country}`
+                      }
+                      {index !== addresses.length - 1 && <hr />}
+                    </div>
                   ),
                 )}
                 {isEditing && (
@@ -346,7 +389,12 @@ const ProfileScreen = ({ history }) => {
                       onClick={() =>
                         setAddresses([
                           ...addresses,
-                          `Address ${addresses.length + 1}`,
+                          {
+                            address: `Address ${addresses.length + 1}`,
+                            city: '',
+                            country: '',
+                            postalCode: '', 
+                          }
                         ])
                       }
                     />

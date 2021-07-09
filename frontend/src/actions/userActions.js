@@ -255,7 +255,7 @@ export const updateUserProfile = (user) => async (
             phoneNo: "${user.phoneNo}",
             email: "${user.email}",
             password: "${user.password}",
-            ${user.userAddress.len != 0 ? user.userAddress : ''}
+            userAddress: [${user.userAddressInput}]
           }) {
               _id
               name
@@ -264,7 +264,6 @@ export const updateUserProfile = (user) => async (
               password
               isAdmin
               userAddress {
-                  _id
                   address
                   city
                   postalCode
