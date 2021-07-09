@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Table,
-  Form,
-  Button,
-  Row,
-  Col,
-  ListGroup,
-} from 'react-bootstrap';
+import { Row, Col, ListGroup } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
@@ -95,10 +88,10 @@ const classes = {
     marginTop: '-100px',
     cursor: 'pointer',
   },
-  textbox: { 
-    display: 'inline-block', 
-    width: '100%', 
-    marginTop: '7px', 
+  textbox: {
+    display: 'inline-block',
+    width: '100%',
+    marginTop: '7px',
   },
 };
 
@@ -156,28 +149,34 @@ const ProfileScreen = ({ history }) => {
 
   const handleAddressChange = (index, value, type) => {
     setAddresses((prev) => {
-      let newAd = {...prev[index]};
-      
-      switch(type) {
-        case 'address': newAd.address = value;
-                        break;
-        case 'city': newAd.city = value;
-                      break;
-        case 'code': newAd.postalCode = value;
-                      break;
-        case 'country': newAd.country = value;
-                      break;
-        default: break;
+      const newAd = { ...prev[index] };
+
+      switch (type) {
+        case 'address':
+          newAd.address = value;
+          break;
+        case 'city':
+          newAd.city = value;
+          break;
+        case 'code':
+          newAd.postalCode = value;
+          break;
+        case 'country':
+          newAd.country = value;
+          break;
+        default:
+          break;
       }
 
-      prev[index] = newAd;
+      const tprev = prev;
+      tprev[index] = newAd;
 
-      return [...prev];
+      return [...tprev];
     });
   };
 
   const handleRemoveAddress = (idx) => {
-    let newAddresses = addresses.filter((address) => {
+    const newAddresses = addresses.filter((address) => {
       return addresses.indexOf(address) !== idx;
     });
     setAddresses(newAddresses);
@@ -187,9 +186,9 @@ const ProfileScreen = ({ history }) => {
     if (password !== confirmPassword) {
       setMessage('Passwords do not match');
     } else {
-      let userAddressInput = addresses.map((ad) => {
-        return `{address:"${ad.address}",city:"${ad.city}",country:"${ad.country}",postalCode:"${ad.postalCode}"}`
-      })
+      const userAddressInput = addresses.map((ad) => {
+        return `{address:"${ad.address}",city:"${ad.city}",country:"${ad.country}",postalCode:"${ad.postalCode}"}`;
+      });
       dispatch(
         updateUserProfile({
           name,
@@ -230,7 +229,11 @@ const ProfileScreen = ({ history }) => {
                   <div style={{ float: 'right' }}>
                     <i
                       className="fas fa-check"
-                      style={{ marginLeft: '10px', marginRight: '15px', cursor: 'pointer' }}
+                      style={{
+                        marginLeft: '10px',
+                        marginRight: '15px',
+                        cursor: 'pointer',
+                      }}
                       onClick={() => {
                         submitHandler();
                       }}
@@ -334,31 +337,65 @@ const ProfileScreen = ({ history }) => {
                   isEditing ? (
                     <div key={index}>
                       <div>
-                        <div style={{ width: '85%', fontSize: '1.1rem' }}>
+                        <div
+                          style={{ width: '85%', fontSize: '1.1rem' }}
+                        >
                           <textarea
                             placeholder="Enter address"
                             value={address.address}
                             onChange={(e) =>
-                              handleAddressChange(index, e.target.value, 'address')
+                              handleAddressChange(
+                                index,
+                                e.target.value,
+                                'address',
+                              )
                             }
-                            style={{ display: 'inline-block', width: '100%', minHeight: '80px' }}
+                            style={{
+                              display: 'inline-block',
+                              width: '100%',
+                              minHeight: '80px',
+                            }}
                           />
-                            <input type="text" style={classes.textbox} placeholder="Enter City" value={address.city} 
+                          <input
+                            type="text"
+                            style={classes.textbox}
+                            placeholder="Enter City"
+                            value={address.city}
                             onChange={(e) =>
-                              handleAddressChange(index, e.target.value, 'city')
+                              handleAddressChange(
+                                index,
+                                e.target.value,
+                                'city',
+                              )
                             }
-                            />
-                            <input type="text" style={classes.textbox} placeholder="Enter Postal Code" value={address.postalCode} 
+                          />
+                          <input
+                            type="text"
+                            style={classes.textbox}
+                            placeholder="Enter Postal Code"
+                            value={address.postalCode}
                             onChange={(e) =>
-                              handleAddressChange(index, e.target.value, 'code')
+                              handleAddressChange(
+                                index,
+                                e.target.value,
+                                'code',
+                              )
                             }
-                            />
-                            <input type="text" style={classes.textbox} placeholder="Enter Country" value={address.country} 
+                          />
+                          <input
+                            type="text"
+                            style={classes.textbox}
+                            placeholder="Enter Country"
+                            value={address.country}
                             onChange={(e) =>
-                              handleAddressChange(index, e.target.value, 'country')
+                              handleAddressChange(
+                                index,
+                                e.target.value,
+                                'country',
+                              )
                             }
-                            />
-                          </div>
+                          />
+                        </div>
                         <i
                           className="far fa-minus-square fa-2x"
                           style={classes.icon3}
@@ -369,13 +406,13 @@ const ProfileScreen = ({ history }) => {
                       {index !== addresses.length - 1 && <hr />}
                     </div>
                   ) : (
-                    <div
-                      key={index}
-                      style={{ fontSize: '1.05rem' }}
-                    >
-                      {address && 
-                        `${address.address && address.address}, ${address.city && address.city}, ${address.postalCode && address.postalCode}, ${address.country && address.country}`
-                      }
+                    <div key={index} style={{ fontSize: '1.05rem' }}>
+                      {address &&
+                        `${address.address && address.address}, ${
+                          address.city && address.city
+                        }, ${
+                          address.postalCode && address.postalCode
+                        }, ${address.country && address.country}`}
                       {index !== addresses.length - 1 && <hr />}
                     </div>
                   ),
@@ -390,11 +427,13 @@ const ProfileScreen = ({ history }) => {
                         setAddresses([
                           ...addresses,
                           {
-                            address: `Address ${addresses.length + 1}`,
+                            address: `Address ${
+                              addresses.length + 1
+                            }`,
                             city: '',
                             country: '',
-                            postalCode: '', 
-                          }
+                            postalCode: '',
+                          },
                         ])
                       }
                     />
