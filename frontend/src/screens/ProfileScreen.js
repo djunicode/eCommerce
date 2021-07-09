@@ -344,7 +344,7 @@ const ProfileScreen = ({ history }) => {
               <ListGroup.Item style={classes.addresses}>
                 {addresses.map((address, index) =>
                   isEditing ? (
-                    <div key={address.address}>
+                    <div key={addresses.indexof(address)}>
                       <div>
                         <div
                           style={{ width: '85%', fontSize: '1.1rem' }}
@@ -419,7 +419,7 @@ const ProfileScreen = ({ history }) => {
                     </div>
                   ) : (
                     <div
-                      key={address.address}
+                      key={addresses.indexof(address)}
                       style={{ fontSize: '1.05rem' }}
                     >
                       {address &&
