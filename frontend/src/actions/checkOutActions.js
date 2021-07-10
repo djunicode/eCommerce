@@ -18,11 +18,6 @@ export const getAddresses = () => async (dispatch) => {
 
     const data = `query {
       getUserProfile {
-        userAddress {
-          address,
-          city,
-          postalCode,
-        }
         name,
         phoneNo
       }
@@ -60,12 +55,12 @@ export const addAddress = (address) => async (dispatch) => {
       type: ADDRESS_POST_REQUEST,
     });
 
-    const userinfo = JSON.parse(localStorage.getItem('userinfo'));
+    const userinfo = JSON.parse(localStorage.getItem('userInfo'));
 
     const data = JSON.stringify({
       query: `mutation {
         addUserAddress(userAddressInput: {
-          address:"${address.adress}",
+          address:"${address.address}",
           city: "${address.city}",
           postalCode: "${address.postalCode}",
           country: "India",

@@ -6,6 +6,7 @@ import {
   PINCODE_CHECK_FAIL,
   PINCODE_CHECK_REQUEST,
   PINCODE_CHECK_SUCCESS,
+  PINCODE_CHECKED,
 } from '../constants/productidConstants';
 
 export const productidReducer = (
@@ -48,6 +49,12 @@ export const pincodeReducer = (
         ...state,
         pincodeLoading: false,
         error: action.payload,
+        isDeliverable: [],
+      };
+    case PINCODE_CHECKED:
+      return {
+        pincodeLoading: false,
+        error: '',
         isDeliverable: [],
       };
     default:

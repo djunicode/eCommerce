@@ -8,14 +8,23 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 // import { setRandomFallback } from 'bcryptjs';
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Spinner,
+} from 'react-bootstrap';
 import styled from 'styled-components';
 import axios from 'axios';
 // import { set } from 'mongoose';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
 import OrderItem from '../components/OrderItem';
-import { getAddresses } from '../actions/checkOutActions';
+import { addAddress, getAddresses } from '../actions/checkOutActions';
+import { postPincode } from '../actions/productidAction';
+import { PINCODE_CHECKED } from '../constants/productidConstants';
 
 // these can be changed
 const orderAmount = 50;
@@ -56,13 +65,14 @@ const paymentHandler = async (e) => {
 };
 
 const initialValues = {
-  name: '',
-  number: '',
-  email: '',
+  // name: '',
+  // number: '',
+  // email: '',
   state: '',
   city: '',
   pincode: '',
   address: '',
+  saved: false,
 };
 
 function OrderSummaryScreen() {
@@ -72,12 +82,55 @@ function OrderSummaryScreen() {
   const [ana, setAna] = useState(false);
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState({
+    color: 'red',
+    message: '',
+  });
   const [cart, setCart] = useState('');
   const [loading, setLoading] = useState(true);
   const [amount, setAmount] = useState(0);
+  const [postalStatus, setPostalStatus] = useState({
+    color: 'red',
+    message: '',
+  });
 
   const dispatch = useDispatch();
+
+  const { isDeliverable, pincodeLoading } = useSelector(
+    (state) => state.checkPincode,
+  );
+
+  useEffect(() => {
+    if (isDeliverable === false) {
+      setPostalStatus({
+        color: 'red',
+        message: 'This product cannot be delivered to your location',
+      });
+    } else if (isDeliverable === true) {
+      setP('on');
+      setDa('done');
+      setPostalStatus({
+        color: 'red',
+        message: '',
+      });
+      setMessage({
+        color: 'red',
+        message: '',
+      });
+      dispatch({
+        type: PINCODE_CHECKED,
+      });
+
+      if (values.saved) {
+        const address = {
+          address: values.address,
+          city: values.city,
+          postalCode: values.postalCode,
+        };
+        dispatch(addAddress(address));
+      }
+    }
+  }, [isDeliverable]);
 
   useEffect(() => {
     const c = JSON.parse(localStorage.getItem('cart'));
@@ -85,6 +138,12 @@ function OrderSummaryScreen() {
     setCart(c);
     setLoading(false);
     dispatch(getAddresses());
+    // const address = {
+    //   address: 'Mysore Colony',
+    //   city: 'Mumbai',
+    //   postalCode: '400001',
+    // };
+    // dispatch(addAddress(address));
   }, []);
 
   useEffect(() => {
@@ -109,18 +168,29 @@ function OrderSummaryScreen() {
     if (e.target.name === 'pop' && ana) {
       validate();
       if (
-        errors.name === '' &&
-        errors.number === '' &&
-        errors.email === '' &&
+        // errors.name === '' &&
+        // errors.number === '' &&
+        // errors.email === '' &&
         errors.state === '' &&
         errors.city === '' &&
         errors.pincode === '' &&
         errors.address === ''
       ) {
-        setP('on');
-        setDa('done');
+        if (isDeliverable.length === 0 || isDeliverable === false) {
+          dispatch(postPincode(values.pincode));
+        } else if (isDeliverable === true) {
+          setP('on');
+          setDa('done');
+          setPostalStatus({
+            color: 'red',
+            message: '',
+          });
+        }
       } else {
-        setMessage('Please fill all the fields correctly');
+        setMessage({
+          color: 'red',
+          message: 'Please fill all the fields correctly',
+        });
       }
     } else if (e.target.name === 'pop') {
       setP('on');
@@ -130,30 +200,30 @@ function OrderSummaryScreen() {
 
   const validate = (fieldValues = values) => {
     const temp = { ...errors };
-    if ('name' in fieldValues)
-      temp.name = fieldValues.name ? '' : 'This field is required.';
-    if ('number' in fieldValues) {
-      temp.number = fieldValues.number
-        ? ''
-        : 'This field is required.';
-      if (temp.number === '') {
-        temp.number = /^(\+?\d{1,4}[\s-])?(?!0+\s+,?$)\d{10}\s*,?$/.test(
-          fieldValues.number,
-        )
-          ? ''
-          : 'Invalid Phone Number.';
-      }
-    }
-    if ('email' in fieldValues) {
-      temp.email = fieldValues.email ? '' : 'This field is required.';
-      if (temp.email === '') {
-        temp.email = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/.test(
-          fieldValues.email,
-        )
-          ? ''
-          : 'Invalid email.';
-      }
-    }
+    // if ('name' in fieldValues)
+    //   temp.name = fieldValues.name ? '' : 'This field is required.';
+    // if ('number' in fieldValues) {
+    //   temp.number = fieldValues.number
+    //     ? ''
+    //     : 'This field is required.';
+    //   if (temp.number === '') {
+    //     temp.number = /^(\+?\d{1,4}[\s-])?(?!0+\s+,?$)\d{10}\s*,?$/.test(
+    //       fieldValues.number,
+    //     )
+    //       ? ''
+    //       : 'Invalid Phone Number.';
+    //   }
+    // }
+    // if ('email' in fieldValues) {
+    //   temp.email = fieldValues.email ? '' : 'This field is required.';
+    //   if (temp.email === '') {
+    //     temp.email = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/.test(
+    //       fieldValues.email,
+    //     )
+    //       ? ''
+    //       : 'Invalid email.';
+    //   }
+    // }
     if ('state' in fieldValues)
       temp.state = fieldValues.state ? '' : 'This field is required.';
     if ('city' in fieldValues)
@@ -326,7 +396,11 @@ function OrderSummaryScreen() {
                   Delivery Address
                 </h1>
                 <>
-                  <Row>
+                  <Row
+                    onChange={(e) => {
+                      console.log(e.target);
+                    }}
+                  >
                     <>
                       <Col md={6} style={{ position: 'relative' }}>
                         <Card className="px-3 py-2 mb-3">
@@ -336,6 +410,7 @@ function OrderSummaryScreen() {
                               type="radio"
                               name="flexRadioDefault"
                               id="flexRadioDefault1"
+                              style={{ left: '25px', top: '6px' }}
                             />
                             <label
                               className="form-check-label"
@@ -390,6 +465,113 @@ function OrderSummaryScreen() {
                               type="radio"
                               name="flexRadioDefault"
                               id="flexRadioDefault1"
+                              style={{ left: '25px', top: '6px' }}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="flexRadioDefault1"
+                            >
+                              <h5
+                                className="ml-1"
+                                style={{
+                                  letterSpacing: '0',
+                                  textTransform: 'none',
+                                  paddingBottom: '0px',
+                                  display: 'inline',
+                                }}
+                              >
+                                Dhiraj Shah
+                              </h5>
+                              <h5
+                                style={{
+                                  letterSpacing: '0',
+                                  textTransform: 'none',
+                                  paddingBottom: '0px',
+                                  display: 'inline',
+                                  position: 'absolute',
+                                  right: '10px',
+                                }}
+                              >
+                                9820560183
+                              </h5>
+                              <small
+                                className="ml-3 mt-2"
+                                style={{ display: 'block' }}
+                              >
+                                Lorem ipsum dolor sit amet consectetur
+                                adipisicing elit. Et eveniet nihil,
+                                corporis laboriosam natus iusto
+                                dignissimos fugiat, animi nulla rerum,
+                                quam accusamus cumque fuga explicabo
+                                in dolore exercitationem magnam.
+                                Accusamus!
+                              </small>
+                            </label>
+                          </span>
+                        </Card>
+                      </Col>
+                      <Col md={6} style={{ position: 'relative' }}>
+                        <Card className="px-3 py-2 mb-3">
+                          <span>
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="flexRadioDefault"
+                              id="flexRadioDefault1"
+                              style={{ left: '25px', top: '6px' }}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="flexRadioDefault1"
+                            >
+                              <h5
+                                className="ml-1"
+                                style={{
+                                  letterSpacing: '0',
+                                  textTransform: 'none',
+                                  paddingBottom: '0px',
+                                  display: 'inline',
+                                }}
+                              >
+                                Dhiraj Shah
+                              </h5>
+                              <h5
+                                style={{
+                                  letterSpacing: '0',
+                                  textTransform: 'none',
+                                  paddingBottom: '0px',
+                                  display: 'inline',
+                                  position: 'absolute',
+                                  right: '10px',
+                                }}
+                              >
+                                9820560183
+                              </h5>
+                              <small
+                                className="ml-3 mt-2"
+                                style={{ display: 'block' }}
+                              >
+                                Lorem ipsum dolor sit amet consectetur
+                                adipisicing elit. Et eveniet nihil,
+                                corporis laboriosam natus iusto
+                                dignissimos fugiat, animi nulla rerum,
+                                quam accusamus cumque fuga explicabo
+                                in dolore exercitationem magnam.
+                                Accusamus!
+                              </small>
+                            </label>
+                          </span>
+                        </Card>
+                      </Col>
+                      <Col md={6} style={{ position: 'relative' }}>
+                        <Card className="px-3 py-2 mb-3">
+                          <span>
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="flexRadioDefault"
+                              id="flexRadioDefault1"
+                              style={{ left: '25px', top: '6px' }}
                             />
                             <label
                               className="form-check-label"
@@ -438,7 +620,7 @@ function OrderSummaryScreen() {
                   </Row>
                 </>
                 <div
-                  className="mb-3 px-3 pt-3 pb-1"
+                  className="mb-3 px-3 pt-3 pb-2"
                   style={{
                     width: '100%',
                     backgroundColor: '#F9F9F9',
@@ -463,8 +645,8 @@ function OrderSummaryScreen() {
                     </h6>
                   </span>
                   {ana && (
-                    <>
-                      <Row className="mt-3">
+                    <div style={{ position: 'relative' }}>
+                      {/* <Row className="mt-3">
                         <Col md={4}>
                           <label htmlFor="name">Name</label>
                           <input
@@ -519,7 +701,7 @@ function OrderSummaryScreen() {
                             {errors.email}
                           </small>
                         </Col>
-                      </Row>
+                      </Row> */}
                       <Row className="mt-3">
                         <Col md={4}>
                           <label htmlFor="state">State</label>
@@ -601,7 +783,14 @@ function OrderSummaryScreen() {
                           <input
                             className="form-check-input"
                             type="checkbox"
-                            value=""
+                            checked={values.saved}
+                            onChange={() => {
+                              setValues((t) => {
+                                const temp = { ...t };
+                                temp.saved = !temp.saved;
+                                return temp;
+                              });
+                            }}
                             id="flexCheckDefault"
                           />
                           <label
@@ -613,17 +802,56 @@ function OrderSummaryScreen() {
                             </small>
                           </label>
                         </div>
+                        <Button
+                          className="btn-danger rounded py-1 px-5"
+                          style={{
+                            textTransform: 'none',
+                            position: 'absolute',
+                            right: '0',
+                          }}
+                          name="pop"
+                          onClick={() => setAna(false)}
+                        >
+                          Cancel
+                        </Button>
                       </Row>
                       <div
                         style={{
-                          color: 'red',
+                          color: message.color,
                           textAlign: 'center',
                           width: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
                         }}
                       >
-                        {message}
+                        {message.message}
                       </div>
-                    </>
+                    </div>
+                  )}
+                </div>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                    color: postalStatus.color,
+                  }}
+                >
+                  {postalStatus.message}
+                  {pincodeLoading && (
+                    <Spinner
+                      animation="border"
+                      role="status"
+                      style={{
+                        width: '20px',
+                        height: '20px',
+                        margin: 'auto',
+                        display: 'block',
+                      }}
+                    />
                   )}
                 </div>
                 <div
