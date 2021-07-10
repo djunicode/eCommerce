@@ -59,10 +59,7 @@ import {
   brandEditReducer,
   brandListReducer,
 } from './reducers/brandReducers';
-import {
-  getAddressReducer,
-  postAddressReducer,
-} from './reducers/checkOutReducers';
+import postAddressReducer from './reducers/checkOutReducers';
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -109,7 +106,6 @@ const reducer = combineReducers({
   updateChatbot,
   checkPincode: pincodeReducer,
   cartAdd: cartAddReducer,
-  getAddress: getAddressReducer,
   addAddress: postAddressReducer,
 });
 

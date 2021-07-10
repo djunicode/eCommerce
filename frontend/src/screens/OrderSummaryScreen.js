@@ -22,9 +22,10 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
 import OrderItem from '../components/OrderItem';
-import { addAddress, getAddresses } from '../actions/checkOutActions';
+import addAddress from '../actions/checkOutActions';
 import { postPincode } from '../actions/productidAction';
 import { PINCODE_CHECKED } from '../constants/productidConstants';
+import { getUserDetails } from '../actions/userActions';
 
 // these can be changed
 const orderAmount = 50;
@@ -125,7 +126,7 @@ function OrderSummaryScreen() {
         const address = {
           address: values.address,
           city: values.city,
-          postalCode: values.postalCode,
+          postalCode: values.pincode,
         };
         dispatch(addAddress(address));
       }
@@ -137,13 +138,7 @@ function OrderSummaryScreen() {
     console.log(c);
     setCart(c);
     setLoading(false);
-    dispatch(getAddresses());
-    // const address = {
-    //   address: 'Mysore Colony',
-    //   city: 'Mumbai',
-    //   postalCode: '400001',
-    // };
-    // dispatch(addAddress(address));
+    dispatch(getUserDetails());
   }, []);
 
   useEffect(() => {
