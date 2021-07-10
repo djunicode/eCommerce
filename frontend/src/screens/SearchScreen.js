@@ -63,6 +63,8 @@ const SearchScreen = () => {
   let noProds = true;
   const renderedProds = [];
 
+  //
+
   return (
     <>
       {loading ? (
