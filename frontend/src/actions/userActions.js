@@ -85,7 +85,14 @@ export const login = (email, password) => async (dispatch) => {
       'userInfo',
       JSON.stringify(reconstructedData),
     );
-    console.log(JSON.parse(localforage.getItem('userInfo')));
+    localforage
+      .getItem('userInfo')
+      .then((value) => {
+        console.log(value);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,

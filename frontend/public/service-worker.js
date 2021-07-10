@@ -1,12 +1,21 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable no-undef */
+
 /* eslint-disable func-names */
-
+self.importScripts('localforage.js');
 console.log('Service Worker in public');
-// change the authtoken variable in line 28 according to redux state
-const authtoken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwNGM3NTgzYTVmNjJiMmZmMDc5NTQzMCIsImlhdCI6MTYyNTQ5NjE3NSwiZXhwIjoxNjI1NDk5Nzc1fQ.uCr23T0lwF7ksBCyAk_6FpPb1F7_VI6Kii_tzKhSBJ4';
+const authtoken = localforage
+  .getItem('userInfo')
+  .then((value) => {
+    return JSON.parse(value).token;
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
+console.log(authtoken);
+
+// change the authtoken variable in line 28 according to redux state
 self.addEventListener('push', function (event) {
   event.waitUntil(
     self.registration.showNotification('E-Commerce', {
