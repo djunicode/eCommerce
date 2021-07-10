@@ -16,6 +16,8 @@ const classes = {
   orderItemHeader: {
     borderBottom: '1px solid',
     borderBottomColor: LIGHT_PEACH,
+    maxWidth: '100%',
+    overflow: 'hidden',
   },
   heading: {
     display: 'inline-block',
@@ -344,7 +346,7 @@ const ProfileScreen = ({ history }) => {
               <ListGroup.Item style={classes.addresses}>
                 {addresses.map((address, index) =>
                   isEditing ? (
-                    <div key={addresses.indexof(address)}>
+                    <div key={addresses.indexOf(address)}>
                       <div>
                         <div
                           style={{ width: '85%', fontSize: '1.1rem' }}
@@ -419,7 +421,7 @@ const ProfileScreen = ({ history }) => {
                     </div>
                   ) : (
                     <div
-                      key={addresses.indexof(address)}
+                      key={addresses.indexOf(address)}
                       style={{ fontSize: '1.05rem' }}
                     >
                       {address &&
@@ -471,17 +473,19 @@ const ProfileScreen = ({ history }) => {
         ) : (
           <>
             {myOrders.map((myOrder) => (
-              <div>
-                <ListGroup key={myOrder._id}>
+              <div key={myOrder._id}>
+                <ListGroup style={{ maxWidth: '100%' }}>
                   <ListGroup.Item style={classes.orderItemHeader}>
                     <Link
                       to={`/order/${myOrder._id}`}
                       style={classes.heading}
                     >
-                      <div>ORDER ID: {myOrder._id}</div>
+                      <div style={{ maxWidth: '100%' }}>
+                        ORDER ID: {myOrder._id}
+                      </div>
                     </Link>
                     <div style={classes.price}>
-                      Rs. {myOrder.toatlPrice}
+                      Rs. {myOrder.totalPrice}
                     </div>
                   </ListGroup.Item>
 
@@ -494,7 +498,7 @@ const ProfileScreen = ({ history }) => {
                         Qty: {orderItem.qty}
                       </div>
                       <div style={classes.productBrand}>
-                        {orderItem.price}
+                        Rs. {orderItem.price}
                       </div>
                     </ListGroup.Item>
                   ))}
