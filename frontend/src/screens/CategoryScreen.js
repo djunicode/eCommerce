@@ -45,8 +45,8 @@ const CategoryScreen = () => {
   const [localProducts, setLocalProducts] = useState(products);
   const [productsSet, setProductsSet] = useState(false);
 
-  if (localProducts.length > 0 && !productsSet) {
-    setLocalProducts(localProducts);
+  if (products.length > 0 && !productsSet) {
+    setLocalProducts(products);
     setProductsSet(true);
   }
 
