@@ -4,6 +4,7 @@ import {
   ADDRESS_POST_REQUEST,
   ADDRESS_POST_SUCCESS,
 } from '../constants/checkOutConstants';
+import { logout } from './userActions';
 
 const addAddress = (address) => async (dispatch) => {
   try {
@@ -14,18 +15,14 @@ const addAddress = (address) => async (dispatch) => {
     const userinfo = JSON.parse(localStorage.getItem('userInfo'));
 
     const data = JSON.stringify({
-      query: `mutation {
-        addUserAddress(userAddressInput: {
-          address:"${address.address}",
-          city: "${address.city}",
-          postalCode: "${address.postalCode}",
-          country: "India",
+      query: `mutation{
+        updateUserProfile(userInput: {
+          phoneNo: "9820560183",
+          userAddress: [${address}]
         }) {
+          name,
           userAddress {
-            _id,
-            address,
-            city,
-            postalCode,
+              country
           }
         }
       }`,
@@ -49,10 +46,16 @@ const addAddress = (address) => async (dispatch) => {
       payload: response.data,
     });
   } catch (error) {
-    console.log(error);
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === 'Not authorized, token failed') {
+      dispatch(logout());
+    }
     dispatch({
       type: ADDRESS_POST_FAIL,
-      payload: error,
+      payload: message,
     });
   }
 };

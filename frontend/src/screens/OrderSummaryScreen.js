@@ -94,9 +94,12 @@ function OrderSummaryScreen() {
     color: 'red',
     message: '',
   });
+  const [address, setAddress] = useState([]);
+  const [addressOption, setAddressOption] = useState(0);
 
   const dispatch = useDispatch();
 
+  const { user } = useSelector((state) => state.userDetails);
   const { isDeliverable, pincodeLoading } = useSelector(
     (state) => state.checkPincode,
   );
@@ -123,12 +126,16 @@ function OrderSummaryScreen() {
       });
 
       if (values.saved) {
-        const address = {
-          address: values.address,
-          city: values.city,
-          postalCode: values.pincode,
-        };
-        dispatch(addAddress(address));
+        const a = [];
+        const addedAddress = `{address: "${values.address}", country: "India", postalCode: "${values.pincode}", city: "${values.city}"}`;
+        address.map((add) => {
+          const temp = `{address: "${add.address}", country: "India", postalCode: "${add.pincode}", city: "${add.city}"}`;
+          a.push(temp);
+          return null;
+        });
+        a.push(addedAddress);
+        console.log(a);
+        dispatch(addAddress(a));
       }
     }
   }, [isDeliverable]);
@@ -137,9 +144,15 @@ function OrderSummaryScreen() {
     const c = JSON.parse(localStorage.getItem('cart'));
     console.log(c);
     setCart(c);
-    setLoading(false);
     dispatch(getUserDetails());
   }, []);
+
+  useEffect(() => {
+    if (user && Object.keys(user).length !== 0) {
+      setLoading(false);
+      setAddress(user.userAddress);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (cart) {
@@ -187,38 +200,22 @@ function OrderSummaryScreen() {
           message: 'Please fill all the fields correctly',
         });
       }
-    } else if (e.target.name === 'pop') {
-      setP('on');
-      setDa('done');
+    } else if (e.target.name === 'pop' && !ana) {
+      if (!addressOption) {
+        setPostalStatus({
+          color: 'red',
+          message: 'Please select an address',
+        });
+      } else if (addressOption) {
+        setP('on');
+        setDa('done');
+        console.log(address[addressOption]);
+      }
     }
   };
 
   const validate = (fieldValues = values) => {
     const temp = { ...errors };
-    // if ('name' in fieldValues)
-    //   temp.name = fieldValues.name ? '' : 'This field is required.';
-    // if ('number' in fieldValues) {
-    //   temp.number = fieldValues.number
-    //     ? ''
-    //     : 'This field is required.';
-    //   if (temp.number === '') {
-    //     temp.number = /^(\+?\d{1,4}[\s-])?(?!0+\s+,?$)\d{10}\s*,?$/.test(
-    //       fieldValues.number,
-    //     )
-    //       ? ''
-    //       : 'Invalid Phone Number.';
-    //   }
-    // }
-    // if ('email' in fieldValues) {
-    //   temp.email = fieldValues.email ? '' : 'This field is required.';
-    //   if (temp.email === '') {
-    //     temp.email = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/.test(
-    //       fieldValues.email,
-    //     )
-    //       ? ''
-    //       : 'Invalid email.';
-    //   }
-    // }
     if ('state' in fieldValues)
       temp.state = fieldValues.state ? '' : 'This field is required.';
     if ('city' in fieldValues)
@@ -237,11 +234,11 @@ function OrderSummaryScreen() {
     });
   };
 
-  const handleBack = (e) => {
-    if (e.target.name === 'da') {
+  const handleBack = (name) => {
+    if (name === 'da') {
       setDa('off');
       setOs('on');
-    } else if (e.target.name === 'p') {
+    } else if (name === 'p') {
       setP('off');
       setDa('on');
     }
@@ -316,22 +313,32 @@ function OrderSummaryScreen() {
               <Back
                 className="btn-danger rounded py-1 px-3"
                 name="p"
-                onClick={(e) => {
-                  handleBack(e);
+                onClick={() => {
+                  handleBack('p');
                 }}
               >
-                <i className="fas fa-arrow-left" />
+                <i
+                  className="fas fa-arrow-left"
+                  onClick={() => {
+                    handleBack('p');
+                  }}
+                />
               </Back>
             )}
             {da === 'on' && (
               <Back
                 className="btn-danger rounded py-1 px-3"
                 name="da"
-                onClick={(e) => {
-                  handleBack(e);
+                onClick={() => {
+                  handleBack('da');
                 }}
               >
-                <i className="fas fa-arrow-left" />
+                <i
+                  className="fas fa-arrow-left"
+                  onClick={() => {
+                    handleBack('da');
+                  }}
+                />
               </Back>
             )}
 
@@ -391,227 +398,71 @@ function OrderSummaryScreen() {
                   Delivery Address
                 </h1>
                 <>
-                  <Row
-                    onChange={(e) => {
-                      console.log(e.target);
-                    }}
-                  >
-                    <>
-                      <Col md={6} style={{ position: 'relative' }}>
-                        <Card className="px-3 py-2 mb-3">
-                          <span>
-                            <input
-                              className="form-check-input"
-                              type="radio"
-                              name="flexRadioDefault"
-                              id="flexRadioDefault1"
-                              style={{ left: '25px', top: '6px' }}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="flexRadioDefault1"
-                            >
-                              <h5
-                                className="ml-1"
-                                style={{
-                                  letterSpacing: '0',
-                                  textTransform: 'none',
-                                  paddingBottom: '0px',
-                                  display: 'inline',
-                                }}
-                              >
-                                Dhiraj Shah
-                              </h5>
-                              <h5
-                                style={{
-                                  letterSpacing: '0',
-                                  textTransform: 'none',
-                                  paddingBottom: '0px',
-                                  display: 'inline',
-                                  position: 'absolute',
-                                  right: '10px',
-                                }}
-                              >
-                                9820560183
-                              </h5>
-                              <small
-                                className="ml-3 mt-2"
-                                style={{ display: 'block' }}
-                              >
-                                Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Et eveniet nihil,
-                                corporis laboriosam natus iusto
-                                dignissimos fugiat, animi nulla rerum,
-                                quam accusamus cumque fuga explicabo
-                                in dolore exercitationem magnam.
-                                Accusamus!
-                              </small>
-                            </label>
-                          </span>
-                        </Card>
-                      </Col>
-                    </>
-                    <>
-                      <Col md={6} style={{ position: 'relative' }}>
-                        <Card className="px-3 py-2 mb-3">
-                          <span>
-                            <input
-                              className="form-check-input"
-                              type="radio"
-                              name="flexRadioDefault"
-                              id="flexRadioDefault1"
-                              style={{ left: '25px', top: '6px' }}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="flexRadioDefault1"
-                            >
-                              <h5
-                                className="ml-1"
-                                style={{
-                                  letterSpacing: '0',
-                                  textTransform: 'none',
-                                  paddingBottom: '0px',
-                                  display: 'inline',
-                                }}
-                              >
-                                Dhiraj Shah
-                              </h5>
-                              <h5
-                                style={{
-                                  letterSpacing: '0',
-                                  textTransform: 'none',
-                                  paddingBottom: '0px',
-                                  display: 'inline',
-                                  position: 'absolute',
-                                  right: '10px',
-                                }}
-                              >
-                                9820560183
-                              </h5>
-                              <small
-                                className="ml-3 mt-2"
-                                style={{ display: 'block' }}
-                              >
-                                Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Et eveniet nihil,
-                                corporis laboriosam natus iusto
-                                dignissimos fugiat, animi nulla rerum,
-                                quam accusamus cumque fuga explicabo
-                                in dolore exercitationem magnam.
-                                Accusamus!
-                              </small>
-                            </label>
-                          </span>
-                        </Card>
-                      </Col>
-                      <Col md={6} style={{ position: 'relative' }}>
-                        <Card className="px-3 py-2 mb-3">
-                          <span>
-                            <input
-                              className="form-check-input"
-                              type="radio"
-                              name="flexRadioDefault"
-                              id="flexRadioDefault1"
-                              style={{ left: '25px', top: '6px' }}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="flexRadioDefault1"
-                            >
-                              <h5
-                                className="ml-1"
-                                style={{
-                                  letterSpacing: '0',
-                                  textTransform: 'none',
-                                  paddingBottom: '0px',
-                                  display: 'inline',
-                                }}
-                              >
-                                Dhiraj Shah
-                              </h5>
-                              <h5
-                                style={{
-                                  letterSpacing: '0',
-                                  textTransform: 'none',
-                                  paddingBottom: '0px',
-                                  display: 'inline',
-                                  position: 'absolute',
-                                  right: '10px',
-                                }}
-                              >
-                                9820560183
-                              </h5>
-                              <small
-                                className="ml-3 mt-2"
-                                style={{ display: 'block' }}
-                              >
-                                Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Et eveniet nihil,
-                                corporis laboriosam natus iusto
-                                dignissimos fugiat, animi nulla rerum,
-                                quam accusamus cumque fuga explicabo
-                                in dolore exercitationem magnam.
-                                Accusamus!
-                              </small>
-                            </label>
-                          </span>
-                        </Card>
-                      </Col>
-                      <Col md={6} style={{ position: 'relative' }}>
-                        <Card className="px-3 py-2 mb-3">
-                          <span>
-                            <input
-                              className="form-check-input"
-                              type="radio"
-                              name="flexRadioDefault"
-                              id="flexRadioDefault1"
-                              style={{ left: '25px', top: '6px' }}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="flexRadioDefault1"
-                            >
-                              <h5
-                                className="ml-1"
-                                style={{
-                                  letterSpacing: '0',
-                                  textTransform: 'none',
-                                  paddingBottom: '0px',
-                                  display: 'inline',
-                                }}
-                              >
-                                Dhiraj Shah
-                              </h5>
-                              <h5
-                                style={{
-                                  letterSpacing: '0',
-                                  textTransform: 'none',
-                                  paddingBottom: '0px',
-                                  display: 'inline',
-                                  position: 'absolute',
-                                  right: '10px',
-                                }}
-                              >
-                                9820560183
-                              </h5>
-                              <small
-                                className="ml-3 mt-2"
-                                style={{ display: 'block' }}
-                              >
-                                Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Et eveniet nihil,
-                                corporis laboriosam natus iusto
-                                dignissimos fugiat, animi nulla rerum,
-                                quam accusamus cumque fuga explicabo
-                                in dolore exercitationem magnam.
-                                Accusamus!
-                              </small>
-                            </label>
-                          </span>
-                        </Card>
-                      </Col>
-                    </>
+                  <Row>
+                    {address.length !== 0 &&
+                      address.map((add, index) => {
+                        return (
+                          <Col
+                            md={6}
+                            style={{ position: 'relative' }}
+                            key={index}
+                          >
+                            <Card className="px-3 py-2 mb-3">
+                              <span>
+                                <input
+                                  className="form-check-input"
+                                  type="radio"
+                                  name={index}
+                                  id="flexRadioDefault1"
+                                  style={{ left: '25px', top: '6px' }}
+                                  checked={
+                                    typeof addressOption ===
+                                      'string' &&
+                                    index === Number(addressOption)
+                                  }
+                                  onChange={(e) => {
+                                    setAddressOption(e.target.name);
+                                  }}
+                                />
+                                <label
+                                  className="form-check-label"
+                                  htmlFor="flexRadioDefault1"
+                                >
+                                  <h5
+                                    className="ml-3"
+                                    style={{
+                                      letterSpacing: '0',
+                                      textTransform: 'none',
+                                      paddingBottom: '0px',
+                                      display: 'inline',
+                                    }}
+                                  >
+                                    {add.city}
+                                  </h5>
+                                  <h5
+                                    style={{
+                                      letterSpacing: '0',
+                                      textTransform: 'none',
+                                      paddingBottom: '0px',
+                                      display: 'inline',
+                                      position: 'absolute',
+                                      right: '10px',
+                                    }}
+                                  >
+                                    {add.postalCode}
+                                  </h5>
+                                  <small
+                                    className="ml-3 mt-2"
+                                    style={{ display: 'block' }}
+                                  >
+                                    {add.address}
+                                  </small>
+                                </label>
+                              </span>
+                            </Card>
+                          </Col>
+                        );
+                      })}
                   </Row>
                 </>
                 <div
