@@ -241,7 +241,7 @@ const MODAL_STYLES = styled.div`
   transform: translate(5%, 4%);
   background-color: transparent;
   padding: 0px;
-  z-index: 1000;
+  z-index: 10000000;
 `;
 
 const MESSAGE_ICON = styled.div`
@@ -255,7 +255,7 @@ const MESSAGE_ICON = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 0px;
-  z-index: 1000;
+  z-index: 10000000;
 `;
 
 const CARD_STYLES = styled(Card)`
@@ -283,7 +283,7 @@ const MODAL_STYLES2 = styled.div`
   transform: translate(6.5%, -8.6%);
   background-color: transparent;
   padding: 0px;
-  z-index: 2;
+  z-index: 200000000;
 `;
 
 const FOOTER_STYLES = styled.div`
