@@ -4,6 +4,10 @@
   z-index: 1000 !important;
 } */
 
+body {
+  overflow-x: hidden;
+}
+
 ::-webkit-scrollbar {
   height: 6px;
   width: 10px;
@@ -109,7 +113,7 @@ h2 {
 }
 
 .Grid {
-  border: 1px solid #F9F9F9;
+  border: 1px solid #f9f9f9;
 }
 
 .GridItemEven,
@@ -138,7 +142,7 @@ h2 {
   background-color: #F9F9F9 !important;
 } */
 body {
-  background-color: #F9F9F9 !important;
+  background-color: #f9f9f9 !important;
 }
 .red {
   border: 1px solid red;
@@ -163,21 +167,21 @@ body {
   background-color: #eee;
 } */
 
-.switch-handle{
+.switch-handle {
   border-radius: 50px !important;
   z-index: 10 !important;
   background-color: #eee !important;
 }
 
-.switch{
+.switch {
   border-radius: 100px !important;
   margin-bottom: 2px !important;
 }
 
-.switch-on{
+.switch-on {
   right: 100% !important;
 }
-.switch-off{
+.switch-off {
   left: 50% !important;
   padding-left: 37px !important;
 }
@@ -197,15 +201,15 @@ body {
 }
 
 .custom-control-label::before {
-  border: 1.5px solid #D4D4D4;
+  border: 1.5px solid #d4d4d4;
 }
 
-@media(max-width: 990px){
-  .fcISXU{
+@media (max-width: 990px) {
+  .fcISXU {
     width: 90% !important;
     margin: 12px auto !important;
   }
-  .lnUEPL{
+  .lnUEPL {
     border: none !important;
     text-align: left !important;
     margin-left: 0 !important;
@@ -234,14 +238,15 @@ body {
   }
 }
 
-@import "~slick-carousel/slick/slick.css";
-@import "~slick-carousel/slick/slick-theme.css";
+@import '~slick-carousel/slick/slick.css';
+@import '~slick-carousel/slick/slick-theme.css';
 .react-slick * {
   min-height: 0;
   min-width: 0;
 }
 
-.react-slick .slick-prev, .react-slick .slick-next {
+.react-slick .slick-prev,
+.react-slick .slick-next {
   background-color: rgb(187, 184, 184);
   border-radius: 10px;
 }
@@ -251,7 +256,7 @@ body {
 }
 
 @media (min-width: 480px) {
-  .react-slick .fluid__image-container{
+  .react-slick .fluid__image-container {
     margin: 40px;
   }
 
@@ -261,18 +266,23 @@ body {
   }
 }
 
-@media(max-width: 768px){
-  .navbar-brand{
+@media (max-width: 768px) {
+  .navbar-brand {
     margin-right: 6px !important;
   }
 }
 
-@media(max-width: 992px){
-  .navbar .container, .navbar .container-fluid, .navbar .container-sm, .navbar .container-md, .navbar .container-lg, .navbar .container-xl{
+@media (max-width: 992px) {
+  .navbar .container,
+  .navbar .container-fluid,
+  .navbar .container-sm,
+  .navbar .container-md,
+  .navbar .container-lg,
+  .navbar .container-xl {
     justify-content: space-between !important;
   }
 
-  main{
+  main {
     margin-top: 140px;
   }
 }
