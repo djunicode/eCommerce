@@ -108,7 +108,7 @@ function OrderSummaryScreen() {
     if (isDeliverable === false) {
       setPostalStatus({
         color: 'red',
-        message: 'This product cannot be delivered to your location',
+        message: 'This product cannot be delivered to this location',
       });
     } else if (isDeliverable === true) {
       setP('on');
@@ -129,7 +129,7 @@ function OrderSummaryScreen() {
         const a = [];
         const addedAddress = `{address: "${values.address}", country: "India", postalCode: "${values.pincode}", city: "${values.city}"}`;
         address.map((add) => {
-          const temp = `{address: "${add.address}", country: "India", postalCode: "${add.pincode}", city: "${add.city}"}`;
+          const temp = `{address: "${add.address}", country: "India", postalCode: "${add.postalCode}", city: "${add.city}"}`;
           a.push(temp);
           return null;
         });
@@ -207,8 +207,7 @@ function OrderSummaryScreen() {
           message: 'Please select an address',
         });
       } else if (addressOption) {
-        setP('on');
-        setDa('done');
+        dispatch(postPincode(address[addressOption].postalCode));
         console.log(address[addressOption]);
       }
     }
