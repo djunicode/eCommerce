@@ -204,7 +204,7 @@ function OrderSummaryScreen() {
       if (!addressOption) {
         setPostalStatus({
           color: 'red',
-          message: 'Please select an address',
+          message: 'Please select or add an address',
         });
       } else if (addressOption) {
         dispatch(postPincode(address[addressOption].postalCode));

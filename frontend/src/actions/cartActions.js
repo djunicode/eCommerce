@@ -10,12 +10,13 @@ import {
   CART_ADD_REQUEST,
   CART_ADD_SUCCESS,
 } from '../constants/cartConstants';
+import { logout } from './userActions';
 
 export const getCartItems = (query) => async (dispatch) => {
   try {
     dispatch({ type: CART_LIST_REQUEST });
 
-    // const userinfo = JSON.parse(localStorage.getItem('userInfo'));
+    const userinfo = JSON.parse(localStorage.getItem('userInfo'));
 
     const request = {
       method: 'post',
@@ -25,7 +26,7 @@ export const getCartItems = (query) => async (dispatch) => {
       },
       headers: {
         'Content-Type': 'application/json',
-        // Authorization: `Bearer ${userinfo.token}`,
+        Authorization: `Bearer ${userinfo.token}`,
       },
     };
 
@@ -40,9 +41,9 @@ export const getCartItems = (query) => async (dispatch) => {
       error.response && error.response.data.message
         ? error.response.data.message
         : error.message;
-    // if (message === 'Not authorized, token failed') {
-    //   dispatch(logout());
-    // }
+    if (message === 'Not authorized, token failed') {
+      dispatch(logout());
+    }
     console.log(message);
     dispatch({
       type: CART_LIST_FAIL,

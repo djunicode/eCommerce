@@ -33,7 +33,7 @@ export const cartAddReducer = (
 };
 
 const cartReducer = (
-  state = { loading: false, data: [], error: false },
+  state = { loading: false, cartItems: [], error: false },
   action,
 ) => {
   switch (action.type) {

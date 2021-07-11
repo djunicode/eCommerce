@@ -23,7 +23,8 @@ import ReactSlick from '../components/ReactSlick';
 import Questions from '../components/Questions';
 import Ratings from '../components/Ratings';
 import ProductDetails from '../components/ProductDetails';
-import { addToCart } from '../actions/cartActions';
+import { addToCart, getCartItems } from '../actions/cartActions';
+import { PINCODE_CHECKED } from '../constants/productidConstants';
 
 const initialValues = {
   question: '',
@@ -65,6 +66,7 @@ const ProductScreen = () => {
   const { cartLoading, cartData } = useSelector(
     (state) => state.cartAdd,
   );
+  const { cartItems } = useSelector((state) => state.cart);
 
   useEffect(() => {
     if (cartData.status === 200) {
@@ -108,10 +110,16 @@ const ProductScreen = () => {
   };
 
   useEffect(() => {
+    setMessage({
+      color: 'red',
+      message: '',
+    });
+    dispatch({
+      type: PINCODE_CHECKED,
+    });
     const url = window.location.href;
     const n = url.search('product');
     const id = url.substr(n + 8, url.length);
-    console.log(id);
     const query = ` query{
       getProductById (id: "${id}") {
         _id
@@ -142,6 +150,25 @@ const ProductScreen = () => {
       }
     }`;
     dispatch(getProduct(query));
+
+    const cartQuery = `
+    query {
+      getCart {
+        contents {
+          product {
+            _id,
+            name
+          }
+          price,
+          optionName,
+          isOptionSelected
+          quantity
+        }
+      }
+    }
+    `;
+
+    dispatch(getCartItems(cartQuery));
   }, []);
 
   useEffect(() => {
@@ -179,6 +206,9 @@ const ProductScreen = () => {
       temp.price = price;
       temp.name = options !== '' ? options : data.name;
       console.log(temp);
+      dispatch({
+        type: PINCODE_CHECKED,
+      });
       localStorage.setItem('cart', JSON.stringify([temp]));
       history.push('/OrderSummaryScreen');
     } else {
@@ -201,9 +231,30 @@ const ProductScreen = () => {
     } else if (isDeliverable === true) {
       const mutation = [];
       mutation.push(
-        `{product:"${data._id}",isOptionSelected: false, optionName: "${options}", price: ${price}, quantity: ${qty}}`,
+        `{product:"${data._id}",isOptionSelected: ${
+          options.length !== 0
+        }, optionName: "${options}", price: ${price}, quantity: ${qty}}`,
       );
-      dispatch(addToCart(mutation));
+      let added = false;
+      cartItems.contents.map((item) => {
+        if (
+          item.product._id === data._id &&
+          item.optionName === options
+        ) {
+          added = true;
+          setMessage({
+            color: 'red',
+            message: 'Item already present in cart',
+          });
+        } else {
+          mutation.push(
+            `{product:"${item.product._id}",isOptionSelected: ${item.isOptionSelected}, optionName: "${item.optionName}", price: ${item.price}, quantity: ${item.quantity}}`,
+          );
+        }
+        return null;
+      });
+
+      if (!added) dispatch(addToCart(mutation));
     } else {
       setMessage({
         color: 'red',
@@ -513,14 +564,14 @@ const ProductScreen = () => {
                       flexDirection: 'column',
                     }}
                   >
-                    <small
+                    <span
                       style={{
                         color: `${message.color}`,
                         textAlign: 'center',
                       }}
                     >
                       {message.message}
-                    </small>
+                    </span>
                     {(pincodeLoading || cartLoading) && (
                       <Spinner
                         animation="border"
