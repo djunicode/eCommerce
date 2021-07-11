@@ -4,10 +4,6 @@
   z-index: 1000 !important;
 } */
 
-body {
-  overflow-x: hidden;
-}
-
 ::-webkit-scrollbar {
   height: 6px;
   width: 10px;

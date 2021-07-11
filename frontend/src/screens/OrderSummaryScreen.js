@@ -252,7 +252,7 @@ function OrderSummaryScreen() {
   };
 
   return (
-    <>
+    <div style={{ overflowX: 'hidden' }}>
       {loading ? (
         <Loader />
       ) : (
@@ -739,7 +739,7 @@ function OrderSummaryScreen() {
           </Container>
         </>
       )}
-    </>
+    </div>
   );
 }
 

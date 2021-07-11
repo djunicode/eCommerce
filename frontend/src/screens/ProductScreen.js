@@ -167,8 +167,8 @@ const ProductScreen = () => {
       }
     }
     `;
-
-    dispatch(getCartItems(cartQuery));
+    if (localStorage.getItem('userInfo'))
+      dispatch(getCartItems(cartQuery));
   }, [dispatch]);
 
   useEffect(() => {
