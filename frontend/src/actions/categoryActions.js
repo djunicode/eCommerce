@@ -356,18 +356,18 @@ export const deleteSubCategories = (query) => async (dispatch) => {
   }
 };
 
-export const getProductByCategory = (id, sort = 'none') => async (
-  dispatch,
-) => {
-  try {
-    dispatch({
-      type: PRODCUTS_BY_CATEGORY_ID_LIST_REQUEST,
-    });
+export const getProductByCategory =
+  (id, sort = 'none') =>
+  async (dispatch) => {
+    try {
+      dispatch({
+        type: PRODCUTS_BY_CATEGORY_ID_LIST_REQUEST,
+      });
 
-    const { data } = await axios.post(
-      url,
-      {
-        query: `
+      const { data } = await axios.post(
+        url,
+        {
+          query: `
             query{
                 getProductByCategory(categoryId: "${id}"){
                     _id
@@ -404,50 +404,50 @@ export const getProductByCategory = (id, sort = 'none') => async (
                 }
             }
         `,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
         },
-      },
-    );
-    // console.log('categoryActions.js');
-    // console.log(data);
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      // console.log('categoryActions.js');
+      // console.log(data);
 
-    let sortedData;
-    if (sort === 'asc') {
-      sortedData = data.data.getProductByCategory.sort(
-        (a, b) => a.price - b.price,
-      );
-    } else if (sort === 'desc') {
-      sortedData = data.data.getProductByCategory.sort(
-        (a, b) => b.price - a.price,
-      );
-    } else {
-      sortedData = data.data.getProductByCategory;
+      let sortedData;
+      if (sort === 'asc') {
+        sortedData = data.data.getProductByCategory.sort(
+          (a, b) => a.price - b.price,
+        );
+      } else if (sort === 'desc') {
+        sortedData = data.data.getProductByCategory.sort(
+          (a, b) => b.price - a.price,
+        );
+      } else {
+        sortedData = data.data.getProductByCategory;
+      }
+
+      try {
+        const brands = sortedData.map((elem) => elem.brand.name);
+        sessionStorage.setItem(
+          'proshop_brand_length',
+          JSON.stringify([...new Set(brands)].length),
+        );
+      } catch (err) {
+        console.log(err);
+      }
+
+      dispatch({
+        type: PRODCUTS_BY_CATEGORY_ID_LIST_SUCCESS,
+        payload: sortedData,
+      });
+    } catch (error) {
+      dispatch({
+        type: PRODCUTS_BY_CATEGORY_ID_LIST_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
     }
-
-    try {
-      const brands = sortedData.map((elem) => elem.brand.name);
-      sessionStorage.setItem(
-        'proshop_brand_length',
-        JSON.stringify([...new Set(brands)].length),
-      );
-    } catch (err) {
-      console.log(err);
-    }
-
-    dispatch({
-      type: PRODCUTS_BY_CATEGORY_ID_LIST_SUCCESS,
-      payload: sortedData,
-    });
-  } catch (error) {
-    dispatch({
-      type: PRODCUTS_BY_CATEGORY_ID_LIST_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+  };

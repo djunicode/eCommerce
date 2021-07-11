@@ -218,49 +218,47 @@ export const updateProduct = (query) => async (dispatch) => {
   }
 };
 
-export const createProductReview = (productId, review) => async (
-  dispatch,
-  getState,
-) => {
-  try {
-    dispatch({
-      type: PRODUCT_CREATE_REVIEW_REQUEST,
-    });
+export const createProductReview =
+  (productId, review) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: PRODUCT_CREATE_REVIEW_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
+      const {
+        userLogin: { userInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    await axios.post(
-      `/api/products/${productId}/reviews`,
-      review,
-      config,
-    );
+      await axios.post(
+        `/api/products/${productId}/reviews`,
+        review,
+        config,
+      );
 
-    dispatch({
-      type: PRODUCT_CREATE_REVIEW_SUCCESS,
-    });
-  } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-    if (message === 'Not authorized, token failed') {
-      dispatch(logout());
+      dispatch({
+        type: PRODUCT_CREATE_REVIEW_SUCCESS,
+      });
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      if (message === 'Not authorized, token failed') {
+        dispatch(logout());
+      }
+      dispatch({
+        type: PRODUCT_CREATE_REVIEW_FAIL,
+        payload: message,
+      });
     }
-    dispatch({
-      type: PRODUCT_CREATE_REVIEW_FAIL,
-      payload: message,
-    });
-  }
-};
+  };
 
 export const listTopProducts = (query) => async (dispatch) => {
   try {
@@ -352,34 +350,33 @@ export const listProductByCategory = (query) => async (dispatch) => {
   }
 };
 
-export const listProductBySubCategory = (query) => async (
-  dispatch,
-) => {
-  try {
-    dispatch({ type: PRODUCT_BY_SUBCATEGORY_REQUEST });
+export const listProductBySubCategory =
+  (query) => async (dispatch) => {
+    try {
+      dispatch({ type: PRODUCT_BY_SUBCATEGORY_REQUEST });
 
-    const request = {
-      method: 'post',
-      url: 'http://localhost:5000/graphql',
-      data: {
-        query,
-      },
-      headers: { 'Content-Type': 'application/json' },
-    };
+      const request = {
+        method: 'post',
+        url: 'http://localhost:5000/graphql',
+        data: {
+          query,
+        },
+        headers: { 'Content-Type': 'application/json' },
+      };
 
-    const { data } = await axios(request);
+      const { data } = await axios(request);
 
-    dispatch({
-      type: PRODUCT_BY_SUBCATEGORY_SUCCESS,
-      payload: data.data.getProductBySubCategory,
-    });
-  } catch (error) {
-    dispatch({
-      type: PRODUCT_BY_SUBCATEGORY_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: PRODUCT_BY_SUBCATEGORY_SUCCESS,
+        payload: data.data.getProductBySubCategory,
+      });
+    } catch (error) {
+      dispatch({
+        type: PRODUCT_BY_SUBCATEGORY_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };

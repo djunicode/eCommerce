@@ -291,7 +291,11 @@ const FilterSidebar = ({ page }) => {
           })
         }
       >
-        Filters
+        <i className="fas fa-filter" />
+        <i
+          className="fas fa-chevron-right"
+          style={{ marginLeft: 12 }}
+        />
       </StyledTabToggleBtn>
       <StyledLeftSidebar display={show}>
         <Row>
@@ -551,7 +555,7 @@ const StyledTabToggleBtn = styled.button`
   }
 
   @media (max-width: 990px) {
-    top: 145px;
+    top: 125px;
   }
 `;
 
