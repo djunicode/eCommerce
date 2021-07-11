@@ -169,7 +169,7 @@ const ProductScreen = () => {
     `;
 
     dispatch(getCartItems(cartQuery));
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (data._id) {

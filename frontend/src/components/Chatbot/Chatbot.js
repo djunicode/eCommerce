@@ -104,7 +104,7 @@ export default function Chatbot() {
 
   useEffect(() => {
     if (click) dispatch(getChat(query));
-  }, [click]);
+  }, [click, dispatch, query]);
 
   useEffect(() => {
     scrollToBottom();

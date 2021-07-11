@@ -12,8 +12,8 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 
 function OrdersScreen() {
-  const [sdate, setSdate] = useState();
-  const [edate, setEdate] = useState();
+  const [sdate, setSdate] = useState('');
+  const [edate, setEdate] = useState('');
   const [filtered, setFiltered] = useState(null);
   const [products, setProducts] = useState([]);
   const [message, setMessage] = useState('');
@@ -60,16 +60,17 @@ function OrdersScreen() {
       const Sdate = new Date(sdate);
       const Edate = new Date(edate);
       const Filter = products.filter((product) => {
-        const date = new Date(product.date);
+        let date;
+        if (completed) {
+          date = new Date(product.deliveredAt);
+        } else {
+          date = new Date(product.paidAt);
+        }
         if (Sdate <= date && date <= Edate) {
-          console.log(Sdate);
-          console.log(date);
-          console.log(Edate);
           return product;
         }
         return null;
       });
-      console.log(Filter);
       setFiltered(Filter);
     }
   }, [sdate, edate]);
@@ -87,13 +88,29 @@ function OrdersScreen() {
           >
             {rowIndex === 0 ? (
               columnIndex === 0 ? (
-                <GridHeadings>ID</GridHeadings>
+                <thead>
+                  <tr>
+                    <GridHeadings>ID</GridHeadings>
+                  </tr>
+                </thead>
               ) : columnIndex === 1 ? (
-                <GridHeadings>USER</GridHeadings>
+                <thead>
+                  <tr>
+                    <GridHeadings>USER</GridHeadings>
+                  </tr>
+                </thead>
               ) : columnIndex === 2 ? (
-                <GridHeadings>DATE</GridHeadings>
+                <thead>
+                  <tr>
+                    <GridHeadings>DATE</GridHeadings>
+                  </tr>
+                </thead>
               ) : (
-                <GridHeadings>AMOUNT</GridHeadings>
+                <thead>
+                  <tr>
+                    <GridHeadings>AMOUNT</GridHeadings>
+                  </tr>
+                </thead>
               )
             ) : columnIndex === 0 ? (
               <tbody>
@@ -180,7 +197,7 @@ function OrdersScreen() {
                           }}
                           onClick={() => {
                             history.push(
-                              `admin/orderdetails/${product._id}`,
+                              `orderdetails/${product._id}`,
                             );
                           }}
                         >
@@ -206,13 +223,29 @@ function OrdersScreen() {
         >
           {rowIndex === 0 ? (
             columnIndex === 0 ? (
-              <GridHeadings>ID</GridHeadings>
+              <thead>
+                <tr>
+                  <GridHeadings>ID</GridHeadings>
+                </tr>
+              </thead>
             ) : columnIndex === 1 ? (
-              <GridHeadings>USER</GridHeadings>
+              <thead>
+                <tr>
+                  <GridHeadings>USER</GridHeadings>
+                </tr>
+              </thead>
             ) : columnIndex === 2 ? (
-              <GridHeadings>DATE</GridHeadings>
+              <thead>
+                <tr>
+                  <GridHeadings>DATE</GridHeadings>
+                </tr>
+              </thead>
             ) : (
-              <GridHeadings>AMOUNT</GridHeadings>
+              <thead>
+                <tr>
+                  <GridHeadings>AMOUNT</GridHeadings>
+                </tr>
+              </thead>
             )
           ) : columnIndex === 0 ? (
             <tbody>
@@ -257,10 +290,7 @@ function OrdersScreen() {
                 return (
                   <tr key={index}>
                     <td>
-                      {`${date.getFullYear()}-${
-                        date.getMonth() + 1
-                      }-${date.getDate()}`}
-                      {console.log(typeof product.deliveredAt)}
+                      {`${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`}
                       <br />
                       <span style={{ color: '#5F5F5F' }}>
                         {completed ? (
@@ -302,9 +332,7 @@ function OrdersScreen() {
                           cursor: 'pointer',
                         }}
                         onClick={() => {
-                          history.push(
-                            `admin/orderdetails/${product._id}`,
-                          );
+                          history.push(`orderdetails/${product._id}`);
                         }}
                       >
                         SEE DETAILS &gt;

@@ -205,7 +205,6 @@ export const getUserDetails = () => async (dispatch, getState) => {
     );
 
     const reconstructedData = data.data.data.getUserProfile;
-    console.log(reconstructedData);
 
     dispatch({
       type: USER_DETAILS_SUCCESS,

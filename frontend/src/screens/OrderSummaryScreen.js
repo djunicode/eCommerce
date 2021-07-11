@@ -6,7 +6,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-// import { setRandomFallback } from 'bcryptjs';
 import React, { useState, useEffect } from 'react';
 import {
   Container,
@@ -138,14 +137,14 @@ function OrderSummaryScreen() {
         dispatch(addAddress(a));
       }
     }
-  }, [isDeliverable]);
+  }, [isDeliverable, dispatch, address, values]);
 
   useEffect(() => {
     const c = JSON.parse(localStorage.getItem('cart'));
     console.log(c);
     setCart(c);
     dispatch(getUserDetails());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (user && Object.keys(user).length !== 0) {
