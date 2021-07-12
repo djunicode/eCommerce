@@ -1,7 +1,7 @@
 /* eslint no-return-assign: "error" */
 /* eslint-disable array-callback-return */
 /* eslint-disable consistent-return */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
 
@@ -42,6 +42,14 @@ const CategoryScreen = () => {
   const { loading, error, products } = searchedCategory;
   console.log(products);
 
+  const [localProducts, setLocalProducts] = useState(products);
+  const [productsSet, setProductsSet] = useState(false);
+
+  if (products.length > 0 && !productsSet) {
+    setLocalProducts(products);
+    setProductsSet(true);
+  }
+
   const filtersApplied = useSelector((state) => state.filter);
   const { filters } = filtersApplied;
   console.log(filters);
@@ -52,9 +60,9 @@ const CategoryScreen = () => {
   let renderedProds = [];
   useEffect(() => {
     renderedProds = [];
-  }, [filters, products, id]);
+  }, [filters, localProducts, id]);
 
-  if (products && products.length === 0 && !loading) {
+  if (localProducts && localProducts.length === 0 && !loading) {
     return (
       <Message variant="danger">
         No Products found in this Category
@@ -71,10 +79,10 @@ const CategoryScreen = () => {
       ) : (
         <>
           <FilterSidebar page="Category" />
-          {products[0] && (
+          {localProducts[0] && (
             <StyledBadgeSortDiv>
               <StyledBadge variant="danger">
-                {products[0].category.name.toUpperCase()}{' '}
+                {localProducts[0].category.name.toUpperCase()}{' '}
                 <Link to="/">
                   <i
                     className="fas fa-times"
@@ -90,17 +98,23 @@ const CategoryScreen = () => {
                   <StyledDropdownItem
                     as="button"
                     onClick={() => {
-                      dispatch(getProductByCategory(id, 'asc'));
-                      if (
-                        filters.brands &&
-                        JSON.parse(
-                          sessionStorage.getItem(
-                            'proshop_brand_length',
-                          ),
-                        ) === filters.brands.length
-                      ) {
-                        dispatch(filter({}));
-                      }
+                      // dispatch(getProductByCategory(id, 'asc'));
+                      // if (
+                      //   filters.brands &&
+                      //   JSON.parse(
+                      //     sessionStorage.getItem(
+                      //       'proshop_brand_length',
+                      //     ),
+                      //   ) === filters.brands.length
+                      // ) {
+                      //   dispatch(filter({}));
+                      // }
+                      const temp = [...localProducts];
+                      setLocalProducts(
+                        temp.sort((a, b) => {
+                          return a.price - b.price;
+                        }),
+                      );
                     }}
                   >
                     Price - Low to High
@@ -108,17 +122,23 @@ const CategoryScreen = () => {
                   <StyledDropdownItem
                     as="button"
                     onClick={() => {
-                      dispatch(getProductByCategory(id, 'desc'));
-                      if (
-                        filters.brands &&
-                        JSON.parse(
-                          sessionStorage.getItem(
-                            'proshop_brand_length',
-                          ),
-                        ) === filters.brands.length
-                      ) {
-                        dispatch(filter({}));
-                      }
+                      // dispatch(getProductByCategory(id, 'desc'));
+                      // if (
+                      //   filters.brands &&
+                      //   JSON.parse(
+                      //     sessionStorage.getItem(
+                      //       'proshop_brand_length',
+                      //     ),
+                      //   ) === filters.brands.length
+                      // ) {
+                      //   dispatch(filter({}));
+                      // }
+                      const temp = [...localProducts];
+                      setLocalProducts(
+                        temp.sort((a, b) => {
+                          return b.price - a.price;
+                        }),
+                      );
                     }}
                   >
                     Price - High to Low
@@ -128,15 +148,15 @@ const CategoryScreen = () => {
             </StyledBadgeSortDiv>
           )}
           <StyledGridDiv>
-            {Object.keys(products).length > 0 &&
+            {Object.keys(localProducts).length > 0 &&
               Object.keys(filters).length === 0 &&
-              products.map((product) => (
+              localProducts.map((product) => (
                 <Product product={product} key={product._id} />
               ))}
 
-            {Object.keys(products).length > 0 &&
+            {Object.keys(localProducts).length > 0 &&
               Object.keys(filters).length > 0 &&
-              products.map(
+              localProducts.map(
                 (product) =>
                   product.price <= filters.price.max &&
                   product.price >= filters.price.min &&
@@ -164,7 +184,7 @@ const CategoryScreen = () => {
                 {/* <StyledSimilarProdsH1>
                   Similar Products
                 </StyledSimilarProdsH1> */}
-                {products.map((product) => {
+                {localProducts.map((product) => {
                   if (
                     !breaker &&
                     filters.brands.includes(product.brand.name) &&
@@ -179,7 +199,7 @@ const CategoryScreen = () => {
                   }
                 })}
                 <StyledGridDiv>
-                  {products.map(
+                  {localProducts.map(
                     (product) =>
                       filters.brands.includes(product.brand.name) &&
                       !renderedProds.includes(product) && (
@@ -198,7 +218,7 @@ const CategoryScreen = () => {
               <>
                 {(noProds = false)}
                 <StyledGridDiv>
-                  {products.map(
+                  {localProducts.map(
                     (product) =>
                       filters.brands.includes(product.brand.name) &&
                       !renderedProds.includes(product) && (

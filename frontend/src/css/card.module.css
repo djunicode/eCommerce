@@ -1,17 +1,17 @@
 .card {
-    border: none !important;
-    padding: -1px;
-    background-color: #F9F9F9 !important;
+  border: none !important;
+  padding: -1px;
+  background-color: #f9f9f9 !important;
 }
 .cardHeader {
-    background-color: #F9F9F9;
-    text-transform: uppercase;
-    font-weight: 900 !important;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  background-color: #f9f9f9;
+  text-transform: uppercase;
+  font-weight: 900 !important;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 .cardBody {
-    background-color: #F9F9F9;
-    padding-bottom: 10px;
+  background-color: #f9f9f9;
+  padding-bottom: 10px;
 }
