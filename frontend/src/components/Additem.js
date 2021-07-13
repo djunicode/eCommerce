@@ -127,18 +127,7 @@ const Additem = ({ msg, setMessages, index, filt, messages }) => {
               setOpen(false);
             }}
           />
-          <div
-            style={{
-              position: 'fixed',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              backgroundColor: '#FFF',
-              padding: '50px',
-              zIndex: 1000,
-              borderRadius: '20px',
-            }}
-          >
+          <ModalContainer>
             <Form>
               <Form.Group controlId="formBasicEmail">
                 <Form.Label>Msg</Form.Label>
@@ -187,7 +176,7 @@ const Additem = ({ msg, setMessages, index, filt, messages }) => {
                 Done
               </StyledButton>
             </Form>
-          </div>
+          </ModalContainer>
         </>
       )}
     </div>
@@ -200,4 +189,18 @@ const StyledButton = styled(Button)`
   float: right;
   border-radius: 4px;
   margin-top: 12px;
+`;
+const ModalContainer = styled.div `
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #FFF;
+  padding: 50px;
+  z-index: 1000;
+  @media screen and (max-width: 500px) {
+    padding: 20px;
+    left: 50%;
+    right: -30%;
+  }
 `;

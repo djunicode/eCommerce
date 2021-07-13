@@ -406,25 +406,14 @@ const ChatbotAdmin = () => {
                 left: '0',
                 right: '0',
                 bottom: '0',
-                backgroundColor: 'rgba(0,0,0,.7)',
+                backgroundColor: 'rgba(0,0,0,0.8)',
                 zIndex: '1000',
               }}
               onClick={() => {
                 setOpen(false);
               }}
             />
-            <div
-              style={{
-                position: 'fixed',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                backgroundColor: '#FFF',
-                padding: '50px',
-                zIndex: 1000,
-                borderRadius: '20px',
-              }}
-            >
+            <ModalContainer>
               <Form>
                 <Form.Group controlId="formBasicEmail">
                   <Form.Label>Msg</Form.Label>
@@ -462,7 +451,7 @@ const ChatbotAdmin = () => {
                   Done
                 </StyledButton>
               </Form>
-            </div>
+            </ModalContainer>
           </>
         )}
         {delt && (
@@ -627,5 +616,19 @@ const Stylediv = styled.div`
     align-items: center;
     justify-content: space-between;
     height: 7rem;
+  }
+`;
+const ModalContainer = styled.div `
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #FFF;
+  padding: 50px;
+  z-index: 1000;
+  @media screen and (max-width: 500px) {
+    padding: 20px;
+    top: 60%;
+    width: 90%;
   }
 `;
