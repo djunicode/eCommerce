@@ -76,12 +76,13 @@ const Acc = ({
       {dispmsgs.map((dispmsg) => {
         return (
           <Accordion defaultActiveKey="0" key={dispmsg.index}>
-            <Card style={{ backgroundColor: '#F9F9F9' }}>
+            <Card
+              style={{ backgroundColor: '#F9F9F9', border: 'none' }}
+            >
               <Card.Header
                 style={{
                   backgroundColor: '#F9F9F9',
                   padding: '0',
-                  borderBottom: '2px solid rgba(0,0,0,0.125)',
                 }}
               >
                 <Accordion.Toggle
@@ -100,16 +101,18 @@ const Acc = ({
                     });
                   }}
                 >
-                  <span style={{ fontWeight: '100' }}>
+                  <span
+                    style={{ color: '#55595c', fontSize: '15px' }}
+                  >
                     {dispmsg.msg}&nbsp;&nbsp;&nbsp;
                     {arrow[`${dispmsg.index}`] ? (
                       <i
-                        style={{ color: '#222831' }}
+                        style={{ color: '#55595c' }}
                         className="fas fa-chevron-up"
                       />
                     ) : (
                       <i
-                        style={{ color: '#222831' }}
+                        style={{ color: '#55595c' }}
                         className="fas fa-chevron-down"
                       />
                     )}
@@ -124,7 +127,8 @@ const Acc = ({
                     paddingLeft: '1rem',
                   }}
                 >
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{dispmsg.info}
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <TextSpan>{dispmsg.info}</TextSpan>
                   <span
                     onClick={() => {
                       setOpen(true);
@@ -136,10 +140,9 @@ const Acc = ({
                       cursor: 'pointer',
                       position: 'absolute',
                       right: '10px',
-                      color: '#929293',
                     }}
                   >
-                    <i className="fas fa-edit" />
+                    <Icon className="fas fa-edit" />
                   </span>
                   <span
                     onClick={() => {
@@ -149,11 +152,10 @@ const Acc = ({
                     style={{
                       cursor: 'pointer',
                       position: 'absolute',
-                      right: '50px',
-                      color: '#929293',
+                      right: '0.5vw',
                     }}
                   >
-                    <i className="fas fa-trash-alt" />
+                    <Icon className="fas fa-trash-alt" />
                   </span>
                   <Additem
                     msg={msg}
@@ -334,4 +336,16 @@ const StyledDiv = styled.div`
   justify-content: space-evenly;
   align-items: center;
   width: 100%;
+`;
+const Icon = styled.i`
+  color: #929293;
+  &:hover {
+    color: #30475e;
+  }
+`;
+const TextSpan = styled.span`
+  width: 80%;
+  @media screen and (max-width: 500px) {
+    width: 40%;
+  }
 `;

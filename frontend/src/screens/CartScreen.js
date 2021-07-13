@@ -162,7 +162,7 @@ const CartScreen = ({ match, history }) => {
                         fluid
                         width={100}
                         height={100}
-                        style={{margin: 'auto'}}
+                        style={{ margin: 'auto' }}
                       />
                       <Media.Body>
                         <Row style={{ marginBottom: '1.2rem' }}>
@@ -367,7 +367,7 @@ const Wrapper = styled.div`
     padding: 0;
   }
 `;
-const MediaWrapper = styled(Media) `
+const MediaWrapper = styled(Media)`
   @media screen and (max-width: 450px) {
     flex-direction: column;
   }

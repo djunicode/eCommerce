@@ -96,23 +96,20 @@ const Additem = ({ msg, setMessages, index, filt, messages }) => {
   };
 
   return (
-    <div>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <div style={{ padding: '0.75rem 1.5rem' }}>
       <span
         style={{
           cursor: 'pointer',
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          color: 'green',
+          padding: '0.5rem 0.75rem',
+          border: '1px solid #FFB396',
+          borderRadius: '3px',
+          fontSize: '12px',
         }}
         onClick={() => {
           setOpen(true);
         }}
       >
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <i className="fas fa-plus-circle" />
-        &nbsp; Add Option
+        + Add Option
       </span>
       {open && (
         <>
