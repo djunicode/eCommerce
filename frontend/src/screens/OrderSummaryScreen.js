@@ -142,21 +142,23 @@ function OrderSummaryScreen() {
         ? ''
         : 'This field is required.';
       if (temp.number === '') {
-        temp.number = /^(\+?\d{1,4}[\s-])?(?!0+\s+,?$)\d{10}\s*,?$/.test(
-          fieldValues.number,
-        )
-          ? ''
-          : 'Invalid Phone Number.';
+        temp.number =
+          /^(\+?\d{1,4}[\s-])?(?!0+\s+,?$)\d{10}\s*,?$/.test(
+            fieldValues.number,
+          )
+            ? ''
+            : 'Invalid Phone Number.';
       }
     }
     if ('email' in fieldValues) {
       temp.email = fieldValues.email ? '' : 'This field is required.';
       if (temp.email === '') {
-        temp.email = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/.test(
-          fieldValues.email,
-        )
-          ? ''
-          : 'Invalid email.';
+        temp.email =
+          /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/.test(
+            fieldValues.email,
+          )
+            ? ''
+            : 'Invalid email.';
       }
     }
     if ('state' in fieldValues)

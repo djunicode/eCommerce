@@ -57,7 +57,6 @@ const Option = (props) => {
 };
 
 export const CatDropdown = (props) => {
-
   const dispatch = useDispatch();
 
   const categoryList = useSelector((state) => state.categoryList);
@@ -124,7 +123,7 @@ export const CatDropdown = (props) => {
     // document.location.reload();
   };
 
-  const [deleteModalShow, setDeleteModalShow] = React.useState(false)
+  const [deleteModalShow, setDeleteModalShow] = React.useState(false);
 
   const handleDelete = (event) => {
     event.preventDefault();
@@ -155,7 +154,7 @@ export const CatDropdown = (props) => {
         show={editModalShow}
         onHide={() => setEditModalShow(false)}
       />
-      <CategoryDeleteModal 
+      <CategoryDeleteModal
         selectedCategory={selectedCategory}
         show={deleteModalShow}
         onHide={() => setDeleteModalShow(false)}
@@ -170,9 +169,17 @@ export const CatDropdown = (props) => {
         components={{ Option }}
         onCreateOption={handleCreateCategory}
         handleDelete={handleDelete}
-        defaultValue={{ label: props.categoryName, value: props.categ }}
+        defaultValue={{
+          label: props.categoryName,
+          value: props.categ,
+        }}
       />
-      <Form.Control.Feedback type="invalid" style={{display: `${props.dropdownError.category}`}}>This field is required</Form.Control.Feedback>
+      <Form.Control.Feedback
+        type="invalid"
+        style={{ display: `${props.dropdownError.category}` }}
+      >
+        This field is required
+      </Form.Control.Feedback>
     </>
   );
 };
@@ -237,7 +244,7 @@ export const SubCatDropdown = (props) => {
     value: createSubcategory._id,
   });
 
-  const [suberrordisplay, setSuberrordisplay] = useState('none')
+  const [suberrordisplay, setSuberrordisplay] = useState('none');
 
   const handleCreateSubCategory = (inputValue) => {
     const newOption = createSubCategoryOption(inputValue);
@@ -249,17 +256,16 @@ export const SubCatDropdown = (props) => {
             }
         }`;
 
-    if(props.categ === '') {
+    if (props.categ === '') {
       setSuberrordisplay('flex');
-    }
-    else {
+    } else {
       dispatch(createSubCategories(queryCreateSub));
       // document.location.reload();
       setSuberrordisplay('none');
     }
   };
 
-  const [deleteModalShow, setDeleteModalShow] = React.useState(false)
+  const [deleteModalShow, setDeleteModalShow] = React.useState(false);
 
   const handleDelete = (event) => {
     event.preventDefault();
@@ -291,7 +297,7 @@ export const SubCatDropdown = (props) => {
         show={editModalShow}
         onHide={() => setEditModalShow(false)}
       />
-      <SubCategoryDeleteModal 
+      <SubCategoryDeleteModal
         selectedSubCategory={selectedSubCategory}
         show={deleteModalShow}
         subCateg={props.subCateg}
@@ -307,10 +313,22 @@ export const SubCatDropdown = (props) => {
         components={{ Option }}
         onCreateOption={handleCreateSubCategory}
         handleDelete={handleDelete}
-        defaultValue={{ label: props.subCategoryName, value: props.subCateg }}
+        defaultValue={{
+          label: props.subCategoryName,
+          value: props.subCateg,
+        }}
       />
-      <Form.Control.Feedback type="invalid" style={{display: `${props.dropdownError.subcategory}`}}>This field is required</Form.Control.Feedback>
-      <Form.Control.Feedback style={{color: 'red', display: `${suberrordisplay}`}}>Select a category first</Form.Control.Feedback>
+      <Form.Control.Feedback
+        type="invalid"
+        style={{ display: `${props.dropdownError.subcategory}` }}
+      >
+        This field is required
+      </Form.Control.Feedback>
+      <Form.Control.Feedback
+        style={{ color: 'red', display: `${suberrordisplay}` }}
+      >
+        Select a category first
+      </Form.Control.Feedback>
     </>
   );
 };
@@ -382,7 +400,7 @@ export const BrandDropdown = (props) => {
     // document.location.reload();
   };
 
-  const [deleteModalShow, setDeleteModalShow] = React.useState(false)
+  const [deleteModalShow, setDeleteModalShow] = React.useState(false);
 
   const handleDelete = (event) => {
     event.preventDefault();
@@ -413,7 +431,7 @@ export const BrandDropdown = (props) => {
         show={editModalShow}
         onHide={() => setEditModalShow(false)}
       />
-      <BrandDeleteModal 
+      <BrandDeleteModal
         selectedBrand={selectedBrand}
         show={deleteModalShow}
         onHide={() => setDeleteModalShow(false)}
@@ -430,7 +448,12 @@ export const BrandDropdown = (props) => {
         handleDelete={handleDelete}
         defaultValue={{ label: props.brandName, value: props.brand }}
       />
-      <Form.Control.Feedback type="invalid" style={{display: `${props.dropdownError.brand}`}}>This field is required</Form.Control.Feedback>
+      <Form.Control.Feedback
+        type="invalid"
+        style={{ display: `${props.dropdownError.brand}` }}
+      >
+        This field is required
+      </Form.Control.Feedback>
     </>
   );
 };
@@ -442,7 +465,7 @@ const Icon = styled.i`
     color: #30475e;
   }
 `;
-const DropdownButtons = styled.button `
+const DropdownButtons = styled.button`
   border: none;
   background: none;
 `;

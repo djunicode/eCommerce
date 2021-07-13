@@ -1,4 +1,5 @@
 import axios from 'axios';
+import localforage from 'localforage';
 import {
   USER_DETAILS_FAIL,
   USER_DETAILS_REQUEST,
@@ -78,6 +79,20 @@ export const login = (email, password) => async (dispatch) => {
       'userInfo',
       JSON.stringify(reconstructedData),
     );
+
+    localforage.setDriver([localforage.INDEXEDDB]);
+    localforage.setItem(
+      'userInfo',
+      JSON.stringify(reconstructedData),
+    );
+    localforage
+      .getItem('userInfo')
+      .then((value) => {
+        console.log(value);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,
@@ -101,18 +116,17 @@ export const logout = () => (dispatch) => {
   document.location.href = '/login';
 };
 
-export const register = (name, number, email, password) => async (
-  dispatch,
-) => {
-  try {
-    dispatch({
-      type: USER_REGISTER_REQUEST,
-    });
+export const register =
+  (name, number, email, password) => async (dispatch) => {
+    try {
+      dispatch({
+        type: USER_REGISTER_REQUEST,
+      });
 
-    const data = await axios.post(
-      'http://localhost:5000/graphql',
-      {
-        query: `
+      const data = await axios.post(
+        'http://localhost:5000/graphql',
+        {
+          query: `
         mutation {
           registerUser(userInput: {name: "${name}", phoneNo: "${number}", email: "${email}", password: "${password}", isAdmin: ${false}}){
             _id
@@ -123,48 +137,48 @@ export const register = (name, number, email, password) => async (
           }
         }
         `,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
         },
-      },
-    );
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
 
-    const reconstructedData = {
-      _id: data.data.data.registerUser._id,
-      name: data.data.data.registerUser.name,
-      email: data.data.data.registerUser.email,
-      phoneNo: data.data.data.registerUser.phoneNo,
-      isAdmin: data.data.data.registerUser.isAdmin,
-    };
+      const reconstructedData = {
+        _id: data.data.data.registerUser._id,
+        name: data.data.data.registerUser.name,
+        email: data.data.data.registerUser.email,
+        phoneNo: data.data.data.registerUser.phoneNo,
+        isAdmin: data.data.data.registerUser.isAdmin,
+      };
 
-    dispatch({
-      type: USER_REGISTER_SUCCESS,
-      payload: reconstructedData,
-    });
+      dispatch({
+        type: USER_REGISTER_SUCCESS,
+        payload: reconstructedData,
+      });
 
-    dispatch({
-      type: USER_LOGIN_SUCCESS,
-      payload: reconstructedData,
-    });
+      dispatch({
+        type: USER_LOGIN_SUCCESS,
+        payload: reconstructedData,
+      });
 
-    localStorage.setItem(
-      'userInfo',
-      JSON.stringify(reconstructedData),
-    );
-  } catch (error) {
-    dispatch({
-      type: USER_REGISTER_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.response.data.errors[0].message,
-    });
-  }
-};
+      localStorage.setItem(
+        'userInfo',
+        JSON.stringify(reconstructedData),
+      );
+    } catch (error) {
+      dispatch({
+        type: USER_REGISTER_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.response.data.errors[0].message,
+      });
+    }
+  };
 
-export const getUserDetails = (id) => async (dispatch, getState) => {
+export const getUserDetails = () => async (dispatch, getState) => {
   try {
     dispatch({
       type: USER_DETAILS_REQUEST,
@@ -177,14 +191,38 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
     const config = {
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
+        'Content-Type': 'application/json',
       },
     };
 
-    const { data } = await axios.get(`/api/users/${id}`, config);
+    const data = await axios.post(
+      'http://localhost:5000/graphql',
+      {
+        query: `
+        query {
+          getUserProfile {
+            _id
+            name
+            phoneNo
+            email
+            userAddress {
+                address
+                city
+                postalCode
+                country
+            }
+          }
+        }
+        `,
+      },
+      config,
+    );
+
+    const reconstructedData = data.data.data.getUserProfile;
 
     dispatch({
       type: USER_DETAILS_SUCCESS,
-      payload: data,
+      payload: reconstructedData,
     });
   } catch (error) {
     const message =
@@ -201,55 +239,84 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
   }
 };
 
-export const updateUserProfile = (user) => async (
-  dispatch,
-  getState,
-) => {
-  try {
-    dispatch({
-      type: USER_UPDATE_PROFILE_REQUEST,
-    });
+export const updateUserProfile =
+  (user) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: USER_UPDATE_PROFILE_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
+      const {
+        userLogin: { userInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.put(
-      `/api/users/profile`,
-      user,
-      config,
-    );
+      const data = await axios.post(
+        'http://localhost:5000/graphql',
+        {
+          query: `
+        mutation {
+          updateUserProfile (userInput: {
+            name: "${user.name}",
+            phoneNo: "${user.phoneNo}",
+            email: "${user.email}",
+            password: "${user.password}",
+            userAddress: [${user.userAddressInput}]
+          }) {
+              _id
+              name
+              phoneNo
+              email
+              password
+              isAdmin
+              userAddress {
+                  address
+                  city
+                  postalCode
+                  country
+              }
+              token
+          }
+        }
+        `,
+        },
+        config,
+      );
 
-    dispatch({
-      type: USER_UPDATE_PROFILE_SUCCESS,
-      payload: data,
-    });
-    dispatch({
-      type: USER_LOGIN_SUCCESS,
-      payload: data,
-    });
-    localStorage.setItem('userInfo', JSON.stringify(data));
-  } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-    if (message === 'Not authorized, token failed') {
-      dispatch(logout());
+      const reconstructedData = data.data.data.updateUserProfile;
+
+      dispatch({
+        type: USER_UPDATE_PROFILE_SUCCESS,
+        payload: reconstructedData,
+      });
+      dispatch({
+        type: USER_LOGIN_SUCCESS,
+        payload: reconstructedData,
+      });
+      localStorage.setItem(
+        'userInfo',
+        JSON.stringify(reconstructedData),
+      );
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      if (message === 'Not authorized, token failed') {
+        dispatch(logout());
+      }
+      dispatch({
+        type: USER_UPDATE_PROFILE_FAIL,
+        payload: message,
+      });
     }
-    dispatch({
-      type: USER_UPDATE_PROFILE_FAIL,
-      payload: message,
-    });
-  }
-};
+  };
 
 export const listUsers = () => async (dispatch, getState) => {
   try {
