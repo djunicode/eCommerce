@@ -118,12 +118,12 @@ const CartScreen = ({ match, history }) => {
     console.log(mutation);
   };
 
-  let x;
-  if (window.innerWidth <= 576) {
-    x = 70;
-  } else {
-    x = 100;
-  }
+  // let x;
+  // if (window.innerWidth <= 450) {
+  //   x = 300;
+  // } else {
+  //   x = 100;
+  // }
 
   return (
     <Wrapper>
@@ -155,14 +155,14 @@ const CartScreen = ({ match, history }) => {
               {cartItems.contents &&
                 cartItems.contents.map((item, index) => (
                   <ListItem>
-                    <Media>
+                    <MediaWrapper>
                       <Image
                         src={item.product.image}
                         alt={item.product.name}
                         fluid
-                        className="mr-4"
-                        width={x}
-                        height={x}
+                        width={100}
+                        height={100}
+                        style={{margin: 'auto'}}
                       />
                       <Media.Body>
                         <Row style={{ marginBottom: '1.2rem' }}>
@@ -185,7 +185,7 @@ const CartScreen = ({ match, history }) => {
                           </Col>
                         </Row>
                         <Row xs={2} sm={3}>
-                          <SecondCol xs={12} sm={5}>
+                          <SecondCol sm={5}>
                             <span style={{ marginRight: '0.5rem' }}>
                               Option:
                             </span>
@@ -195,7 +195,7 @@ const CartScreen = ({ match, history }) => {
                                 : 'None'}
                             </SpanBox>
                           </SecondCol>
-                          <SecondCol xs={10} sm={5}>
+                          <SecondCol sm={5}>
                             Qty:
                             <span>
                               <QtyButtons
@@ -277,7 +277,7 @@ const CartScreen = ({ match, history }) => {
                           </SecondCol>
                         </Row>
                       </Media.Body>
-                    </Media>
+                    </MediaWrapper>
                   </ListItem>
                 ))}
             </ListGroup>
@@ -367,6 +367,11 @@ const Wrapper = styled.div`
     padding: 0;
   }
 `;
+const MediaWrapper = styled(Media) `
+  @media screen and (max-width: 450px) {
+    flex-direction: column;
+  }
+`;
 const Column = styled(Col)`
   @media screen and (max-width: 768px) {
     margin-bottom: 3rem;
@@ -382,6 +387,7 @@ const ListItem = styled(ListGroup.Item)`
   padding: 1.5rem 2rem;
   @media screen and (max-width: 576px) {
     padding: 1rem 1.2rem;
+    flex-direction: column;
   }
 `;
 const PriceList = styled(ListGroup.Item)`
