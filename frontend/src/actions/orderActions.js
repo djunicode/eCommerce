@@ -25,7 +25,10 @@ import { logout } from './userActions';
 
 const url = 'http://localhost:5000/graphql';
 
-export const createOrder = (order) => async (dispatch, getState) => {
+export const createOrder = (query, cart) => async (
+  dispatch,
+  getState,
+) => {
   try {
     dispatch({
       type: ORDER_CREATE_REQUEST,
@@ -35,23 +38,31 @@ export const createOrder = (order) => async (dispatch, getState) => {
       userLogin: { userInfo },
     } = getState();
 
-    const config = {
+    const request = {
+      method: 'post',
+      url,
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `Bearer ${userInfo.token}`,
+        'Content-Type': 'application/json',
+      },
+      data: {
+        query,
       },
     };
 
-    const { data } = await axios.post(`/api/orders`, order, config);
+    const response = await axios(request);
+    console.log(response.data);
 
     dispatch({
       type: ORDER_CREATE_SUCCESS,
-      payload: data,
+      payload: response.data,
     });
-    dispatch({
-      type: CART_CLEAR_ITEMS,
-      payload: data,
-    });
+    if (cart) {
+      dispatch({
+        type: CART_CLEAR_ITEMS,
+        payload: response.data,
+      });
+    }
     localStorage.removeItem('cartItems');
   } catch (error) {
     const message =

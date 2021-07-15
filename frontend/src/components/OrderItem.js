@@ -16,7 +16,7 @@ function OrderItem({ product }) {
               marginTop: '15px',
             }}
           >
-            {product.name}
+            {product.product.name}
           </h1>
           <h1
             style={{

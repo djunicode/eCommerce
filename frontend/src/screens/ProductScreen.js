@@ -69,6 +69,10 @@ const ProductScreen = () => {
   const { cartItems } = useSelector((state) => state.cart);
 
   useEffect(() => {
+    console.log(cartItems);
+  }, [cartItems]);
+
+  useEffect(() => {
     if (cartData.status === 200) {
       setMessage({
         color: 'green',
@@ -204,7 +208,13 @@ const ProductScreen = () => {
     } else if (isDeliverable === true) {
       const temp = { ...data };
       temp.price = price;
-      temp.name = options !== '' ? options : data.name;
+      temp.optionName = options;
+      temp.isOptionSelected = options.localeCompare('') !== 0;
+      temp.product = {
+        _id: data._id,
+        name: data.name,
+      };
+      temp.quantity = qty;
       console.log(temp);
       dispatch({
         type: PINCODE_CHECKED,

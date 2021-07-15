@@ -17,14 +17,15 @@ import {
 } from 'react-bootstrap';
 import styled from 'styled-components';
 import axios from 'axios';
-// import { set } from 'mongoose';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 import Loader from '../components/Loader';
 import OrderItem from '../components/OrderItem';
 import addAddress from '../actions/checkOutActions';
 import { postPincode } from '../actions/productidAction';
 import { PINCODE_CHECKED } from '../constants/productidConstants';
 import { getUserDetails } from '../actions/userActions';
+import { createOrder } from '../actions/orderActions';
 
 // these can be changed
 const orderAmount = 50;
@@ -65,12 +66,9 @@ const paymentHandler = async (e) => {
 };
 
 const initialValues = {
-  // name: '',
-  // number: '',
-  // email: '',
   state: '',
   city: '',
-  pincode: '',
+  postalCode: '',
   address: '',
   saved: false,
 };
@@ -95,13 +93,35 @@ function OrderSummaryScreen() {
   });
   const [address, setAddress] = useState([]);
   const [addressOption, setAddressOption] = useState(0);
+  const [finalAddress, setFinalAddress] = useState({});
+  const [codError, setCodError] = useState({
+    color: 'red',
+    message: '',
+  });
 
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const { user } = useSelector((state) => state.userDetails);
   const { isDeliverable, pincodeLoading } = useSelector(
     (state) => state.checkPincode,
   );
+  const orderStatus = useSelector((state) => state.orderCreate);
+
+  useEffect(() => {
+    if (orderStatus.success) {
+      history.push('/');
+      setCodError({
+        color: 'red',
+        message: '',
+      });
+    } else if (orderStatus.error) {
+      setCodError({
+        color: 'red',
+        message: orderStatus.error,
+      });
+    }
+  }, [orderStatus]);
 
   useEffect(() => {
     if (isDeliverable === false) {
@@ -112,6 +132,16 @@ function OrderSummaryScreen() {
     } else if (isDeliverable === true) {
       setP('on');
       setDa('done');
+      if (ana) {
+        const fAddress = {
+          address: values.address,
+          city: values.city,
+          postalCode: values.postalCode,
+        };
+        setFinalAddress(fAddress);
+      } else if (!ana) {
+        setFinalAddress(address[addressOption]);
+      }
       setPostalStatus({
         color: 'red',
         message: '',
@@ -126,7 +156,7 @@ function OrderSummaryScreen() {
 
       if (values.saved) {
         const a = [];
-        const addedAddress = `{address: "${values.address}", country: "India", postalCode: "${values.pincode}", city: "${values.city}"}`;
+        const addedAddress = `{address: "${values.address}", country: "India", postalCode: "${values.postalCode}", city: "${values.city}"}`;
         address.map((add) => {
           const temp = `{address: "${add.address}", country: "India", postalCode: "${add.postalCode}", city: "${add.city}"}`;
           a.push(temp);
@@ -175,16 +205,13 @@ function OrderSummaryScreen() {
     if (e.target.name === 'pop' && ana) {
       validate();
       if (
-        // errors.name === '' &&
-        // errors.number === '' &&
-        // errors.email === '' &&
         errors.state === '' &&
         errors.city === '' &&
-        errors.pincode === '' &&
+        errors.postalCode === '' &&
         errors.address === ''
       ) {
         if (isDeliverable.length === 0 || isDeliverable === false) {
-          dispatch(postPincode(values.pincode));
+          dispatch(postPincode(values.postalCode));
         } else if (isDeliverable === true) {
           setP('on');
           setDa('done');
@@ -219,7 +246,7 @@ function OrderSummaryScreen() {
     if ('city' in fieldValues)
       temp.city = fieldValues.city ? '' : 'This field is required.';
     if ('pincode' in fieldValues)
-      temp.pincode = fieldValues.pincode
+      temp.postalCode = fieldValues.postalCode
         ? ''
         : 'This field is required.';
     if ('address' in fieldValues)
@@ -249,6 +276,49 @@ function OrderSummaryScreen() {
       [name]: value,
     });
     validate({ [name]: value });
+  };
+
+  const handleCOD = () => {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    const orderItems = [];
+    cart.map((c) => {
+      console.log(typeof c.quantity);
+      console.log(typeof c.price);
+      console.log(typeof c.product._id);
+      const add = `{
+        qty: ${c.quantity},
+        price: ${c.price},
+        product: "${c.product._id}",
+      }`;
+      orderItems.push(add);
+      return null;
+    });
+    const query = `mutation {
+      createOrder(orderInput: {
+        orderItems: [${orderItems}],
+        shippingAddress: {
+          address: "${finalAddress.address}",
+          city: "${finalAddress.city}",
+          postalCode: "${finalAddress.postalCode}",
+          country: "India",
+        },
+        paymentMethod:"Cash",
+        paymentResult: {
+          id: "",
+          status: "pending",
+          update_time: "none",
+          email_address: "${userInfo.email}"
+        },
+        taxPrice: 0,
+        shippingPrice: 0,
+        totalPrice: ${amount},
+        isPaid: false,
+        isDelivered: false,
+      }) {
+        _id
+      }
+    }`;
+    dispatch(createOrder(query, false));
   };
 
   return (
@@ -412,7 +482,11 @@ function OrderSummaryScreen() {
                                   type="radio"
                                   name={index}
                                   id="flexRadioDefault1"
-                                  style={{ left: '25px', top: '6px' }}
+                                  style={{
+                                    left: '25px',
+                                    top: '6px',
+                                    cursor: 'pointer',
+                                  }}
                                   checked={
                                     typeof addressOption ===
                                       'string' &&
@@ -490,62 +564,6 @@ function OrderSummaryScreen() {
                   </span>
                   {ana && (
                     <div style={{ position: 'relative' }}>
-                      {/* <Row className="mt-3">
-                        <Col md={4}>
-                          <label htmlFor="name">Name</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            placeholder="Full Name"
-                            name="name"
-                            style={{ backgroundColor: 'white' }}
-                            onChange={(e) => {
-                              handleInputChange(e);
-                            }}
-                            value={values.name}
-                          />
-                          <small style={{ color: 'red' }}>
-                            {errors.name}
-                          </small>
-                        </Col>
-                        <Col md={4}>
-                          <label htmlFor="number">Number</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="number"
-                            placeholder="Phone Number"
-                            name="number"
-                            style={{ backgroundColor: 'white' }}
-                            onChange={(e) => {
-                              handleInputChange(e);
-                            }}
-                            value={values.number}
-                          />
-                          <small style={{ color: 'red' }}>
-                            {errors.number}
-                          </small>
-                        </Col>
-                        <Col md={4}>
-                          <label htmlFor="email">Email</label>
-                          <input
-                            type="email"
-                            className="form-control"
-                            id="email"
-                            placeholder="email"
-                            name="email"
-                            style={{ backgroundColor: 'white' }}
-                            onChange={(e) => {
-                              handleInputChange(e);
-                            }}
-                            value={values.email}
-                          />
-                          <small style={{ color: 'red' }}>
-                            {errors.email}
-                          </small>
-                        </Col>
-                      </Row> */}
                       <Row className="mt-3">
                         <Col md={4}>
                           <label htmlFor="state">State</label>
@@ -595,10 +613,10 @@ function OrderSummaryScreen() {
                             onChange={(e) => {
                               handleInputChange(e);
                             }}
-                            value={values.pincode}
+                            value={values.postalCode}
                           />
                           <small style={{ color: 'red' }}>
-                            {errors.pincode}
+                            {errors.postalCode}
                           </small>
                         </Col>
                       </Row>
@@ -726,7 +744,12 @@ function OrderSummaryScreen() {
                   Payment Options
                 </h1>
                 <Stylediv>
-                  <StyledButtn variant="danger">COD</StyledButtn>
+                  <StyledButtn
+                    variant="danger"
+                    onClick={() => handleCOD()}
+                  >
+                    COD
+                  </StyledButtn>
                   <StyledButtn
                     variant="danger"
                     onClick={paymentHandler}
@@ -734,6 +757,9 @@ function OrderSummaryScreen() {
                     Others
                   </StyledButtn>
                 </Stylediv>
+                <StyleBox style={{ color: codError.color }}>
+                  {codError.message}
+                </StyleBox>
               </>
             )}
           </Container>
@@ -782,6 +808,13 @@ const StyledButtn = styled(Button)`
 const Stylediv = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`;
+
+const StyleBox = styled.div`
+  display: flex;
+  justify-content: center;
   align-items: center;
   width: 100%;
 `;
