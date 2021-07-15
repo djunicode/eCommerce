@@ -39,12 +39,20 @@ const SearchScreen = () => {
   const searchedProduct = useSelector((state) => state.search);
   const { loading, error, products } = searchedProduct;
 
+  const [localProducts, setLocalProducts] = useState(products);
+  const [productsSet, setProductsSet] = useState(false);
+
+  if (products.length > 0 && !productsSet) {
+    setLocalProducts(products);
+    setProductsSet(true);
+  }
+
   const filtersApplied = useSelector((state) => state.filter);
   const { filters } = filtersApplied;
 
   let breaker = false;
 
-  if (products && products.length === 0 && !loading) {
+  if (localProducts && localProducts.length === 0 && !loading) {
     return (
       <Message variant="danger">
         No Products Matched the Search criteria!
@@ -64,7 +72,7 @@ const SearchScreen = () => {
       ) : (
         <>
           <FilterSidebar page="Search" />
-          {products[0] && (
+          {localProducts[0] && (
             <StyledBadgeSortDiv>
               <StyledBadge variant="danger">
                 {keyword.toUpperCase()}{' '}
@@ -83,17 +91,29 @@ const SearchScreen = () => {
                   <StyledDropdownItem
                     as="button"
                     onClick={() => {
-                      dispatch(search(keyword, 'asc'));
-                      if (
-                        filters.brands &&
-                        JSON.parse(
-                          sessionStorage.getItem(
-                            'proshop_brand_length',
-                          ),
-                        ) === filters.brands.length
-                      ) {
-                        dispatch(filter({}));
-                      }
+                      // dispatch(search(keyword, 'asc'));
+                      // if (
+                      //   filters.brands &&
+                      //   JSON.parse(
+                      //     sessionStorage.getItem(
+                      //       'proshop_brand_length',
+                      //     ),
+                      //   ) === filters.brands.length
+                      // ) {
+                      //   dispatch(filter({}));
+                      // }
+                      const temp = [...localProducts];
+                      setLocalProducts(
+                        temp.sort((a, b) => {
+                          return a.price - b.price;
+                        }),
+                      );
+                      // console.log(localProducts.sort(
+                      //   (a,b) => {
+                      //     console.log(a.price, b.price);
+                      //     return (a.price - b.price)
+                      //   }
+                      // ));
                     }}
                   >
                     Price - Low to High
@@ -101,17 +121,23 @@ const SearchScreen = () => {
                   <StyledDropdownItem
                     as="button"
                     onClick={() => {
-                      dispatch(search(keyword, 'desc'));
-                      if (
-                        filters.brands &&
-                        JSON.parse(
-                          sessionStorage.getItem(
-                            'proshop_brand_length',
-                          ),
-                        ) === filters.brands.length
-                      ) {
-                        dispatch(filter({}));
-                      }
+                      // dispatch(search(keyword, 'desc'));
+                      // if (
+                      //   filters.brands &&
+                      //   JSON.parse(
+                      //     sessionStorage.getItem(
+                      //       'proshop_brand_length',
+                      //     ),
+                      //   ) === filters.brands.length
+                      // ) {
+                      //   dispatch(filter({}));
+                      // }
+                      const temp = [...localProducts];
+                      setLocalProducts(
+                        temp.sort((a, b) => {
+                          return b.price - a.price;
+                        }),
+                      );
                     }}
                   >
                     Price - High to Low
@@ -121,17 +147,17 @@ const SearchScreen = () => {
             </StyledBadgeSortDiv>
           )}
           <StyledGridDiv>
-            {products &&
-              products.length > 0 &&
+            {localProducts &&
+              localProducts.length > 0 &&
               Object.keys(filters).length === 0 &&
-              products.map((product) => (
+              localProducts.map((product) => (
                 <Product product={product} key={product._id} />
               ))}
 
-            {products &&
-              products.length > 0 &&
+            {localProducts &&
+              localProducts.length > 0 &&
               Object.keys(filters).length > 0 &&
-              products.map(
+              localProducts.map(
                 (product) =>
                   product.price <= filters.price.max &&
                   product.price >= filters.price.min &&
@@ -156,16 +182,16 @@ const SearchScreen = () => {
                       No Products Found
                     </StyledWarning>
                     {/* <StyledSimilarProdsH1>
-                    Similar Products
+                    Similar localProducts
                   </StyledSimilarProdsH1> */}
                   </>
                 )}
                 {/* {renderedProds.length === 0 && (
                   <StyledSimilarProdsH1>
-                    Similar Products xxx
+                    Similar localProducts xxx
                   </StyledSimilarProdsH1>
                 )} */}
-                {products.map((product) => {
+                {localProducts.map((product) => {
                   if (
                     !breaker &&
                     filters.brands.includes(product.brand.name) &&
@@ -180,7 +206,7 @@ const SearchScreen = () => {
                   }
                 })}
                 <StyledGridDiv>
-                  {products.map(
+                  {localProducts.map(
                     (product) =>
                       filters.brands.includes(product.brand.name) &&
                       !renderedProds.includes(product) && (
@@ -199,7 +225,7 @@ const SearchScreen = () => {
               <>
                 {(noProds = false)}
                 <StyledGridDiv>
-                  {products.map(
+                  {localProducts.map(
                     (product) =>
                       filters.brands.includes(product.brand.name) &&
                       !renderedProds.includes(product) && (
