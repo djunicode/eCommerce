@@ -26,9 +26,6 @@ const swDev = () => {
       .catch((err) => {
         if (err.response.status === 401) {
           console.warn('Retry!');
-          // localStorage.removeItem('userInfo');
-          // const loc = window.location.hostname;
-          // window.location.replace(`${loc}/login`);
         } else {
           console.warn(err.response.data);
         }
