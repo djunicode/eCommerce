@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import axios from 'axios';
 import { CART_CLEAR_ITEMS } from '../constants/cartConstants';
 import {
@@ -25,61 +24,59 @@ import { logout } from './userActions';
 
 const url = 'http://localhost:5000/graphql';
 
-export const createOrder = (query, cart) => async (
-  dispatch,
-  getState,
-) => {
-  try {
-    dispatch({
-      type: ORDER_CREATE_REQUEST,
-    });
-
-    const {
-      userLogin: { userInfo },
-    } = getState();
-
-    const request = {
-      method: 'post',
-      url,
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-        'Content-Type': 'application/json',
-      },
-      data: {
-        query,
-      },
-    };
-
-    const response = await axios(request);
-    console.log(response.data);
-
-    dispatch({
-      type: ORDER_CREATE_SUCCESS,
-      payload: response.data,
-    });
-    if (cart) {
+export const createOrder =
+  (query, cart) => async (dispatch, getState) => {
+    try {
       dispatch({
-        type: CART_CLEAR_ITEMS,
+        type: ORDER_CREATE_REQUEST,
+      });
+
+      const {
+        userLogin: { userInfo },
+      } = getState();
+
+      const request = {
+        method: 'post',
+        url,
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+          'Content-Type': 'application/json',
+        },
+        data: {
+          query,
+        },
+      };
+
+      const response = await axios(request);
+      console.log(response.data);
+
+      dispatch({
+        type: ORDER_CREATE_SUCCESS,
         payload: response.data,
       });
+      if (cart) {
+        dispatch({
+          type: CART_CLEAR_ITEMS,
+          payload: response.data,
+        });
+      }
+      localStorage.removeItem('cartItems');
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      if (message === 'Not authorized, token failed') {
+        dispatch(logout());
+      }
+      dispatch({
+        type: ORDER_CREATE_FAIL,
+        payload: message,
+      });
     }
-    localStorage.removeItem('cartItems');
-  } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-    if (message === 'Not authorized, token failed') {
-      dispatch(logout());
-    }
-    dispatch({
-      type: ORDER_CREATE_FAIL,
-      payload: message,
-    });
-  }
-};
+  };
 
-export const getOrderDetails = (id) => async (dispatch, getState) => {
+export const getOrderDetails = (id) => async (dispatch) => {
   try {
     dispatch({
       type: ORDER_DETAILS_REQUEST,
@@ -93,13 +90,11 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
       window.localStorage.getItem('userInfo'),
     );
 
-    console.log(userInfo.token);
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+    // const config = {
+    //   headers: {
+    //     Authorization: `Bearer ${userInfo.token}`,
+    //   },
+    // };
 
     const { data } = await axios.post(
       url,
@@ -172,50 +167,48 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
   }
 };
 
-export const payOrder = (orderId, paymentResult) => async (
-  dispatch,
-  getState,
-) => {
-  try {
-    dispatch({
-      type: ORDER_PAY_REQUEST,
-    });
+export const payOrder =
+  (orderId, paymentResult) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: ORDER_PAY_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
+      const {
+        userLogin: { userInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.put(
-      `/api/orders/${orderId}/pay`,
-      paymentResult,
-      config,
-    );
+      const { data } = await axios.put(
+        `/api/orders/${orderId}/pay`,
+        paymentResult,
+        config,
+      );
 
-    dispatch({
-      type: ORDER_PAY_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-    if (message === 'Not authorized, token failed') {
-      dispatch(logout());
+      dispatch({
+        type: ORDER_PAY_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      if (message === 'Not authorized, token failed') {
+        dispatch(logout());
+      }
+      dispatch({
+        type: ORDER_PAY_FAIL,
+        payload: message,
+      });
     }
-    dispatch({
-      type: ORDER_PAY_FAIL,
-      payload: message,
-    });
-  }
-};
+  };
 
 export const deliverOrder = (order) => async (dispatch, getState) => {
   try {
@@ -227,11 +220,11 @@ export const deliverOrder = (order) => async (dispatch, getState) => {
       userLogin: { userInfo },
     } = getState();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+    // const config = {
+    //   headers: {
+    //     Authorization: `Bearer ${userInfo.token}`,
+    //   },
+    // };
 
     const { data } = await axios.post(
       url,
@@ -331,15 +324,11 @@ export const listMyOrders = () => async (dispatch, getState) => {
   }
 };
 
-export const listOrders = () => async (dispatch, getState) => {
+export const listOrders = () => async (dispatch) => {
   try {
     dispatch({
       type: ORDER_LIST_REQUEST,
     });
-
-    const {
-      userLogin: { userInfo },
-    } = getState();
 
     const userinfo = JSON.parse(localStorage.getItem('userInfo'));
 
