@@ -26,6 +26,8 @@ import { postPincode } from '../actions/productidAction';
 import { PINCODE_CHECKED } from '../constants/productidConstants';
 import { getUserDetails } from '../actions/userActions';
 import { createOrder } from '../actions/orderActions';
+import useSubscribe from '../hooks/useSubscribe';
+import useNotification from '../hooks/useNotification';
 
 // these can be changed
 const orderAmount = 50;
@@ -73,6 +75,11 @@ const initialValues = {
   saved: false,
 };
 
+const Subscribe = (notification) => {
+  useSubscribe();
+  useNotification(notification);
+};
+
 function OrderSummaryScreen() {
   const [os, setOs] = useState('on');
   const [da, setDa] = useState('off');
@@ -115,6 +122,9 @@ function OrderSummaryScreen() {
         color: 'red',
         message: '',
       });
+      Subscribe(
+        `Your order for the total of ${amount}Rs has been placed.`,
+      );
     } else if (orderStatus.error) {
       setCodError({
         color: 'red',
