@@ -1,4 +1,5 @@
 import Razorpay from 'razorpay';
+import request from 'request';
 
 const getPaymentOrder = (req, res) => {
   try {
