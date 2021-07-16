@@ -18,7 +18,7 @@ import UserEditScreen from './screens/UserEditScreen';
 import ProductListScreen from './screens/ProductListScreen';
 import ProductEditScreen from './screens/ProductEditScreen';
 import ProductCreateScreen from './screens/ProductCreateScreen';
-import OrderListScreen from './screens/OrderListScreen';
+// import OrderListScreen from './screens/OrderListScreen';
 import OrderSummaryScreen from './screens/OrderSummaryScreen';
 import OrdersScreen from './screens/OrdersScreen';
 import SearchScreen from './screens/SearchScreen';
@@ -66,10 +66,10 @@ const App = () => {
             path="/admin/product/create"
             component={ProductCreateScreen}
           />
-          <Route
+          {/* <Route
             path="/admin/orderlist"
             component={OrderListScreen}
-          />
+          /> */}
           <Route
             path="/admin/orderdetails/:id"
             component={OrderDetailsAdmin}
@@ -100,7 +100,7 @@ const App = () => {
             path="/OrderSummaryScreen"
             component={OrderSummaryScreen}
           />
-          <Route path="/orderscreen" component={OrdersScreen} />
+          <Route path="/admin/orderlist" component={OrdersScreen} />
         </Container>
       </main>
       <Footer />

@@ -90,6 +90,11 @@ const Header = () => {
                         Orders
                       </StyledNavDropDownItem>
                     </StyledLinkContainer>
+                    <StyledLinkContainer to="/admin/chatbot">
+                      <StyledNavDropDownItem>
+                        Chatbot
+                      </StyledNavDropDownItem>
+                    </StyledLinkContainer>
                   </StyledNavDropDown>
                 )}
               </Nav>

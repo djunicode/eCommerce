@@ -59,6 +59,7 @@ import {
   brandEditReducer,
   brandListReducer,
 } from './reducers/brandReducers';
+import postAddressReducer from './reducers/checkOutReducers';
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -105,6 +106,7 @@ const reducer = combineReducers({
   updateChatbot,
   checkPincode: pincodeReducer,
   cartAdd: cartAddReducer,
+  addAddress: postAddressReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem('cartItems')
