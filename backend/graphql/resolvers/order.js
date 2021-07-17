@@ -179,7 +179,6 @@ const getOrders = async (args, { req, redis }) => {
 //private
 const isDeliverable = async (args, {req}) => {
   try {
-    if (loggedin(req)) {  
       const pin = args.postalCode;
       if (pin.length != 6) {
         return false;
@@ -192,7 +191,6 @@ const isDeliverable = async (args, {req}) => {
         }
         return q;
       }
-    }
   } catch (err) {
     console.log(err);
     throw err;
