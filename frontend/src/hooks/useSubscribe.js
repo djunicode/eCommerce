@@ -54,6 +54,9 @@ const useSubscribe = () => {
         },
         body: JSON.stringify(subscription),
       });
+    })
+    .catch((error) => {
+      console.log(error);
     });
 };
 
