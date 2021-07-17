@@ -240,6 +240,7 @@ const ProductScreen = () => {
       });
     } else if (isDeliverable === true) {
       const mutation = [];
+      console.log(`${data._id}sjsks`);
       mutation.push(
         `{product:"${data._id}",isOptionSelected: ${
           options.length !== 0

@@ -29,6 +29,7 @@ main {
   font-family: 'Open Sans', sans-serif;
   color: #222831;
   margin-top: 120px;
+  padding: 0 4rem;
 }
 
 h1 {
@@ -219,10 +220,6 @@ body {
   }
 }
 @media screen and (max-width: 600px) {
-  main {
-    padding: 0 40px;
-    font-size: 10px;
-  }
   h1 {
     font-size: 1.5rem;
   }
@@ -231,6 +228,11 @@ body {
     width: 36px;
     height: 36px;
     margin: 0 -40px;
+  }
+}
+@media screen and (max-width: 400px) {
+  main {
+    padding: 0 1rem;
   }
 }
 

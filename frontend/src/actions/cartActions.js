@@ -44,6 +44,7 @@ export const getCartItems = (query) => async (dispatch) => {
     if (message === 'Not authorized, token failed') {
       dispatch(logout());
     }
+    console.log(message);
     dispatch({
       type: CART_LIST_FAIL,
       payload: message,
