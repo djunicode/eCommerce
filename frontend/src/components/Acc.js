@@ -264,19 +264,8 @@ const Acc = ({
               setDelt(false);
             }}
           />
-          <div
-            style={{
-              position: 'fixed',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              backgroundColor: '#FFF',
-              padding: '50px',
-              zIndex: 1000,
-              borderRadius: '20px',
-            }}
-          >
-            Are you sure you want to delete this?
+          <ModalContainer>
+            Are you sure you want to delete this option?
             <StyledDiv>
               <StyledButtn
                 variant="danger"
@@ -296,7 +285,7 @@ const Acc = ({
                 No
               </StyledButtn>
             </StyledDiv>
-          </div>
+          </ModalContainer>
         </>
       )}
     </>
@@ -336,6 +325,7 @@ const StyledDiv = styled.div`
   justify-content: space-evenly;
   align-items: center;
   width: 100%;
+  margin-top: 1rem;
 `;
 const Icon = styled.i`
   color: #929293;
@@ -347,5 +337,19 @@ const TextSpan = styled.span`
   width: 80%;
   @media screen and (max-width: 500px) {
     width: 40%;
+  }
+`;
+const ModalContainer = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 50px;
+  z-index: 1000;
+  @media screen and (max-width: 500px) {
+    padding: 20px;
+    top: 60%;
+    width: 90%;
   }
 `;

@@ -190,12 +190,12 @@ const StyledButton = styled(Button)`
   border-radius: 4px;
   margin-top: 12px;
 `;
-const ModalContainer = styled.div `
+const ModalContainer = styled.div`
   position: absolute;
   top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #FFF;
+  background-color: #fff;
   padding: 50px;
   z-index: 1000;
   @media screen and (max-width: 500px) {

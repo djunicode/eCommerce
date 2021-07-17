@@ -424,7 +424,7 @@ const ProductListScreen = ({ history }) => {
   );
 
   return (
-    <Wrapper>
+    <div>
       <Row xs={1} sm={2} lg={4}>
         <Column>
           <Form.Label>Search Products</Form.Label>
@@ -512,19 +512,11 @@ const ProductListScreen = ({ history }) => {
           </div>
         </>
       )}
-    </Wrapper>
+    </div>
   );
 };
 
 export default ProductListScreen;
-
-const Wrapper = styled.div`
-  padding: 0 4rem;
-
-  @media screen and (max-width: 600px) {
-    padding: 0;
-  }
-`;
 
 const Column = styled(Col)`
   @media screen and (max-width: 600px) {

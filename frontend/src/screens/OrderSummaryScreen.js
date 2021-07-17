@@ -31,7 +31,7 @@ const paymentHandler = async (e) => {
   });
   const { data } = response;
   const options = {
-    key: process.env.RAZOR_PAY_TEST_KEY,
+    key: process.env.RAZOR_PAY_KEY_ID,
     name: myAppName,
     description: myDescription,
     order_id: data.id,
@@ -40,8 +40,14 @@ const paymentHandler = async (e) => {
       try {
         const paymentId = response.razorpay_payment_id;
         const url = `${API_URL}capture/${paymentId}`;
-        const captureResponse = await axios.post(url, {});
+        const captureResponse = await axios.post(url, {
+          amount: orderAmount,
+        });
         console.log(captureResponse.data);
+        if (captureResponse.data) {
+          // call query
+          console.log('success');
+        }
       } catch (err) {
         console.log(err);
       }

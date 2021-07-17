@@ -470,19 +470,8 @@ const ChatbotAdmin = () => {
                 setDelt(false);
               }}
             />
-            <div
-              style={{
-                position: 'fixed',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                backgroundColor: '#FFF',
-                padding: '50px',
-                zIndex: 1000,
-                borderRadius: '20px',
-              }}
-            >
-              Are you sure you want to delete this?
+            <ModalContainer>
+              Are you sure you want to delete this option?
               <StyledDiv>
                 <Button
                   variant="danger"
@@ -502,7 +491,7 @@ const ChatbotAdmin = () => {
                   No
                 </Button>
               </StyledDiv>
-            </div>
+            </ModalContainer>
           </>
         )}
       </div>
@@ -601,6 +590,7 @@ const StyledDiv = styled.div`
   justify-content: space-evenly;
   align-items: center;
   width: 100%;
+  margin-top: 1.5rem;
 `;
 
 const Stylediv = styled.div`
@@ -618,12 +608,12 @@ const Stylediv = styled.div`
     height: 7rem;
   }
 `;
-const ModalContainer = styled.div `
+const ModalContainer = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #FFF;
+  background-color: #fff;
   padding: 50px;
   z-index: 1000;
   @media screen and (max-width: 500px) {

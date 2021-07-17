@@ -257,7 +257,7 @@ const ProductEditScreen = ({ match, history }) => {
   // }, [optionsInput]);
 
   return (
-    <Wrapper>
+    <div>
       <Link
         to="/admin/productlist"
         className="btn btn-light my-3"
@@ -595,19 +595,11 @@ const ProductEditScreen = ({ match, history }) => {
           </Col>
         </>
       )}
-    </Wrapper>
+    </div>
   );
 };
 
 export default ProductEditScreen;
-
-const Wrapper = styled.div`
-  padding: 0 4rem;
-
-  @media screen and (max-width: 600px) {
-    padding: 0;
-  }
-`;
 
 const Column = styled(Col)`
   @media screen and (max-width: 600px) {

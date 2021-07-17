@@ -75,9 +75,9 @@ const Header = () => {
                 )}
                 {userInfo && userInfo.isAdmin && (
                   <StyledNavDropDown title="Admin" id="adminmenu">
-                    <StyledLinkContainer to="/admin/userlist">
+                    <StyledLinkContainer to="/admin/chatbot">
                       <StyledNavDropDownItem>
-                        Users
+                        Chatbot
                       </StyledNavDropDownItem>
                     </StyledLinkContainer>
                     <StyledLinkContainer to="/admin/productlist">
