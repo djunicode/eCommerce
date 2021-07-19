@@ -20,29 +20,29 @@ import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { getProduct, postPincode } from '../actions/productidAction';
 import ReactSlick from '../components/ReactSlick';
-import Questions from '../components/Questions';
+// import Questions from '../components/Questions';
 import Ratings from '../components/Ratings';
-import ProductDetails from '../components/ProductDetails';
+// import ProductDetails from '../components/ProductDetails';
 import { addToCart, getCartItems } from '../actions/cartActions';
 import { PINCODE_CHECKED } from '../constants/productidConstants';
 
-const initialValues = {
-  question: '',
-  review: '',
-  rating: '',
-};
+// const initialValues = {
+//   question: '',
+//   review: '',
+//   rating: '',
+// };
 
 // { history, match }
-const ProductScreen = () => {
+const ProductScreen = ({ match }) => {
   const [qty, setQty] = useState(1);
-  const [pd, setPd] = useState(true);
-  const [rr, setRr] = useState(false);
-  const [q, setQ] = useState(false);
-  const [aaq, setAaq] = useState(false);
-  const [values, setValues] = useState(initialValues);
-  const [questions, setQuestions] = useState([
-    { question: 'Is it durable ?', answer: 'Yes' },
-  ]);
+  // const [pd, setPd] = useState(false);
+  const [rr, setRr] = useState(true);
+  // const [q, setQ] = useState(false);
+  // const [aaq, setAaq] = useState(false);
+  // const [values, setValues] = useState(initialValues);
+  // const [questions, setQuestions] = useState([
+  //   { question: 'Is it durable ?', answer: 'Yes' },
+  // ]);
   const [war, setWar] = useState(false);
   const [disable, setDisable] = useState(false);
   const [pincode, setPincode] = useState('');
@@ -56,6 +56,7 @@ const ProductScreen = () => {
 
   const dispatch = useDispatch();
   const history = useHistory();
+  const productId = match.params.id;
 
   const { loading, data, error } = useSelector(
     (state) => state.productid,
@@ -97,18 +98,18 @@ const ProductScreen = () => {
 
   const handleTab = (e) => {
     if (e.target.name === 'pd') {
-      setPd(true);
+      // setPd(true);
       setRr(false);
-      setQ(false);
+      // setQ(false);
     }
     if (e.target.name === 'rr') {
       setRr(true);
-      setPd(false);
-      setQ(false);
+      // setPd(false);
+      // setQ(false);
     }
     if (e.target.name === 'q') {
-      setQ(true);
-      setPd(false);
+      // setQ(true);
+      // setPd(false);
       setRr(false);
     }
   };
@@ -272,27 +273,6 @@ const ProductScreen = () => {
           'Please check if this product can be delivered to your location by entering your pincode',
       });
     }
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setValues({
-      ...values,
-      [name]: value,
-    });
-  };
-
-  const handleDone = () => {
-    if (values.question) {
-      setQuestions((qu) => {
-        setAaq(false);
-        return [
-          { question: values.question, answer: 'None Yet' },
-          ...qu,
-        ];
-      });
-    }
-    setValues((v) => ({ ...v, question: '' }));
   };
 
   return (
@@ -625,7 +605,7 @@ const ProductScreen = () => {
           </Contain>
           <Contain className="my-5" style={{ padding: '0px' }}>
             <Nav fill variant="tabs" defaultActiveKey="/home">
-              <Nav.Item
+              {/* <Nav.Item
                 style={{ marginRight: '0', flex: '0 1 auto' }}
               >
                 <Links
@@ -641,7 +621,7 @@ const ProductScreen = () => {
                 >
                   Product Details
                 </Links>
-              </Nav.Item>
+              </Nav.Item> */}
               <Nav.Item
                 style={{ marginRight: '0', flex: '0 1 auto' }}
               >
@@ -659,7 +639,7 @@ const ProductScreen = () => {
                   Ratings &amp; Reviews
                 </Links>
               </Nav.Item>
-              <Nav.Item
+              {/* <Nav.Item
                 style={{ marginRight: '0', flex: '0 1 auto' }}
               >
                 <Links
@@ -675,23 +655,24 @@ const ProductScreen = () => {
                 >
                   Questions
                 </Links>
-              </Nav.Item>
+              </Nav.Item> */}
             </Nav>
             <Card
               className="p-4"
               style={{ backgroundColor: '#F9F9F9', border: 'none' }}
             >
-              {pd && <ProductDetails />}
+              {/* {pd && <ProductDetails />} */}
               {rr && (
                 <Ratings
                   war={war}
                   setWar={setWar}
-                  handleInputChange={handleInputChange}
-                  values={values}
-                  handleDone={handleDone}
+                  // handleInputChange={handleInputChange}
+                  // values={values}
+                  // handleDone={handleDone}
+                  productId={productId}
                 />
               )}
-              {q && (
+              {/* {q && (
                 <Questions
                   aaq={aaq}
                   setAaq={setAaq}
@@ -700,7 +681,7 @@ const ProductScreen = () => {
                   values={values}
                   questions={questions}
                 />
-              )}
+              )} */}
             </Card>
           </Contain>
         </>

@@ -60,6 +60,10 @@ import {
   brandListReducer,
 } from './reducers/brandReducers';
 import postAddressReducer from './reducers/checkOutReducers';
+import {
+  getReviewsReducer,
+  postReviewReducer,
+} from './reducers/reviewReducers';
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -107,6 +111,8 @@ const reducer = combineReducers({
   checkPincode: pincodeReducer,
   cartAdd: cartAddReducer,
   addAddress: postAddressReducer,
+  reviewGet: getReviewsReducer,
+  reviewPost: postReviewReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem('cartItems')
