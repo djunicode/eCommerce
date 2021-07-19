@@ -193,8 +193,6 @@ const getNewProducts = async (args, { req, redis }) => {
 const updateProduct = async (args, { req, redis }) => {
   try {
     if (admin(req)) {
-      // console.log(args.productId);
-      // console.log(args);
       const product = await Product.findById(args.productId);
       if (!product) {
         throw new Error('Product not found');
@@ -216,7 +214,6 @@ const updateProduct = async (args, { req, redis }) => {
         $set: newUpdatedProduct,
       });
       const updatedProduct = await Product.findById(args.productId);
-      console.log(updatedProduct);
       return updatedProduct;
     }
   } catch (err) {
@@ -233,7 +230,6 @@ const deleteProduct = async (args, { req, redis }) => {
       const product = await Product.find({ _id: args.id });
       if (product) {
         const deleted = await Product.findByIdAndDelete(args.id);
-        // console.log(deleted);
         return { ...deleted._doc };
       } else {
         throw new Error('Product not found');
@@ -247,34 +243,40 @@ const deleteProduct = async (args, { req, redis }) => {
 
 //add product review
 //private/
-const createProductReview = async (args, req) => {
+const createProductReview = async (args, {req}) => {
   try {
     if (loggedin(req)) {
       const product = await Product.find({ _id: args.productId });
+      
       if (product) {
         let reviews = product[0].reviews;
         let numReviews = product[0].numReviews;
-        let avgRate =
-          product[0].avgRating * numReviews + args.productReview.rating;
+        let avgRate = product[0].avgRating * numReviews + args.productReview.rating;
         numReviews = product[0].reviews.length + 1;
         avgRate = avgRate / numReviews;
+        
         const review = {
           name: args.productReview.name,
           rating: args.productReview.rating,
           comment: args.productReview.comment,
+          date: args.productReview.date,
           user: req.user,
         };
         reviews.push(review);
+        
         const updatedProduct = {
           reviews: reviews,
           numReviews: numReviews,
           avgRating: avgRate,
         };
+        
         await Product.findByIdAndUpdate(args.productId, {
           $set: updatedProduct,
         });
         const newUpdatedProduct = await Product.findById(args.productId);
         return newUpdatedProduct;
+      } else {
+        throw new Error('Product not found');
       }
     }
   } catch (err) {
@@ -290,7 +292,6 @@ const getProductReviews = async (args) => {
     const product = await Product.find({ _id: args.productId });
     if (product) {
       const reviews = product[0].reviews;
-      // console.log(reviews);
       return reviews;
     }
   } catch (err) {
