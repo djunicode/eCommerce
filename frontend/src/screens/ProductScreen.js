@@ -24,7 +24,10 @@ import ReactSlick from '../components/ReactSlick';
 import Ratings from '../components/Ratings';
 // import ProductDetails from '../components/ProductDetails';
 import { addToCart, getCartItems } from '../actions/cartActions';
-import { PINCODE_CHECKED } from '../constants/productidConstants';
+import {
+  PINCODE_CHECKED,
+  PRODUCTID_CREATED,
+} from '../constants/productidConstants';
 
 // const initialValues = {
 //   question: '',
@@ -53,6 +56,7 @@ const ProductScreen = ({ match }) => {
   const [options, setOptions] = useState('');
   const [price, setPrice] = useState();
   const [maxQty, setMaxQty] = useState();
+  const [tempData, setTempData] = useState({});
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -177,22 +181,30 @@ const ProductScreen = ({ match }) => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (data._id) {
-      console.log(data);
-      if (data.countInStock === 0) {
+    if (tempData._id) {
+      if (tempData.countInStock === 0) {
         setDisable(true);
       }
-      setPrice(data.price);
-      setMaxQty(data.countInStock);
+      setPrice(tempData.price);
+      setMaxQty(tempData.countInStock);
+    }
+  }, [tempData]);
+
+  useEffect(() => {
+    if (data._id) {
+      setTempData(data);
+      dispatch({
+        type: PRODUCTID_CREATED,
+      });
     }
   }, [data]);
 
   const handleOption = (e) => {
     setOptions(e.target.value);
-    data.options.forEach((option, index) => {
+    tempData.options.forEach((option, index) => {
       if (option.name === e.target.value) {
-        setPrice(data.options[index].price);
-        setMaxQty(data.options[index].countInStock);
+        setPrice(tempData.options[index].price);
+        setMaxQty(tempData.options[index].countInStock);
         setQty(1);
       }
     });
@@ -207,13 +219,13 @@ const ProductScreen = ({ match }) => {
         },
       });
     } else if (isDeliverable === true) {
-      const temp = { ...data };
+      const temp = { ...tempData };
       temp.price = price;
       temp.optionName = options;
       temp.isOptionSelected = options.localeCompare('') !== 0;
       temp.product = {
-        _id: data._id,
-        name: data.name,
+        _id: tempData._id,
+        name: tempData.name,
       };
       temp.quantity = qty;
       console.log(temp);
@@ -242,14 +254,14 @@ const ProductScreen = ({ match }) => {
     } else if (isDeliverable === true) {
       const mutation = [];
       mutation.push(
-        `{product:"${data._id}",isOptionSelected: ${
+        `{product:"${tempData._id}",isOptionSelected: ${
           options.length !== 0
         }, optionName: "${options}", price: ${price}, quantity: ${qty}}`,
       );
       let added = false;
       cartItems.contents.map((item) => {
         if (
-          item.product._id === data._id &&
+          item.product._id === tempData._id &&
           item.optionName === options
         ) {
           added = true;
@@ -277,7 +289,7 @@ const ProductScreen = ({ match }) => {
 
   return (
     <Box>
-      {loading ? (
+      {loading || !tempData._id ? (
         <Loader />
       ) : error ? (
         <Message>{error}</Message>
@@ -314,7 +326,7 @@ const ProductScreen = ({ match }) => {
                     padding: '0px',
                   }}
                 >
-                  {data.name}
+                  {tempData.name}
                 </Heading>
                 <div
                   style={{
@@ -324,7 +336,7 @@ const ProductScreen = ({ match }) => {
                     transform: 'translateY(-1.5%)',
                   }}
                 >
-                  {data.brand && data.brand.name}
+                  {tempData.brand && tempData.brand.name}
                 </div>
                 <Rating value={4.5} text="(4.5)" />
                 <Price
@@ -337,10 +349,11 @@ const ProductScreen = ({ match }) => {
                   Rs {price}
                 </Price>
                 <div className="mt-4" style={{ fontWeight: '450' }}>
-                  {data.description}
+                  {tempData.description}
                 </div>
                 <Row className="mt-5">
-                  {data.options && data.options.length !== 0 ? (
+                  {tempData.options &&
+                  tempData.options.length !== 0 ? (
                     <Col xs={12} md={6}>
                       <Row
                         className="pl-3"
@@ -378,8 +391,8 @@ const ProductScreen = ({ match }) => {
                           <option hidden default>
                             Select Option
                           </option>
-                          {data.options &&
-                            data.options.map((p, index) => {
+                          {tempData.options &&
+                            tempData.options.map((p, index) => {
                               return (
                                 <option value={p.name} key={index}>
                                   {p.name}
@@ -594,7 +607,7 @@ const ProductScreen = ({ match }) => {
                           fontWeight: '700',
                         }}
                       >
-                        {data.countInStock === 0 &&
+                        {tempData.countInStock === 0 &&
                           'This product is currently out of stock'}
                       </span>
                     </div>

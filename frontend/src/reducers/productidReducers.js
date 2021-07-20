@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import {
   PRODUCTID_CREATE_FAIL,
   PRODUCTID_CREATE_SUCCESS,
@@ -7,10 +6,11 @@ import {
   PINCODE_CHECK_REQUEST,
   PINCODE_CHECK_SUCCESS,
   PINCODE_CHECKED,
+  PRODUCTID_CREATED,
 } from '../constants/productidConstants';
 
 export const productidReducer = (
-  state = { loading: false, data: [], error: '' },
+  state = { loading: false, data: {}, error: '' },
   action,
 ) => {
   switch (action.type) {
@@ -26,6 +26,8 @@ export const productidReducer = (
     case PRODUCTID_CREATE_FAIL:
       console.log(action.payload);
       return { ...state, loading: false, error: action.payload };
+    case PRODUCTID_CREATED:
+      return { loading: false, data: {}, error: '' };
     default:
       return state;
   }
