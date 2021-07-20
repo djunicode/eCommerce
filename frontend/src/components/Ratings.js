@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -5,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { useHistory } from 'react-router';
 import Review from './Review';
 import { getReviews, postReview } from '../actions/reviewActions';
 
@@ -18,16 +20,17 @@ const Ratings = ({ war, setWar, productId }) => {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
   const dispatch = useDispatch();
+  const history = useHistory();
 
-  const { loadingReviews, reviews, errorReviews } = useSelector(
+  const { reviews, errorReviews } = useSelector(
     (state) => state.reviewGet,
   );
 
   useEffect(() => {
-    if (reviews.length !== 0){
+    if (reviews.length !== 0) {
       setRatings(reviews);
     }
-  }, [reviews])
+  }, [reviews]);
 
   useEffect(() => {
     dispatch(getReviews(productId));
@@ -48,20 +51,36 @@ const Ratings = ({ war, setWar, productId }) => {
       Number(values.rating) >= 1 &&
       Number(values.rating) <= 5
     ) {
-      dispatch(
-        postReview({
+      let time = new Date();
+      time = time.toLocaleString([], {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+      });
+      if (userInfo) {
+        const tempReview = {
           name: userInfo.name,
           rating: values.rating,
           comment: values.comment,
+          date: time,
           productId,
-        }),
-      );
-      setMessage('');
-      setWar(false);
-      setValues({
-        comment: '',
-        rating: '',
-      });
+        };
+        dispatch(postReview(tempReview));
+        setMessage('');
+        setWar(false);
+        setValues({
+          comment: '',
+          rating: '',
+        });
+        setRatings([tempReview, ...ratings]);
+      } else {
+        history.push({
+          pathname: '/login',
+          state: {
+            redirect: `${window.location.pathname}`,
+          },
+        });
+      }
     }
   };
 
@@ -166,7 +185,35 @@ const Ratings = ({ war, setWar, productId }) => {
           </div>
         </div>
       )}
-      <Review />
+      <hr />
+      {ratings.length !== 0 ? (
+        ratings.map((review, index) => {
+          return <Review review={review} key={index} />;
+        })
+      ) : (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            color: 'black',
+          }}
+        >
+          No Reviews
+        </div>
+      )}
+      {errorReviews && (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            color: 'black',
+          }}
+        >
+          No Reviews
+        </div>
+      )}
     </>
   );
 };

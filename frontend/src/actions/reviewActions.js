@@ -24,6 +24,7 @@ export const getReviews = (id) => async (dispatch) => {
               name,
               rating,
               comment,
+              date,
             }
           }
         `,
@@ -70,6 +71,7 @@ export const postReview = (info) => async (dispatch) => {
             name: "${info.name}",
             rating: ${info.rating},
             comment: "${info.comment}",
+            date: "${info.date}",
           }) {
             _id
           }
