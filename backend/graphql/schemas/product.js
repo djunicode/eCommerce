@@ -31,6 +31,7 @@ export const ProductSchema = `
         rating: Int!
         comment: String!
         user: ID!
+        date: String
     }
 
     type productQ {
@@ -91,6 +92,7 @@ export const ProductSchema = `
         name: String!
         rating: Int!
         comment: String!
+        date: String!
     }
 
     input ProductQ {

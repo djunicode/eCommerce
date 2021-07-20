@@ -20,29 +20,32 @@ import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { getProduct, postPincode } from '../actions/productidAction';
 import ReactSlick from '../components/ReactSlick';
-import Questions from '../components/Questions';
+// import Questions from '../components/Questions';
 import Ratings from '../components/Ratings';
-import ProductDetails from '../components/ProductDetails';
+// import ProductDetails from '../components/ProductDetails';
 import { addToCart, getCartItems } from '../actions/cartActions';
-import { PINCODE_CHECKED } from '../constants/productidConstants';
+import {
+  PINCODE_CHECKED,
+  PRODUCTID_CREATED,
+} from '../constants/productidConstants';
 
-const initialValues = {
-  question: '',
-  review: '',
-  rating: '',
-};
+// const initialValues = {
+//   question: '',
+//   review: '',
+//   rating: '',
+// };
 
 // { history, match }
-const ProductScreen = () => {
+const ProductScreen = ({ match }) => {
   const [qty, setQty] = useState(1);
-  const [pd, setPd] = useState(true);
-  const [rr, setRr] = useState(false);
-  const [q, setQ] = useState(false);
-  const [aaq, setAaq] = useState(false);
-  const [values, setValues] = useState(initialValues);
-  const [questions, setQuestions] = useState([
-    { question: 'Is it durable ?', answer: 'Yes' },
-  ]);
+  // const [pd, setPd] = useState(false);
+  const [rr, setRr] = useState(true);
+  // const [q, setQ] = useState(false);
+  // const [aaq, setAaq] = useState(false);
+  // const [values, setValues] = useState(initialValues);
+  // const [questions, setQuestions] = useState([
+  //   { question: 'Is it durable ?', answer: 'Yes' },
+  // ]);
   const [war, setWar] = useState(false);
   const [disable, setDisable] = useState(false);
   const [pincode, setPincode] = useState('');
@@ -53,9 +56,11 @@ const ProductScreen = () => {
   const [options, setOptions] = useState('');
   const [price, setPrice] = useState();
   const [maxQty, setMaxQty] = useState();
+  const [tempData, setTempData] = useState({});
 
   const dispatch = useDispatch();
   const history = useHistory();
+  const productId = match.params.id;
 
   const { loading, data, error } = useSelector(
     (state) => state.productid,
@@ -97,18 +102,18 @@ const ProductScreen = () => {
 
   const handleTab = (e) => {
     if (e.target.name === 'pd') {
-      setPd(true);
+      // setPd(true);
       setRr(false);
-      setQ(false);
+      // setQ(false);
     }
     if (e.target.name === 'rr') {
       setRr(true);
-      setPd(false);
-      setQ(false);
+      // setPd(false);
+      // setQ(false);
     }
     if (e.target.name === 'q') {
-      setQ(true);
-      setPd(false);
+      // setQ(true);
+      // setPd(false);
       setRr(false);
     }
   };
@@ -176,22 +181,30 @@ const ProductScreen = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (data._id) {
-      console.log(data);
-      if (data.countInStock === 0) {
+    if (tempData._id) {
+      if (tempData.countInStock === 0) {
         setDisable(true);
       }
-      setPrice(data.price);
-      setMaxQty(data.countInStock);
+      setPrice(tempData.price);
+      setMaxQty(tempData.countInStock);
+    }
+  }, [tempData]);
+
+  useEffect(() => {
+    if (data._id) {
+      setTempData(data);
+      dispatch({
+        type: PRODUCTID_CREATED,
+      });
     }
   }, [data]);
 
   const handleOption = (e) => {
     setOptions(e.target.value);
-    data.options.forEach((option, index) => {
+    tempData.options.forEach((option, index) => {
       if (option.name === e.target.value) {
-        setPrice(data.options[index].price);
-        setMaxQty(data.options[index].countInStock);
+        setPrice(tempData.options[index].price);
+        setMaxQty(tempData.options[index].countInStock);
         setQty(1);
       }
     });
@@ -206,13 +219,13 @@ const ProductScreen = () => {
         },
       });
     } else if (isDeliverable === true) {
-      const temp = { ...data };
+      const temp = { ...tempData };
       temp.price = price;
       temp.optionName = options;
       temp.isOptionSelected = options.localeCompare('') !== 0;
       temp.product = {
-        _id: data._id,
-        name: data.name,
+        _id: tempData._id,
+        name: tempData.name,
       };
       temp.quantity = qty;
       console.log(temp);
@@ -241,14 +254,14 @@ const ProductScreen = () => {
     } else if (isDeliverable === true) {
       const mutation = [];
       mutation.push(
-        `{product:"${data._id}",isOptionSelected: ${
+        `{product:"${tempData._id}",isOptionSelected: ${
           options.length !== 0
         }, optionName: "${options}", price: ${price}, quantity: ${qty}}`,
       );
       let added = false;
       cartItems.contents.map((item) => {
         if (
-          item.product._id === data._id &&
+          item.product._id === tempData._id &&
           item.optionName === options
         ) {
           added = true;
@@ -274,30 +287,9 @@ const ProductScreen = () => {
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setValues({
-      ...values,
-      [name]: value,
-    });
-  };
-
-  const handleDone = () => {
-    if (values.question) {
-      setQuestions((qu) => {
-        setAaq(false);
-        return [
-          { question: values.question, answer: 'None Yet' },
-          ...qu,
-        ];
-      });
-    }
-    setValues((v) => ({ ...v, question: '' }));
-  };
-
   return (
     <Box>
-      {loading ? (
+      {loading || !tempData._id ? (
         <Loader />
       ) : error ? (
         <Message>{error}</Message>
@@ -334,7 +326,7 @@ const ProductScreen = () => {
                     padding: '0px',
                   }}
                 >
-                  {data.name}
+                  {tempData.name}
                 </Heading>
                 <div
                   style={{
@@ -344,7 +336,7 @@ const ProductScreen = () => {
                     transform: 'translateY(-1.5%)',
                   }}
                 >
-                  {data.brand && data.brand.name}
+                  {tempData.brand && tempData.brand.name}
                 </div>
                 <Rating value={4.5} text="(4.5)" />
                 <Price
@@ -357,10 +349,11 @@ const ProductScreen = () => {
                   Rs {price}
                 </Price>
                 <div className="mt-4" style={{ fontWeight: '450' }}>
-                  {data.description}
+                  {tempData.description}
                 </div>
                 <Row className="mt-5">
-                  {data.options && data.options.length !== 0 ? (
+                  {tempData.options &&
+                  tempData.options.length !== 0 ? (
                     <Col xs={12} md={6}>
                       <Row
                         className="pl-3"
@@ -398,8 +391,8 @@ const ProductScreen = () => {
                           <option hidden default>
                             Select Option
                           </option>
-                          {data.options &&
-                            data.options.map((p, index) => {
+                          {tempData.options &&
+                            tempData.options.map((p, index) => {
                               return (
                                 <option value={p.name} key={index}>
                                   {p.name}
@@ -614,7 +607,7 @@ const ProductScreen = () => {
                           fontWeight: '700',
                         }}
                       >
-                        {data.countInStock === 0 &&
+                        {tempData.countInStock === 0 &&
                           'This product is currently out of stock'}
                       </span>
                     </div>
@@ -625,7 +618,7 @@ const ProductScreen = () => {
           </Contain>
           <Contain className="my-5" style={{ padding: '0px' }}>
             <Nav fill variant="tabs" defaultActiveKey="/home">
-              <Nav.Item
+              {/* <Nav.Item
                 style={{ marginRight: '0', flex: '0 1 auto' }}
               >
                 <Links
@@ -641,7 +634,7 @@ const ProductScreen = () => {
                 >
                   Product Details
                 </Links>
-              </Nav.Item>
+              </Nav.Item> */}
               <Nav.Item
                 style={{ marginRight: '0', flex: '0 1 auto' }}
               >
@@ -659,7 +652,7 @@ const ProductScreen = () => {
                   Ratings &amp; Reviews
                 </Links>
               </Nav.Item>
-              <Nav.Item
+              {/* <Nav.Item
                 style={{ marginRight: '0', flex: '0 1 auto' }}
               >
                 <Links
@@ -675,23 +668,24 @@ const ProductScreen = () => {
                 >
                   Questions
                 </Links>
-              </Nav.Item>
+              </Nav.Item> */}
             </Nav>
             <Card
               className="p-4"
               style={{ backgroundColor: '#F9F9F9', border: 'none' }}
             >
-              {pd && <ProductDetails />}
+              {/* {pd && <ProductDetails />} */}
               {rr && (
                 <Ratings
                   war={war}
                   setWar={setWar}
-                  handleInputChange={handleInputChange}
-                  values={values}
-                  handleDone={handleDone}
+                  // handleInputChange={handleInputChange}
+                  // values={values}
+                  // handleDone={handleDone}
+                  productId={productId}
                 />
               )}
-              {q && (
+              {/* {q && (
                 <Questions
                   aaq={aaq}
                   setAaq={setAaq}
@@ -700,7 +694,7 @@ const ProductScreen = () => {
                   values={values}
                   questions={questions}
                 />
-              )}
+              )} */}
             </Card>
           </Contain>
         </>

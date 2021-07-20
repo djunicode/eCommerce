@@ -1,4 +1,5 @@
 import Razorpay from 'razorpay';
+import request from 'request';
 
 const getPaymentOrder = (req, res) => {
   try {
@@ -37,7 +38,7 @@ const postPayment = (req, res) => {
      method: "POST",
      url: `https://${process.env.RAZOR_PAY_KEY_ID}:${process.env.RAZOR_PAY_KEY_SECRET}@api.razorpay.com/v1/payments/${req.params.paymentId}/capture`,
      form: {
-        amount: 10 * 100, // amount == Rs 10 // Same As Order amount
+        amount: req.body.amount * 100, // amount == whatever in body // Same As Order amount
         currency: "INR",
       },
     },
