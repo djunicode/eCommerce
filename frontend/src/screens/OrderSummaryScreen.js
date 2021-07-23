@@ -255,7 +255,7 @@ function OrderSummaryScreen() {
       temp.state = fieldValues.state ? '' : 'This field is required.';
     if ('city' in fieldValues)
       temp.city = fieldValues.city ? '' : 'This field is required.';
-    if ('pincode' in fieldValues)
+    if ('postalCode' in fieldValues)
       temp.postalCode = fieldValues.postalCode
         ? ''
         : 'This field is required.';
@@ -618,7 +618,7 @@ function OrderSummaryScreen() {
                             className="form-control"
                             id="pincode"
                             placeholder="pincode"
-                            name="pincode"
+                            name="postalCode"
                             style={{ backgroundColor: 'white' }}
                             onChange={(e) => {
                               handleInputChange(e);

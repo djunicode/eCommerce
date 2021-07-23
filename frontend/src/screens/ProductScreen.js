@@ -289,7 +289,7 @@ const ProductScreen = ({ match }) => {
 
   return (
     <Box>
-      {loading || !tempData._id ? (
+      {loading ? (
         <Loader />
       ) : error ? (
         <Message>{error}</Message>
