@@ -59,7 +59,7 @@ const ProductCarousel = () => {
         <Carousel.Item key={i}>
           <CardDeck>
             <Row
-              style={{ width: '100%' }}
+              style={{ width: '100%', margin: '0' }}
               xs={1}
               sm={3}
               md={4}

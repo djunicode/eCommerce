@@ -225,7 +225,7 @@ const ProductListScreen = ({ history }) => {
       setCategory(newValue.value);
     }
     if (newValue == null) {
-      window.location.reload();
+      setCategory('');
     }
   };
   const handleSubCategoryChange = (newValue) => {
@@ -233,7 +233,7 @@ const ProductListScreen = ({ history }) => {
       setSubCategory(newValue.value);
     }
     if (newValue == null) {
-      window.location.reload();
+      setCategory('');
     }
   };
 
