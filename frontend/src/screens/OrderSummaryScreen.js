@@ -25,68 +25,19 @@ import addAddress from '../actions/checkOutActions';
 import { postPincode } from '../actions/productidAction';
 import { PINCODE_CHECKED } from '../constants/productidConstants';
 import { getUserDetails } from '../actions/userActions';
-import { createOrder } from '../actions/orderActions';
+import { createOrder, payOrder } from '../actions/orderActions';
 import useSubscribe from '../hooks/useSubscribe';
 import useNotification from '../hooks/useNotification';
 
-// these can be changed
-const orderAmount = 50;
-const myAppName = 'PROSHOP';
-const myDescription = 'Description goes here';
-const myColor = '#30475E';
-
-const paymentHandler = async (e) => {
-  const API_URL = 'http://localhost:5000/payment/';
-  e.preventDefault();
-  const orderUrl = `${API_URL}order`;
-  const response = await axios.get(orderUrl, {
-    params: { amount: orderAmount },
-  });
-  const { data } = response;
-  const options = {
-    key: process.env.RAZOR_PAY_KEY_ID,
-    name: myAppName,
-    description: myDescription,
-    order_id: data.id,
-
-    handler: async (response) => {
-      try {
-        const paymentId = response.razorpay_payment_id;
-        const url = `${API_URL}capture/${paymentId}`;
-        const captureResponse = await axios.post(url, {
-          amount: orderAmount,
-        });
-        console.log(captureResponse.data);
-        if (captureResponse.data) {
-          // call query
-          console.log('success');
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    theme: {
-      color: myColor,
-    },
-  };
-  const rzp1 = new window.Razorpay(options);
-  rzp1.open();
-};
-
-const initialValues = {
-  state: '',
-  city: '',
-  postalCode: '',
-  address: '',
-  saved: false,
-};
-
-const Subscribe = (notification) => {
-  useSubscribe();
-  useNotification(notification);
-};
-
 function OrderSummaryScreen() {
+  const initialValues = {
+    state: '',
+    city: '',
+    postalCode: '',
+    address: '',
+    saved: false,
+  };
+
   const [os, setOs] = useState('on');
   const [da, setDa] = useState('off');
   const [p, setP] = useState('off');
@@ -99,7 +50,7 @@ function OrderSummaryScreen() {
   });
   const [cart, setCart] = useState('');
   const [loading, setLoading] = useState(true);
-  const [amount, setAmount] = useState(0);
+  const [orderAmount, setOrderAmount] = useState(0);
   const [postalStatus, setPostalStatus] = useState({
     color: 'red',
     message: '',
@@ -129,7 +80,7 @@ function OrderSummaryScreen() {
         message: '',
       });
       Subscribe(
-        `Your order for the total of ${amount}Rs has been placed.`,
+        `Your order for the total of ${orderAmount}Rs has been placed.`,
       );
     } else if (orderStatus.error) {
       setCodError({
@@ -201,7 +152,7 @@ function OrderSummaryScreen() {
 
   useEffect(() => {
     if (cart) {
-      setAmount(() => {
+      setOrderAmount(() => {
         let temp = 0;
         cart.map((product) => {
           temp += product.price;
@@ -261,7 +212,7 @@ function OrderSummaryScreen() {
       temp.state = fieldValues.state ? '' : 'This field is required.';
     if ('city' in fieldValues)
       temp.city = fieldValues.city ? '' : 'This field is required.';
-    if ('pincode' in fieldValues)
+    if ('postalCode' in fieldValues)
       temp.postalCode = fieldValues.postalCode
         ? ''
         : 'This field is required.';
@@ -327,7 +278,7 @@ function OrderSummaryScreen() {
         },
         taxPrice: 0,
         shippingPrice: 0,
-        totalPrice: ${amount},
+        totalPrice: ${orderAmount},
         isPaid: false,
         isDelivered: false,
       }) {
@@ -335,6 +286,107 @@ function OrderSummaryScreen() {
       }
     }`;
     dispatch(createOrder(query, false));
+  };
+
+  // RAZORPAY
+  const myAppName = 'PROSHOP';
+  const myColor = '#30475E';
+
+  const paymentHandler = async (e) => {
+    const API_URL = 'http://localhost:5000/payment/';
+    e.preventDefault();
+    const orderUrl = `${API_URL}order`;
+    if (orderAmount !== 0) {
+      const response = await axios.get(orderUrl, {
+        params: { amount: orderAmount },
+      });
+      const { data } = response;
+      const options = {
+        key: process.env.RAZOR_PAY_KEY_ID,
+        name: myAppName,
+        order_id: data.id,
+
+        handler: async (response) => {
+          try {
+            const paymentId = response.razorpay_payment_id;
+            const url = `${API_URL}capture/${paymentId}`;
+            const captureResponse = await axios.post(url, {
+              amount: orderAmount,
+            });
+            console.log(captureResponse.data);
+            if (captureResponse.data) {
+              const orderItems = [];
+              cart.map((c) => {
+                const add = `{
+                  qty: ${c.quantity},
+                  price: ${c.price},
+                  product: "${c.product._id}",
+                }`;
+                orderItems.push(add);
+                return null;
+              });
+              // CREATEORDER MUTATION
+              const createOrderMutation = `mutation {
+                createOrder(orderInput: {
+                  orderItems: [${orderItems}],
+                  shippingAddress: {
+                    address: "${finalAddress.address}",
+                    city: "${finalAddress.city}",
+                    postalCode: "${finalAddress.postalCode}",
+                    country: "India",
+                  },
+                  paymentMethod: "${captureResponse.data.method}",
+                  paymentResult: {
+                    id: "${captureResponse.data.id}",
+                    status: "${captureResponse.data.status}",
+                    update_time: "${captureResponse.data.acquirer_data.created_at}",
+                    email_address: "${captureResponse.data.email}"
+                  },
+                  taxPrice: 0,
+                  shippingPrice: 0,
+                  totalPrice: ${orderAmount},
+                  isPaid: true,
+                  isDelivered: false,
+                }) {
+                  _id
+                }
+              }`;
+              dispatch(createOrder(createOrderMutation, false));
+
+              const paidMutation = `mutation {
+                updateOrderToPaid(
+                  orderId: "${captureResponse.data.order_id}",
+                  paymentResult {
+                    id: "${captureResponse.data.id}",
+                    status: "${captureResponse.data.status}",
+                    update_time: "${captureResponse.data.acquirer_data.created_at}",
+                    email_address: "${captureResponse.data.email}",
+                  }
+                ) {
+                  _id
+                }
+              }`;
+              dispatch(payOrder(paidMutation, true));
+
+              console.log('successfully paid order');
+            }
+          } catch (err) {
+            console.log(err);
+          }
+        },
+        theme: {
+          color: myColor,
+        },
+      };
+      const rzp1 = new window.Razorpay(options);
+      rzp1.open();
+    }
+  };
+
+  // NOTIFICATIONS
+  const Subscribe = (notification) => {
+    useSubscribe();
+    useNotification(notification);
   };
 
   return (
@@ -384,18 +436,13 @@ function OrderSummaryScreen() {
             </span>
           </div>
           <Container
-            className="pb-3"
             style={{
-              backgroundColor: 'white',
-              border: '1px solid #D5D5D5',
-              letterSpacing: '0.5px',
               height: 'auto',
               position: 'relative',
             }}
           >
             {p === 'on' && (
               <Back
-                className="btn-danger rounded py-1 px-3"
                 name="p"
                 onClick={() => {
                   handleBack('p');
@@ -411,7 +458,6 @@ function OrderSummaryScreen() {
             )}
             {da === 'on' && (
               <Back
-                className="btn-danger rounded py-1 px-3"
                 name="da"
                 onClick={() => {
                   handleBack('da');
@@ -428,18 +474,16 @@ function OrderSummaryScreen() {
 
             {os === 'on' && (
               <>
-                <h1
-                  style={{
-                    letterSpacing: '0',
-                    textTransform: 'none',
-                    paddingBottom: '0px',
-                  }}
-                >
-                  Order Summary
-                </h1>
-                <hr style={{ marginBottom: '0px' }} />
+                <h1>Order Summary</h1>
+                <hr />
                 {cart.map((product, index) => {
-                  return <OrderItem product={product} key={index} />;
+                  return (
+                    <OrderItem
+                      product={product}
+                      key={index}
+                      indexNo={index}
+                    />
+                  );
                 })}
                 <div
                   className="mb-3"
@@ -447,20 +491,27 @@ function OrderSummaryScreen() {
                 >
                   <Row>
                     <Col xs={12} style={{ textAlign: 'end' }}>
-                      <h1
+                      <h2
                         style={{
                           letterSpacing: '0',
                           textTransform: 'none',
-                          paddingBottom: '0px',
+                          fontSize: '1.3rem',
+                          margin: '1rem 0',
                         }}
                       >
-                        Amount : Rs {amount}
-                      </h1>
+                        Total Amount : Rs {orderAmount}
+                      </h2>
                     </Col>
                   </Row>
                   <Button
-                    className="btn-danger rounded py-1 px-5"
-                    style={{ textTransform: 'none' }}
+                    className="btn-danger"
+                    style={{
+                      textTransform: 'none',
+                      fontSize: '0.9rem',
+                      letterSpacing: '1px',
+                      padding: '0.6rem 2.5rem',
+                      marginTop: '1rem',
+                    }}
                     name="order_summary"
                     onClick={(e) => {
                       handleTab(e);
@@ -624,7 +675,7 @@ function OrderSummaryScreen() {
                             className="form-control"
                             id="pincode"
                             placeholder="pincode"
-                            name="pincode"
+                            name="postalCode"
                             style={{ backgroundColor: 'white' }}
                             onChange={(e) => {
                               handleInputChange(e);
@@ -813,7 +864,12 @@ const Back = styled(Button)`
   text-transform: none;
   position: absolute;
   top: -45px;
-  left: 0px;
+  left: 1rem;
+  border: 1px solid #d4d4d4;
+  background: none;
+  color: black;
+  padding: 0.4rem 1.2rem;
+  margin-bottom: 3rem;
 `;
 
 const StyledButtn = styled(Button)`

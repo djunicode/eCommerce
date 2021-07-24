@@ -65,12 +65,12 @@ const CartScreen = ({ match, history }) => {
           optionSelected: ca.isOptionSelected,
           optionName: ca.optionName,
           price: ca.price,
-          qty: ca.quantity,
+          quantity: ca.quantity,
+          product: ca.product,
         };
         console.log();
         // setTotalAmount(total + (content[index]['price'] * content[index]['qty']));
-        totalAmount =
-          total + content[index].price * content[index].qty;
+        totalAmount = total + content[index].price;
         total = totalAmount;
         console.log(content[index].price);
         console.log(totalAmount);
@@ -91,25 +91,29 @@ const CartScreen = ({ match, history }) => {
 
   const checkoutHandler = () => {
     const mutation = [];
+    const mutationArray = [];
     productQty.map((item) => {
-      if (productQty.qty !== 0) {
+      if (productQty.quantity !== 0) {
         mutation.push(
-          `{product:"${item.id}", isOptionSelected: ${item.optionSelected}, optionName: "${item.optionName}", price: ${item.price}, quantity: ${item.qty}}`,
+          `{product:"${item.id}", isOptionSelected: ${item.optionSelected}, optionName: "${item.optionName}", price: ${item.price}, quantity: ${item.quantity}}`,
         );
+        mutationArray.push(item);
+        console.log(mutationArray);
+        console.log(item);
       }
     });
     dispatch(addToCart(mutation));
+    localStorage.setItem('cart', JSON.stringify(mutationArray));
     console.log('check out is called');
-    console.log(mutation);
   };
 
   const removeHandler = (temp) => {
     const mutation = [];
     temp.map((item, index) => {
-      if (temp[index].qty !== 0) {
-        console.log(temp[index].qty);
+      if (temp[index].quantity !== 0) {
+        console.log(temp[index].quantity);
         mutation.push(
-          `{product:"${item.id}", isOptionSelected: ${item.optionSelected}, optionName: "${item.optionName}", price: ${item.price}, quantity: ${item.qty}}`,
+          `{product:"${item.id}", isOptionSelected: ${item.optionSelected}, optionName: "${item.optionName}", price: ${item.price}, quantity: ${item.quantity}}`,
         );
       }
     });
@@ -126,7 +130,7 @@ const CartScreen = ({ match, history }) => {
   // }
 
   return (
-    <Wrapper>
+    <div>
       <Row xs={1} md={2}>
         <Column md={9} lg={8}>
           <Link
@@ -162,7 +166,7 @@ const CartScreen = ({ match, history }) => {
                         fluid
                         width={100}
                         height={100}
-                        style={{ margin: 'auto' }}
+                        style={{ margin: '0 1rem 0 0' }}
                       />
                       <Media.Body>
                         <Row style={{ marginBottom: '1.2rem' }}>
@@ -180,12 +184,12 @@ const CartScreen = ({ match, history }) => {
                           </Col>
                           <Col xs={12} sm={4}>
                             <ProductPrice>
-                              Rs {item.price}
+                              Rs {item.product.price}
                             </ProductPrice>
                           </Col>
                         </Row>
-                        <Row xs={2} sm={3}>
-                          <SecondCol sm={5}>
+                        <Row>
+                          <SecondCol xs={6} sm={4}>
                             <span style={{ marginRight: '0.5rem' }}>
                               Option:
                             </span>
@@ -195,25 +199,28 @@ const CartScreen = ({ match, history }) => {
                                 : 'None'}
                             </SpanBox>
                           </SecondCol>
-                          <SecondCol sm={5}>
+                          <SecondCol xs={6}>
                             Qty:
                             <span>
                               <QtyButtons
                                 disabled={
                                   productQty[index] &&
-                                  (productQty[index].qty === 1 ||
-                                    productQty[index].qty === 0)
+                                  (productQty[index].quantity === 1 ||
+                                    productQty[index].quantity === 0)
                                 }
                                 onClick={() => {
                                   setProductQty((c) => {
                                     const temp = [...c];
-                                    temp[index].qty =
-                                      temp[index].qty - 1;
+                                    temp[index].quantity =
+                                      temp[index].quantity - 1;
+                                    temp[index].price =
+                                      temp[index].product.price *
+                                      temp[index].quantity;
                                     return temp;
                                   });
                                   totalAmount =
                                     totalPrice -
-                                    productQty[index].price;
+                                    productQty[index].product.price;
                                   console.log(totalAmount);
                                   setTotalPrice(totalAmount);
                                 }}
@@ -223,26 +230,29 @@ const CartScreen = ({ match, history }) => {
                             </span>
                             <SpanBox>
                               {productQty[index] &&
-                                productQty[index].qty}
+                                productQty[index].quantity}
                             </SpanBox>
                             <span>
                               <QtyButtons
                                 disabled={
                                   productQty[index] &&
-                                  (productQty[index].qty ===
+                                  (productQty[index].quantity ===
                                     item.product.countInStock ||
-                                    productQty[index].qty === 0)
+                                    productQty[index].quantity === 0)
                                 }
                                 onClick={() => {
                                   setProductQty((c) => {
                                     const temp = [...c];
-                                    temp[index].qty =
-                                      temp[index].qty + 1;
+                                    temp[index].quantity =
+                                      temp[index].quantity + 1;
+                                    temp[index].price =
+                                      temp[index].product.price *
+                                      temp[index].quantity;
                                     return temp;
                                   });
                                   totalAmount =
                                     totalPrice +
-                                    productQty[index].price;
+                                    productQty[index].product.price;
                                   console.log(totalAmount);
                                   setTotalPrice(totalAmount);
                                 }}
@@ -251,7 +261,7 @@ const CartScreen = ({ match, history }) => {
                               </QtyButtons>
                             </span>
                           </SecondCol>
-                          <SecondCol xs={2} sm={2}>
+                          <SecondCol xs={2}>
                             <TrashButton
                               type="button"
                               variant="light"
@@ -263,7 +273,7 @@ const CartScreen = ({ match, history }) => {
                                 ) {
                                   setProductQty((c) => {
                                     const temp = [...c];
-                                    temp[index].qty = 0;
+                                    temp[index].quantity = 0;
                                     console.log(temp);
                                     removeHandler(temp);
                                     return temp;
@@ -304,7 +314,8 @@ const CartScreen = ({ match, history }) => {
                           {item.product.name}
                         </ItemPriceName>
                         <div style={{ color: '#5F5F5F' }}>
-                          {productQty[index] && productQty[index].qty}{' '}
+                          {productQty[index] &&
+                            productQty[index].quantity}{' '}
                           items
                         </div>
                       </Col>
@@ -312,7 +323,7 @@ const CartScreen = ({ match, history }) => {
                         <ItemPrice>
                           Rs{' '}
                           {productQty[index] &&
-                            item.price * productQty[index].qty}
+                            productQty[index].price}
                         </ItemPrice>
                       </Col>
                     </Row>
@@ -350,23 +361,12 @@ const CartScreen = ({ match, history }) => {
           </Card>
         </Col>
       </Row>
-    </Wrapper>
+    </div>
   );
 };
 
 export default CartScreen;
 
-const Wrapper = styled.div`
-  padding: 0 4rem;
-
-  @media screen and (max-width: 900px) {
-    padding: 0 2.5rem;
-  }
-
-  @media screen and (max-width: 700px) {
-    padding: 0;
-  }
-`;
 const MediaWrapper = styled(Media)`
   @media screen and (max-width: 450px) {
     flex-direction: column;
