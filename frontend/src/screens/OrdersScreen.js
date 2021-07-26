@@ -360,16 +360,7 @@ function OrdersScreen() {
           <Container>
             <Row style={{ position: 'relative' }}>
               <h5 style={{ color: '#5EAAA8' }}>TOTAL ORDERS (50)</h5>
-              <span
-                className="text-right"
-                style={{
-                  // display: 'flex',
-                  // justifyContent: 'center',
-                  // alignItems: 'center',
-                  position: 'absolute',
-                  right: '0',
-                }}
-              >
+              <Styledspan className="text-right">
                 <Form.Label style={{ transform: 'translateY(15%)' }}>
                   Filter by Date :&nbsp;
                 </Form.Label>
@@ -419,7 +410,7 @@ function OrdersScreen() {
                 />
                 <br />
                 <small className="text-danger">{message}&nbsp;</small>
-              </span>
+              </Styledspan>
             </Row>
             <Nav
               className="mt-4"
@@ -515,4 +506,13 @@ const GridHeadings = styled.th`
   text-transform: uppercase;
   color: #5eaaa8;
   font-size: 1rem;
+`;
+
+const Styledspan = styled.span`
+  position: absolute;
+  right: 0;
+
+  @media (max-width: 768px) {
+    position: static;
+  }
 `;
