@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState, useEffect } from 'react';
@@ -11,8 +12,8 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 
 function OrdersScreen() {
-  const [sdate, setSdate] = useState();
-  const [edate, setEdate] = useState();
+  const [sdate, setSdate] = useState('');
+  const [edate, setEdate] = useState('');
   const [filtered, setFiltered] = useState(null);
   const [products, setProducts] = useState([]);
   const [message, setMessage] = useState('');
@@ -26,6 +27,10 @@ function OrdersScreen() {
   useEffect(() => {
     dispatch(listOrders());
   }, [dispatch]);
+
+  useEffect(() => {
+    console.log(filtered);
+  }, [filtered]);
 
   useEffect(() => {
     if (data) {
@@ -55,16 +60,17 @@ function OrdersScreen() {
       const Sdate = new Date(sdate);
       const Edate = new Date(edate);
       const Filter = products.filter((product) => {
-        const date = new Date(product.date);
+        let date;
+        if (completed) {
+          date = new Date(product.deliveredAt);
+        } else {
+          date = new Date(product.paidAt);
+        }
         if (Sdate <= date && date <= Edate) {
-          console.log(Sdate);
-          console.log(date);
-          console.log(Edate);
           return product;
         }
         return null;
       });
-      console.log(Filter);
       setFiltered(Filter);
     }
   }, [sdate, edate]);
@@ -82,18 +88,34 @@ function OrdersScreen() {
           >
             {rowIndex === 0 ? (
               columnIndex === 0 ? (
-                <GridHeadings>ID</GridHeadings>
+                <thead>
+                  <tr>
+                    <GridHeadings>ID</GridHeadings>
+                  </tr>
+                </thead>
               ) : columnIndex === 1 ? (
-                <GridHeadings>USER</GridHeadings>
+                <thead>
+                  <tr>
+                    <GridHeadings>USER</GridHeadings>
+                  </tr>
+                </thead>
               ) : columnIndex === 2 ? (
-                <GridHeadings>DATE</GridHeadings>
+                <thead>
+                  <tr>
+                    <GridHeadings>DATE</GridHeadings>
+                  </tr>
+                </thead>
               ) : (
-                <GridHeadings>AMOUNT</GridHeadings>
+                <thead>
+                  <tr>
+                    <GridHeadings>AMOUNT</GridHeadings>
+                  </tr>
+                </thead>
               )
             ) : columnIndex === 0 ? (
               <tbody>
-                {filtered.map((product) => (
-                  <tr>
+                {filtered.map((product, index) => (
+                  <tr key={index}>
                     <td>
                       {product._id}
                       <br />
@@ -104,8 +126,8 @@ function OrdersScreen() {
               </tbody>
             ) : columnIndex === 1 ? (
               <tbody>
-                {filtered.map((product) => (
-                  <tr>
+                {filtered.map((product, index) => (
+                  <tr key={index}>
                     <td>
                       {product.user.name}
                       <br />
@@ -123,7 +145,7 @@ function OrdersScreen() {
               </tbody>
             ) : columnIndex === 2 ? (
               <tbody>
-                {filtered.map((product) => {
+                {filtered.map((product, index) => {
                   let date;
                   if (completed) {
                     date = new Date(product.deliveredAt);
@@ -131,7 +153,7 @@ function OrdersScreen() {
                     date = new Date(product.paidAt);
                   }
                   return (
-                    <tr>
+                    <tr key={index}>
                       <td>
                         {`${date.getFullYear()}-${
                           date.getMonth() + 1
@@ -162,9 +184,9 @@ function OrdersScreen() {
               </tbody>
             ) : (
               <tbody>
-                {products.map((product) => {
+                {filtered.map((product, index) => {
                   return (
-                    <tr>
+                    <tr key={index}>
                       <td>
                         {product.totalPrice} Rs
                         <br />
@@ -175,7 +197,7 @@ function OrdersScreen() {
                           }}
                           onClick={() => {
                             history.push(
-                              `admin/orderdetails/${product._id}`,
+                              `orderdetails/${product._id}`,
                             );
                           }}
                         >
@@ -201,18 +223,34 @@ function OrdersScreen() {
         >
           {rowIndex === 0 ? (
             columnIndex === 0 ? (
-              <GridHeadings>ID</GridHeadings>
+              <thead>
+                <tr>
+                  <GridHeadings>ID</GridHeadings>
+                </tr>
+              </thead>
             ) : columnIndex === 1 ? (
-              <GridHeadings>USER</GridHeadings>
+              <thead>
+                <tr>
+                  <GridHeadings>USER</GridHeadings>
+                </tr>
+              </thead>
             ) : columnIndex === 2 ? (
-              <GridHeadings>DATE</GridHeadings>
+              <thead>
+                <tr>
+                  <GridHeadings>DATE</GridHeadings>
+                </tr>
+              </thead>
             ) : (
-              <GridHeadings>AMOUNT</GridHeadings>
+              <thead>
+                <tr>
+                  <GridHeadings>AMOUNT</GridHeadings>
+                </tr>
+              </thead>
             )
           ) : columnIndex === 0 ? (
             <tbody>
-              {products.map((product) => (
-                <tr>
+              {products.map((product, index) => (
+                <tr key={index}>
                   <td>
                     {product._id}
                     <br />
@@ -223,8 +261,8 @@ function OrdersScreen() {
             </tbody>
           ) : columnIndex === 1 ? (
             <tbody>
-              {products.map((product) => (
-                <tr>
+              {products.map((product, index) => (
+                <tr key={index}>
                   <td>
                     {product.user.name}
                     <br />
@@ -242,7 +280,7 @@ function OrdersScreen() {
             </tbody>
           ) : columnIndex === 2 ? (
             <tbody>
-              {products.map((product) => {
+              {products.map((product, index) => {
                 let date;
                 if (completed) {
                   date = new Date(product.deliveredAt);
@@ -250,12 +288,9 @@ function OrdersScreen() {
                   date = new Date(product.paidAt);
                 }
                 return (
-                  <tr>
+                  <tr key={index}>
                     <td>
-                      {`${date.getFullYear()}-${
-                        date.getMonth() + 1
-                      }-${date.getDate()}`}
-                      {console.log(typeof product.deliveredAt)}
+                      {`${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`}
                       <br />
                       <span style={{ color: '#5F5F5F' }}>
                         {completed ? (
@@ -285,9 +320,9 @@ function OrdersScreen() {
             </tbody>
           ) : (
             <tbody>
-              {products.map((product) => {
+              {products.map((product, index) => {
                 return (
-                  <tr>
+                  <tr key={index}>
                     <td>
                       {product.totalPrice} Rs
                       <br />
@@ -297,9 +332,7 @@ function OrdersScreen() {
                           cursor: 'pointer',
                         }}
                         onClick={() => {
-                          history.push(
-                            `admin/orderdetails/${product._id}`,
-                          );
+                          history.push(`orderdetails/${product._id}`);
                         }}
                       >
                         SEE DETAILS &gt;

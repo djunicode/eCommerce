@@ -13,9 +13,10 @@ function OrderItem({ product }) {
               textTransform: 'none',
               paddingBottom: '0px',
               overflow: 'wrap',
+              marginTop: '15px',
             }}
           >
-            {product.name}
+            {product.product.name}
           </h1>
           <h1
             style={{
@@ -26,6 +27,7 @@ function OrderItem({ product }) {
               top: '0px',
               right: '25px',
               overflow: 'wrap',
+              marginTop: '15px',
             }}
           >
             Rs {product.price}

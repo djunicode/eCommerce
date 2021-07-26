@@ -47,8 +47,6 @@ export const postPincode = (info) => async (dispatch) => {
       type: PINCODE_CHECK_REQUEST,
     });
 
-    const userinfo = JSON.parse(localStorage.getItem('userInfo'));
-
     const data = JSON.stringify({
       query: `query{
         isDeliverable(postalCode: "${info}")
@@ -59,7 +57,6 @@ export const postPincode = (info) => async (dispatch) => {
       method: 'post',
       url: 'http://localhost:5000/graphql',
       headers: {
-        Authorization: `Bearer ${userinfo.token}`,
         'Content-Type': 'application/json',
       },
       data,

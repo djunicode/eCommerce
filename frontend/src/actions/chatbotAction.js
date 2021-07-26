@@ -1,7 +1,6 @@
 /* eslint-disable import/named */
 /* eslint-disable import/prefer-default-export */
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
 import {
   CHATBOT_CREATE_FAIL,
   CHATBOT_CREATE_SUCCESS,
@@ -84,8 +83,7 @@ export const updateChat = (mutation) => async (dispatch) => {
           : error.message,
     });
     if (error.response.status === 401) {
-      const dis = useDispatch();
-      dis(logout());
+      dispatch(logout());
     }
   }
 };

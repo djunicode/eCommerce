@@ -6,15 +6,28 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-// import { setRandomFallback } from 'bcryptjs';
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Spinner,
+} from 'react-bootstrap';
 import styled from 'styled-components';
 import axios from 'axios';
-// import { set } from 'mongoose';
-import { useLocation } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 import Loader from '../components/Loader';
 import OrderItem from '../components/OrderItem';
+import addAddress from '../actions/checkOutActions';
+import { postPincode } from '../actions/productidAction';
+import { PINCODE_CHECKED } from '../constants/productidConstants';
+import { getUserDetails } from '../actions/userActions';
+import { createOrder } from '../actions/orderActions';
+import useSubscribe from '../hooks/useSubscribe';
+import useNotification from '../hooks/useNotification';
 
 // these can be changed
 const orderAmount = 50;
@@ -55,13 +68,16 @@ const paymentHandler = async (e) => {
 };
 
 const initialValues = {
-  name: '',
-  number: '',
-  email: '',
   state: '',
   city: '',
-  pincode: '',
+  postalCode: '',
   address: '',
+  saved: false,
+};
+
+const Subscribe = (notification) => {
+  useSubscribe();
+  useNotification(notification);
 };
 
 function OrderSummaryScreen() {
@@ -71,26 +87,111 @@ function OrderSummaryScreen() {
   const [ana, setAna] = useState(false);
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState({
+    color: 'red',
+    message: '',
+  });
   const [cart, setCart] = useState('');
   const [loading, setLoading] = useState(true);
   const [amount, setAmount] = useState(0);
+  const [postalStatus, setPostalStatus] = useState({
+    color: 'red',
+    message: '',
+  });
+  const [address, setAddress] = useState([]);
+  const [addressOption, setAddressOption] = useState(0);
+  const [finalAddress, setFinalAddress] = useState({});
+  const [codError, setCodError] = useState({
+    color: 'red',
+    message: '',
+  });
 
-  const location = useLocation();
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const { user } = useSelector((state) => state.userDetails);
+  const { isDeliverable, pincodeLoading } = useSelector(
+    (state) => state.checkPincode,
+  );
+  const orderStatus = useSelector((state) => state.orderCreate);
 
   useEffect(() => {
-    if (location.state) {
-      const c = JSON.parse(localStorage.getItem('buy'));
-      console.log(c);
-      setCart(c);
-      setLoading(false);
-    } else {
-      const c = JSON.parse(localStorage.getItem('cart'));
-      console.log(c);
-      setCart(c);
-      setLoading(false);
+    if (orderStatus.success) {
+      history.push('/');
+      setCodError({
+        color: 'red',
+        message: '',
+      });
+      Subscribe(
+        `Your order for the total of ${amount}Rs has been placed.`,
+      );
+    } else if (orderStatus.error) {
+      setCodError({
+        color: 'red',
+        message: orderStatus.error,
+      });
     }
-  }, []);
+  }, [orderStatus]);
+
+  useEffect(() => {
+    if (isDeliverable === false) {
+      setPostalStatus({
+        color: 'red',
+        message: 'This product cannot be delivered to this location',
+      });
+    } else if (isDeliverable === true) {
+      setP('on');
+      setDa('done');
+      if (ana) {
+        const fAddress = {
+          address: values.address,
+          city: values.city,
+          postalCode: values.postalCode,
+        };
+        setFinalAddress(fAddress);
+      } else if (!ana) {
+        setFinalAddress(address[addressOption]);
+      }
+      setPostalStatus({
+        color: 'red',
+        message: '',
+      });
+      setMessage({
+        color: 'red',
+        message: '',
+      });
+      dispatch({
+        type: PINCODE_CHECKED,
+      });
+
+      if (values.saved) {
+        const a = [];
+        const addedAddress = `{address: "${values.address}", country: "India", postalCode: "${values.postalCode}", city: "${values.city}"}`;
+        address.map((add) => {
+          const temp = `{address: "${add.address}", country: "India", postalCode: "${add.postalCode}", city: "${add.city}"}`;
+          a.push(temp);
+          return null;
+        });
+        a.push(addedAddress);
+        console.log(a);
+        dispatch(addAddress(a));
+      }
+    }
+  }, [isDeliverable, dispatch, address, values]);
+
+  useEffect(() => {
+    const c = JSON.parse(localStorage.getItem('cart'));
+    console.log(c);
+    setCart(c);
+    dispatch(getUserDetails());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (user && Object.keys(user).length !== 0) {
+      setLoading(false);
+      setAddress(user.userAddress);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (cart) {
@@ -114,59 +215,48 @@ function OrderSummaryScreen() {
     if (e.target.name === 'pop' && ana) {
       validate();
       if (
-        errors.name === '' &&
-        errors.number === '' &&
-        errors.email === '' &&
         errors.state === '' &&
         errors.city === '' &&
-        errors.pincode === '' &&
+        errors.postalCode === '' &&
         errors.address === ''
       ) {
-        setP('on');
-        setDa('done');
+        if (isDeliverable.length === 0 || isDeliverable === false) {
+          dispatch(postPincode(values.postalCode));
+        } else if (isDeliverable === true) {
+          setP('on');
+          setDa('done');
+          setPostalStatus({
+            color: 'red',
+            message: '',
+          });
+        }
       } else {
-        setMessage('Please fill all the fields correctly');
+        setMessage({
+          color: 'red',
+          message: 'Please fill all the fields correctly',
+        });
       }
-    } else if (e.target.name === 'pop') {
-      setP('on');
-      setDa('done');
+    } else if (e.target.name === 'pop' && !ana) {
+      if (!addressOption) {
+        setPostalStatus({
+          color: 'red',
+          message: 'Please select or add an address',
+        });
+      } else if (addressOption) {
+        dispatch(postPincode(address[addressOption].postalCode));
+        console.log(address[addressOption]);
+      }
     }
   };
 
   const validate = (fieldValues = values) => {
     const temp = { ...errors };
-    if ('name' in fieldValues)
-      temp.name = fieldValues.name ? '' : 'This field is required.';
-    if ('number' in fieldValues) {
-      temp.number = fieldValues.number
-        ? ''
-        : 'This field is required.';
-      if (temp.number === '') {
-        temp.number =
-          /^(\+?\d{1,4}[\s-])?(?!0+\s+,?$)\d{10}\s*,?$/.test(
-            fieldValues.number,
-          )
-            ? ''
-            : 'Invalid Phone Number.';
-      }
-    }
-    if ('email' in fieldValues) {
-      temp.email = fieldValues.email ? '' : 'This field is required.';
-      if (temp.email === '') {
-        temp.email =
-          /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/.test(
-            fieldValues.email,
-          )
-            ? ''
-            : 'Invalid email.';
-      }
-    }
     if ('state' in fieldValues)
       temp.state = fieldValues.state ? '' : 'This field is required.';
     if ('city' in fieldValues)
       temp.city = fieldValues.city ? '' : 'This field is required.';
     if ('pincode' in fieldValues)
-      temp.pincode = fieldValues.pincode
+      temp.postalCode = fieldValues.postalCode
         ? ''
         : 'This field is required.';
     if ('address' in fieldValues)
@@ -179,11 +269,11 @@ function OrderSummaryScreen() {
     });
   };
 
-  const handleBack = (e) => {
-    if (e.target.name === 'da') {
+  const handleBack = (name) => {
+    if (name === 'da') {
       setDa('off');
       setOs('on');
-    } else if (e.target.name === 'p') {
+    } else if (name === 'p') {
       setP('off');
       setDa('on');
     }
@@ -198,8 +288,51 @@ function OrderSummaryScreen() {
     validate({ [name]: value });
   };
 
+  const handleCOD = () => {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    const orderItems = [];
+    cart.map((c) => {
+      console.log(typeof c.quantity);
+      console.log(typeof c.price);
+      console.log(typeof c.product._id);
+      const add = `{
+        qty: ${c.quantity},
+        price: ${c.price},
+        product: "${c.product._id}",
+      }`;
+      orderItems.push(add);
+      return null;
+    });
+    const query = `mutation {
+      createOrder(orderInput: {
+        orderItems: [${orderItems}],
+        shippingAddress: {
+          address: "${finalAddress.address}",
+          city: "${finalAddress.city}",
+          postalCode: "${finalAddress.postalCode}",
+          country: "India",
+        },
+        paymentMethod:"Cash",
+        paymentResult: {
+          id: "",
+          status: "pending",
+          update_time: "none",
+          email_address: "${userInfo.email}"
+        },
+        taxPrice: 0,
+        shippingPrice: 0,
+        totalPrice: ${amount},
+        isPaid: false,
+        isDelivered: false,
+      }) {
+        _id
+      }
+    }`;
+    dispatch(createOrder(query, false));
+  };
+
   return (
-    <>
+    <div style={{ overflowX: 'hidden' }}>
       {loading ? (
         <Loader />
       ) : (
@@ -258,22 +391,32 @@ function OrderSummaryScreen() {
               <Back
                 className="btn-danger rounded py-1 px-3"
                 name="p"
-                onClick={(e) => {
-                  handleBack(e);
+                onClick={() => {
+                  handleBack('p');
                 }}
               >
-                <i className="fas fa-arrow-left" />
+                <i
+                  className="fas fa-arrow-left"
+                  onClick={() => {
+                    handleBack('p');
+                  }}
+                />
               </Back>
             )}
             {da === 'on' && (
               <Back
                 className="btn-danger rounded py-1 px-3"
                 name="da"
-                onClick={(e) => {
-                  handleBack(e);
+                onClick={() => {
+                  handleBack('da');
                 }}
               >
-                <i className="fas fa-arrow-left" />
+                <i
+                  className="fas fa-arrow-left"
+                  onClick={() => {
+                    handleBack('da');
+                  }}
+                />
               </Back>
             )}
 
@@ -334,118 +477,78 @@ function OrderSummaryScreen() {
                 </h1>
                 <>
                   <Row>
-                    <>
-                      <Col md={6} style={{ position: 'relative' }}>
-                        <Card className="px-3 py-2 mb-3">
-                          <span>
-                            <input
-                              className="form-check-input"
-                              type="radio"
-                              name="flexRadioDefault"
-                              id="flexRadioDefault1"
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="flexRadioDefault1"
-                            >
-                              <h5
-                                className="ml-1"
-                                style={{
-                                  letterSpacing: '0',
-                                  textTransform: 'none',
-                                  paddingBottom: '0px',
-                                  display: 'inline',
-                                }}
-                              >
-                                Dhiraj Shah
-                              </h5>
-                              <h5
-                                style={{
-                                  letterSpacing: '0',
-                                  textTransform: 'none',
-                                  paddingBottom: '0px',
-                                  display: 'inline',
-                                  position: 'absolute',
-                                  right: '10px',
-                                }}
-                              >
-                                9820560183
-                              </h5>
-                              <small
-                                className="ml-3 mt-2"
-                                style={{ display: 'block' }}
-                              >
-                                Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Et eveniet nihil,
-                                corporis laboriosam natus iusto
-                                dignissimos fugiat, animi nulla rerum,
-                                quam accusamus cumque fuga explicabo
-                                in dolore exercitationem magnam.
-                                Accusamus!
-                              </small>
-                            </label>
-                          </span>
-                        </Card>
-                      </Col>
-                    </>
-                    <>
-                      <Col md={6} style={{ position: 'relative' }}>
-                        <Card className="px-3 py-2 mb-3">
-                          <span>
-                            <input
-                              className="form-check-input"
-                              type="radio"
-                              name="flexRadioDefault"
-                              id="flexRadioDefault1"
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="flexRadioDefault1"
-                            >
-                              <h5
-                                className="ml-1"
-                                style={{
-                                  letterSpacing: '0',
-                                  textTransform: 'none',
-                                  paddingBottom: '0px',
-                                  display: 'inline',
-                                }}
-                              >
-                                Dhiraj Shah
-                              </h5>
-                              <h5
-                                style={{
-                                  letterSpacing: '0',
-                                  textTransform: 'none',
-                                  paddingBottom: '0px',
-                                  display: 'inline',
-                                  position: 'absolute',
-                                  right: '10px',
-                                }}
-                              >
-                                9820560183
-                              </h5>
-                              <small
-                                className="ml-3 mt-2"
-                                style={{ display: 'block' }}
-                              >
-                                Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit. Et eveniet nihil,
-                                corporis laboriosam natus iusto
-                                dignissimos fugiat, animi nulla rerum,
-                                quam accusamus cumque fuga explicabo
-                                in dolore exercitationem magnam.
-                                Accusamus!
-                              </small>
-                            </label>
-                          </span>
-                        </Card>
-                      </Col>
-                    </>
+                    {address.length !== 0 &&
+                      address.map((add, index) => {
+                        return (
+                          <Col
+                            md={6}
+                            style={{ position: 'relative' }}
+                            key={index}
+                          >
+                            <Card className="px-3 py-2 mb-3">
+                              <span>
+                                <input
+                                  className="form-check-input"
+                                  type="radio"
+                                  name={index}
+                                  id="flexRadioDefault1"
+                                  style={{
+                                    left: '25px',
+                                    top: '6px',
+                                    cursor: 'pointer',
+                                  }}
+                                  checked={
+                                    typeof addressOption ===
+                                      'string' &&
+                                    index === Number(addressOption)
+                                  }
+                                  onChange={(e) => {
+                                    setAddressOption(e.target.name);
+                                  }}
+                                />
+                                <label
+                                  className="form-check-label"
+                                  htmlFor="flexRadioDefault1"
+                                >
+                                  <h5
+                                    className="ml-3"
+                                    style={{
+                                      letterSpacing: '0',
+                                      textTransform: 'none',
+                                      paddingBottom: '0px',
+                                      display: 'inline',
+                                    }}
+                                  >
+                                    {add.city}
+                                  </h5>
+                                  <h5
+                                    style={{
+                                      letterSpacing: '0',
+                                      textTransform: 'none',
+                                      paddingBottom: '0px',
+                                      display: 'inline',
+                                      position: 'absolute',
+                                      right: '10px',
+                                    }}
+                                  >
+                                    {add.postalCode}
+                                  </h5>
+                                  <small
+                                    className="ml-3 mt-2"
+                                    style={{ display: 'block' }}
+                                  >
+                                    {add.address}
+                                  </small>
+                                </label>
+                              </span>
+                            </Card>
+                          </Col>
+                        );
+                      })}
                   </Row>
                 </>
                 <div
-                  className="mb-3 px-3 pt-3 pb-1"
+                  className="mb-3 px-3 pt-3 pb-2"
                   style={{
                     width: '100%',
                     backgroundColor: '#F9F9F9',
@@ -470,63 +573,7 @@ function OrderSummaryScreen() {
                     </h6>
                   </span>
                   {ana && (
-                    <>
-                      <Row className="mt-3">
-                        <Col md={4}>
-                          <label htmlFor="name">Name</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            placeholder="Full Name"
-                            name="name"
-                            style={{ backgroundColor: 'white' }}
-                            onChange={(e) => {
-                              handleInputChange(e);
-                            }}
-                            value={values.name}
-                          />
-                          <small style={{ color: 'red' }}>
-                            {errors.name}
-                          </small>
-                        </Col>
-                        <Col md={4}>
-                          <label htmlFor="number">Number</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="number"
-                            placeholder="Phone Number"
-                            name="number"
-                            style={{ backgroundColor: 'white' }}
-                            onChange={(e) => {
-                              handleInputChange(e);
-                            }}
-                            value={values.number}
-                          />
-                          <small style={{ color: 'red' }}>
-                            {errors.number}
-                          </small>
-                        </Col>
-                        <Col md={4}>
-                          <label htmlFor="email">Email</label>
-                          <input
-                            type="email"
-                            className="form-control"
-                            id="email"
-                            placeholder="email"
-                            name="email"
-                            style={{ backgroundColor: 'white' }}
-                            onChange={(e) => {
-                              handleInputChange(e);
-                            }}
-                            value={values.email}
-                          />
-                          <small style={{ color: 'red' }}>
-                            {errors.email}
-                          </small>
-                        </Col>
-                      </Row>
+                    <div style={{ position: 'relative' }}>
                       <Row className="mt-3">
                         <Col md={4}>
                           <label htmlFor="state">State</label>
@@ -576,10 +623,10 @@ function OrderSummaryScreen() {
                             onChange={(e) => {
                               handleInputChange(e);
                             }}
-                            value={values.pincode}
+                            value={values.postalCode}
                           />
                           <small style={{ color: 'red' }}>
-                            {errors.pincode}
+                            {errors.postalCode}
                           </small>
                         </Col>
                       </Row>
@@ -608,7 +655,14 @@ function OrderSummaryScreen() {
                           <input
                             className="form-check-input"
                             type="checkbox"
-                            value=""
+                            checked={values.saved}
+                            onChange={() => {
+                              setValues((t) => {
+                                const temp = { ...t };
+                                temp.saved = !temp.saved;
+                                return temp;
+                              });
+                            }}
                             id="flexCheckDefault"
                           />
                           <label
@@ -620,17 +674,56 @@ function OrderSummaryScreen() {
                             </small>
                           </label>
                         </div>
+                        <Button
+                          className="btn-danger rounded py-1 px-5"
+                          style={{
+                            textTransform: 'none',
+                            position: 'absolute',
+                            right: '0',
+                          }}
+                          name="pop"
+                          onClick={() => setAna(false)}
+                        >
+                          Cancel
+                        </Button>
                       </Row>
                       <div
                         style={{
-                          color: 'red',
+                          color: message.color,
                           textAlign: 'center',
                           width: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
                         }}
                       >
-                        {message}
+                        {message.message}
                       </div>
-                    </>
+                    </div>
+                  )}
+                </div>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'column',
+                    color: postalStatus.color,
+                  }}
+                >
+                  {postalStatus.message}
+                  {pincodeLoading && (
+                    <Spinner
+                      animation="border"
+                      role="status"
+                      style={{
+                        width: '20px',
+                        height: '20px',
+                        margin: 'auto',
+                        display: 'block',
+                      }}
+                    />
                   )}
                 </div>
                 <div
@@ -661,7 +754,12 @@ function OrderSummaryScreen() {
                   Payment Options
                 </h1>
                 <Stylediv>
-                  <StyledButtn variant="danger">COD</StyledButtn>
+                  <StyledButtn
+                    variant="danger"
+                    onClick={() => handleCOD()}
+                  >
+                    COD
+                  </StyledButtn>
                   <StyledButtn
                     variant="danger"
                     onClick={paymentHandler}
@@ -669,12 +767,15 @@ function OrderSummaryScreen() {
                     Others
                   </StyledButtn>
                 </Stylediv>
+                <StyleBox style={{ color: codError.color }}>
+                  {codError.message}
+                </StyleBox>
               </>
             )}
           </Container>
         </>
       )}
-    </>
+    </div>
   );
 }
 
@@ -717,6 +818,13 @@ const StyledButtn = styled(Button)`
 const Stylediv = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`;
+
+const StyleBox = styled.div`
+  display: flex;
+  justify-content: center;
   align-items: center;
   width: 100%;
 `;
