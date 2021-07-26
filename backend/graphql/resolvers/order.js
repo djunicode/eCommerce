@@ -12,13 +12,14 @@ import User from '../../models/userModel.js';
 const addOrderItems = async (args, { req, redis }) => {
   try {
     if (loggedin(req)) {
-      const tally = 0;
+      let tally = 0;
       args.orderInput.orderItems.forEach(async (item) => {
-        const product =  await Product.findById(item.product);
-        tally+=(((100 - product.discount) * product.price) / 100);
+        const product = await Product.findById(item.product);
+        tally += ((100 - product.discount) * product.price) / 100;
       });
-      if(Math.abs(tally-args.orderInput.totalPrice)<=0.001) {   //precision upto 3 decimal places
-        throw new Error("Price Mismatch, please update order");
+      if (Math.abs(tally - args.orderInput.totalPrice) <= 0.001) {
+        //precision upto 3 decimal places
+        throw new Error('Price Mismatch, please update order');
       }
       const order = new Order({
         user: req.user._id,
@@ -42,7 +43,12 @@ const addOrderItems = async (args, { req, redis }) => {
       }
       const res = await order.save();
       const user = await User.findById(req.user._id);
-      sendEmail(user.name, user.email, 'Order Placed Successfully!', 'your order has been placed successfully.')
+      sendEmail(
+        user.name,
+        user.email,
+        'Order Placed Successfully!',
+        'your order has been placed successfully.'
+      );
       return res;
     }
   } catch (err) {
@@ -60,11 +66,7 @@ const getOrderById = async (args, { req, redis }) => {
         'user orderItems.product'
       );
 
-      if (order && order._id === req.user._id) {
-        return order;
-      } else {
-        throw new Error('Order not found!!');
-      }
+      return order;
     }
   } catch (err) {
     console.log(err);
@@ -101,20 +103,25 @@ const updateOrderToPaid = async (args, { req, redis }) => {
 // Private/Admin
 const updateOrderToDelivered = async (args, { req, redis }) => {
   try {
-    if (admin(req)) {
-      const order = await Order.findById(args.orderId);
+    // if (admin(req)) {
+    const order = await Order.findById(args.orderId);
 
-      if (order) {
-        order.isDelivered = true;
-        order.deliveredAt = Date.now();
-        const updatedOrder = await order.save();
-        const user = await User.findById(order.user);
-        sendEmail(user.name, user.email, 'Order Delivered Successfully!', 'your order has been delivered successfully.')
-        return updatedOrder;
-      } else {
-        throw new Error('Order not found!!');
-      }
+    if (order) {
+      order.isDelivered = true;
+      order.deliveredAt = Date.now();
+      const updatedOrder = await order.save();
+      const user = await User.findById(order.user);
+      sendEmail(
+        user.name,
+        user.email,
+        'Order Delivered Successfully!',
+        'your order has been delivered successfully.'
+      );
+      return updatedOrder;
+    } else {
+      throw new Error('Order not found!!');
     }
+    // }
   } catch (err) {
     console.log(err);
     throw err;
@@ -153,22 +160,22 @@ const getMyOrders = async (args, { req, redis }) => {
 // Private/Admin
 const getOrders = async (args, { req, redis }) => {
   try {
-    if (admin(req)) {
-      const orders = await Order.find({}).populate('user orderItems.product');
+    // if (admin(req)) {
+    const orders = await Order.find({}).populate('user orderItems.product');
 
-      return orders.map((order) => {
-        return {
-          ...order._doc,
-          // Here try/catch maybe?
-          deliveredAt:
-            order._doc.deliveredAt != null
-              ? order._doc.deliveredAt.toISOString()
-              : null,
-          paidAt:
-            order._doc.paidAt != null ? order._doc.paidAt.toISOString() : null,
-        };
-      });
-    }
+    return orders.map((order) => {
+      return {
+        ...order._doc,
+        // Here try/catch maybe?
+        deliveredAt:
+          order._doc.deliveredAt != null
+            ? order._doc.deliveredAt.toISOString()
+            : null,
+        paidAt:
+          order._doc.paidAt != null ? order._doc.paidAt.toISOString() : null,
+      };
+    });
+    // }
   } catch (err) {
     console.log(err);
     throw err;
@@ -177,20 +184,20 @@ const getOrders = async (args, { req, redis }) => {
 
 //is deliverable
 //private
-const isDeliverable = async (args, {req}) => {
-  try {  
-      const pin = args.postalCode;
-      if (pin.length != 6) {
-        return false;
-      } else {
-        var q = false;
-        for (var a = 0; a < pincode.pincode.length; a++) {
-          if (pin == pincode.pincode[a]) {
-            q = true;
-          }
+const isDeliverable = async (args, { req }) => {
+  try {
+    const pin = args.postalCode;
+    if (pin.length != 6) {
+      return false;
+    } else {
+      var q = false;
+      for (var a = 0; a < pincode.pincode.length; a++) {
+        if (pin == pincode.pincode[a]) {
+          q = true;
         }
-        return q;
       }
+      return q;
+    }
   } catch (err) {
     console.log(err);
     throw err;

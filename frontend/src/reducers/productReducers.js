@@ -23,6 +23,15 @@ import {
   PRODUCT_TOP_REQUEST,
   PRODUCT_TOP_SUCCESS,
   PRODUCT_TOP_FAIL,
+  PRODUCT_SEARCH_REQUEST,
+  PRODUCT_SEARCH_SUCCESS,
+  PRODUCT_SEARCH_FAIL,
+  PRODUCT_BY_CATEGORY_REQUEST,
+  PRODUCT_BY_CATEGORY_SUCCESS,
+  PRODUCT_BY_CATEGORY_FAIL,
+  PRODUCT_BY_SUBCATEGORY_REQUEST,
+  PRODUCT_BY_SUBCATEGORY_SUCCESS,
+  PRODUCT_BY_SUBCATEGORY_FAIL,
 } from '../constants/productConstants';
 
 export const productListReducer = (
@@ -35,9 +44,7 @@ export const productListReducer = (
     case PRODUCT_LIST_SUCCESS:
       return {
         loading: false,
-        products: action.payload.products,
-        pages: action.payload.pages,
-        page: action.payload.page,
+        products: action.payload,
       };
     case PRODUCT_LIST_FAIL:
       return { loading: false, error: action.payload };
@@ -95,7 +102,7 @@ export const productCreateReducer = (state = {}, action) => {
 };
 
 export const productUpdateReducer = (
-  state = { product: {} },
+  state = { update: {} },
   action,
 ) => {
   switch (action.type) {
@@ -105,12 +112,12 @@ export const productUpdateReducer = (
       return {
         loading: false,
         success: true,
-        product: action.payload,
+        update: action.payload,
       };
     case PRODUCT_UPDATE_FAIL:
       return { loading: false, error: action.payload };
     case PRODUCT_UPDATE_RESET:
-      return { product: {} };
+      return { update: {} };
     default:
       return state;
   }
@@ -142,6 +149,59 @@ export const productTopRatedReducer = (
       return { loading: false, products: action.payload };
     case PRODUCT_TOP_FAIL:
       return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const productSearchReducer = (
+  state = { searchproducts: [] },
+  action,
+) => {
+  switch (action.type) {
+    case PRODUCT_SEARCH_REQUEST:
+      return { loading: true };
+    case PRODUCT_SEARCH_SUCCESS:
+      console.log(action.payload);
+      return { loading: false, searchproducts: action.payload };
+    case PRODUCT_SEARCH_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const productByCategoryReducer = (
+  state = { pByC: [] },
+  action,
+) => {
+  switch (action.type) {
+    case PRODUCT_BY_CATEGORY_REQUEST:
+      return { pByC: [] };
+    case PRODUCT_BY_CATEGORY_SUCCESS:
+      return {
+        pByC: action.payload,
+      };
+    case PRODUCT_BY_CATEGORY_FAIL:
+      return { Cerror: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const productBySubCategoryReducer = (
+  state = { pBySC: [] },
+  action,
+) => {
+  switch (action.type) {
+    case PRODUCT_BY_SUBCATEGORY_REQUEST:
+      return { pBySC: [] };
+    case PRODUCT_BY_SUBCATEGORY_SUCCESS:
+      return {
+        pBySC: action.payload,
+      };
+    case PRODUCT_BY_SUBCATEGORY_FAIL:
+      return { SCerror: action.payload };
     default:
       return state;
   }

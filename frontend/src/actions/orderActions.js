@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import axios from 'axios';
 import { CART_CLEAR_ITEMS } from '../constants/cartConstants';
 import {
@@ -21,6 +22,8 @@ import {
   ORDER_DELIVER_REQUEST,
 } from '../constants/orderConstants';
 import { logout } from './userActions';
+
+const url = 'http://localhost:5000/graphql';
 
 export const createOrder = (order) => async (dispatch, getState) => {
   try {
@@ -71,9 +74,15 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
       type: ORDER_DETAILS_REQUEST,
     });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
+    // const {
+    //   userLogin: { userInfo },
+    // } = getState();
+
+    const userInfo = JSON.parse(
+      window.localStorage.getItem('userInfo'),
+    );
+
+    console.log(userInfo.token);
 
     const config = {
       headers: {
@@ -81,11 +90,61 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/orders/${id}`, config);
+    const { data } = await axios.post(
+      url,
+      {
+        query: `
+      query{
+        orderById(orderId: "${id}"){
+          _id
+          user{
+            name
+            email
+            phoneNo
+          }
+          orderItems{
+            qty
+            price
+            product{
+              _id
+              name
+              image
+            }
+          }
+          shippingAddress{
+            address
+            city
+            postalCode
+            country
+          }
+          paymentMethod
+          paymentResult {
+            id
+          }
+          taxPrice
+          shippingPrice
+          totalPrice
+          isPaid
+          paidAt
+          isDelivered
+          deliveredAt
+        }
+      }
+      `,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      },
+    );
+
+    console.log(data);
 
     dispatch({
       type: ORDER_DETAILS_SUCCESS,
-      payload: data,
+      payload: data.data.orderById,
     });
   } catch (error) {
     const message =
@@ -163,15 +222,27 @@ export const deliverOrder = (order) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.put(
-      `/api/orders/${order._id}/deliver`,
-      {},
-      config,
+    const { data } = await axios.post(
+      url,
+      {
+        query: `
+          mutation{
+            updateOrderToDelivered(orderId: "${order._id}"){
+              isDelivered
+            }
+          }
+        `,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      },
     );
 
     dispatch({
       type: ORDER_DELIVER_SUCCESS,
-      payload: data,
+      payload: data.data.updateOrderToDelivered,
     });
   } catch (error) {
     const message =
@@ -200,15 +271,39 @@ export const listMyOrders = () => async (dispatch, getState) => {
 
     const config = {
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
-    const { data } = await axios.get(`/api/orders/myorders`, config);
+    const data = await axios.post(
+      'http://localhost:5000/graphql',
+      {
+        query: `
+        query {
+          myorders {
+            _id
+            orderItems {
+              qty
+              price
+              product {
+                _id
+                name
+              }
+            }
+            totalPrice
+          }
+        }
+        `,
+      },
+      config,
+    );
+
+    const reconData = data.data.data.myorders;
 
     dispatch({
       type: ORDER_LIST_MY_SUCCESS,
-      payload: data,
+      payload: reconData,
     });
   } catch (error) {
     const message =
@@ -235,17 +330,66 @@ export const listOrders = () => async (dispatch, getState) => {
       userLogin: { userInfo },
     } = getState();
 
+    const userinfo = JSON.parse(localStorage.getItem('userInfo'));
+
+    const Data = JSON.stringify({
+      query: `query orders {
+        orders {
+            _id
+            user {
+                  _id
+                  name
+                  phoneNo
+                  email
+                  password
+                  isAdmin
+                  token
+              }
+            orderItems {
+                qty
+                price
+            }
+            shippingAddress {
+                address
+                city
+                postalCode
+                country
+            }
+            paymentMethod
+            paymentResult {
+                id
+                status
+                update_time
+                email_address
+            }
+            taxPrice
+            shippingPrice
+            totalPrice
+            isPaid
+            paidAt
+            isDelivered
+            deliveredAt
+        }
+    }`,
+      variables: {},
+    });
+
     const config = {
+      method: 'post',
+      url: 'http://localhost:5000/graphql',
       headers: {
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userinfo.token}`,
+        'Content-Type': 'application/json',
       },
+      data: Data,
     };
 
-    const { data } = await axios.get(`/api/orders`, config);
+    const { data } = await axios(config);
+    console.log(data.data.orders);
 
     dispatch({
       type: ORDER_LIST_SUCCESS,
-      payload: data,
+      payload: data.data.orders,
     });
   } catch (error) {
     const message =

@@ -7,6 +7,7 @@ const loggedin = (req) => {
 };
 
 const admin = (req) => {
+  console.log(req.user);
   if (req.user && req.user.isAdmin) {
     return true;
   } else {

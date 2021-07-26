@@ -64,7 +64,10 @@ export const login = (email, password) => async (dispatch) => {
       email: data.data.data.authUser.email,
       phoneNo: data.data.data.authUser.phoneNo,
       isAdmin: data.data.data.authUser.isAdmin,
+      token: data.data.data.authUser.token,
     };
+
+    console.log(reconstructedData);
 
     dispatch({
       type: USER_LOGIN_SUCCESS,
@@ -161,7 +164,7 @@ export const register = (name, number, email, password) => async (
   }
 };
 
-export const getUserDetails = (id) => async (dispatch, getState) => {
+export const getUserDetails = () => async (dispatch, getState) => {
   try {
     dispatch({
       type: USER_DETAILS_REQUEST,
@@ -174,14 +177,38 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
     const config = {
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
+        'Content-Type': 'application/json',
       },
     };
 
-    const { data } = await axios.get(`/api/users/${id}`, config);
+    const data = await axios.post(
+      'http://localhost:5000/graphql',
+      {
+        query: `
+        query {
+          getUserProfile {
+            _id
+            name
+            phoneNo
+            email
+            userAddress {
+                address
+                city
+                postalCode
+                country
+            }
+          }
+        }
+        `,
+      },
+      config,
+    );
+
+    const reconstructedData = data.data.data.getUserProfile;
 
     dispatch({
       type: USER_DETAILS_SUCCESS,
-      payload: data,
+      payload: reconstructedData,
     });
   } catch (error) {
     const message =
@@ -218,21 +245,53 @@ export const updateUserProfile = (user) => async (
       },
     };
 
-    const { data } = await axios.put(
-      `/api/users/profile`,
-      user,
+    const data = await axios.post(
+      'http://localhost:5000/graphql',
+      {
+        query: `
+        mutation {
+          updateUserProfile (userInput: {
+            name: "${user.name}",
+            phoneNo: "${user.phoneNo}",
+            email: "${user.email}",
+            password: "${user.password}",
+            ${user.userAddress.len != 0 ? user.userAddress : ''}
+          }) {
+              _id
+              name
+              phoneNo
+              email
+              password
+              isAdmin
+              userAddress {
+                  _id
+                  address
+                  city
+                  postalCode
+                  country
+              }
+              token
+          }
+        }
+        `,
+      },
       config,
     );
 
+    const reconstructedData = data.data.data.updateUserProfile;
+
     dispatch({
       type: USER_UPDATE_PROFILE_SUCCESS,
-      payload: data,
+      payload: reconstructedData,
     });
     dispatch({
       type: USER_LOGIN_SUCCESS,
-      payload: data,
+      payload: reconstructedData,
     });
-    localStorage.setItem('userInfo', JSON.stringify(data));
+    localStorage.setItem(
+      'userInfo',
+      JSON.stringify(reconstructedData),
+    );
   } catch (error) {
     const message =
       error.response && error.response.data.message
