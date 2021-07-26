@@ -11,7 +11,6 @@ export const UserSchema = `
     }
 
     type userAddress {
-        _id: ID!
         address: String
         city: String
         postalCode: String
@@ -24,7 +23,7 @@ export const UserSchema = `
         email: String!
         password: String!
         isAdmin: Boolean
-        userAddress: userAddressInput
+        userAddress: [userAddressInput!]
     }
 
     input userAddressInput {
@@ -40,6 +39,6 @@ export const UserSchema = `
         email: String
         password: String
         isAdmin: Boolean
-        userAddress: userAddressInput
+        userAddress: [userAddressInput!]
     }
 `;
