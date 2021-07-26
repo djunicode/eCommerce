@@ -141,6 +141,7 @@ const CartScreen = ({ match, history }) => {
             Go Back
           </Link>
           <h1>My Cart</h1>
+          <hr />
           {loading ? (
             <Loader />
           ) : error ? (
@@ -296,7 +297,7 @@ const CartScreen = ({ match, history }) => {
 
         {/* ***** PAYMENT DETAILS ***** */}
         <Col md={3} lg={4}>
-          <Card>
+          <Card style={{ border: 'none' }}>
             <ListGroup variant="flush">
               <PriceList>
                 <h4 style={{ color: '#30475E' }}>PRICE DETAILS</h4>
