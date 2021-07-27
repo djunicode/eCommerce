@@ -6,7 +6,7 @@ import { Container, Row, Form, Nav, Table } from 'react-bootstrap';
 import { FixedSizeGrid as Grid } from 'react-window';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { listOrders } from '../actions/orderActions';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
@@ -19,7 +19,6 @@ function OrdersScreen() {
   const [message, setMessage] = useState('');
   const [completed, setCompleted] = useState(true);
   const dispatch = useDispatch();
-  const history = useHistory();
   const { data, loading, error } = useSelector(
     (state) => state.orderList,
   );
@@ -185,19 +184,15 @@ function OrdersScreen() {
                       <td>
                         {product.totalPrice} Rs
                         <br />
-                        <span
+                        <Link
                           style={{
                             color: '#5F5F5F',
                             cursor: 'pointer',
                           }}
-                          onClick={() => {
-                            history.push(
-                              `orderdetails/${product._id}`,
-                            );
-                          }}
+                          to={`/orderdetails/${product._id}`}
                         >
                           SEE DETAILS &gt;
-                        </span>
+                        </Link>
                       </td>
                     </tr>
                   );
@@ -321,17 +316,15 @@ function OrdersScreen() {
                     <td>
                       {product.totalPrice} Rs
                       <br />
-                      <span
+                      <Link
                         style={{
                           color: '#5F5F5F',
                           cursor: 'pointer',
                         }}
-                        onClick={() => {
-                          history.push(`orderdetails/${product._id}`);
-                        }}
+                        to={`/orderdetails/${product._id}`}
                       >
                         SEE DETAILS &gt;
-                      </span>
+                      </Link>
                     </td>
                   </tr>
                 );
