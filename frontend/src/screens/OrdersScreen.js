@@ -1,3 +1,4 @@
+/* eslint-disable react/button-has-type */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -140,12 +141,7 @@ function OrdersScreen() {
             ) : columnIndex === 2 ? (
               <tbody>
                 {filtered.map((product, index) => {
-                  let date;
-                  if (completed) {
-                    date = new Date(product.deliveredAt);
-                  } else {
-                    date = new Date(product.paidAt);
-                  }
+                  const date = new Date(Number(product.createdAt));
                   return (
                     <tr key={index}>
                       <td>
@@ -186,7 +182,7 @@ function OrdersScreen() {
                         <br />
                         <Link
                           style={{
-                            color: '#5F5F5F',
+                            color: 'blue',
                             cursor: 'pointer',
                           }}
                           to={`/orderdetails/${product._id}`}
@@ -271,12 +267,7 @@ function OrdersScreen() {
           ) : columnIndex === 2 ? (
             <tbody>
               {products.map((product, index) => {
-                let date;
-                if (completed) {
-                  date = new Date(product.deliveredAt);
-                } else {
-                  date = new Date(product.paidAt);
-                }
+                const date = new Date(Number(product.createdAt));
                 return (
                   <tr key={index}>
                     <td>
@@ -318,7 +309,7 @@ function OrdersScreen() {
                       <br />
                       <Link
                         style={{
-                          color: '#5F5F5F',
+                          color: 'blue',
                           cursor: 'pointer',
                         }}
                         to={`/orderdetails/${product._id}`}
@@ -480,6 +471,24 @@ function OrdersScreen() {
               >
                 {Cell}
               </Grid>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+              }}
+            >
+              <button
+                className="btn btn-danger mt-1"
+                onClick={() => {
+                  setFiltered(null);
+                  setEdate('');
+                  setSdate('');
+                }}
+              >
+                RESET
+              </button>
             </div>
           </Container>
         </div>
