@@ -33,6 +33,7 @@ export const OrderSchema = `
         paidAt:          String
         isDelivered:     Boolean!
         deliveredAt:     String
+        createdAt:       String
     }
 
             

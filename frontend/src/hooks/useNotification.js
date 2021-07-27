@@ -28,6 +28,9 @@ const useNotification = (message = 'General Notification') => {
           body: JSON.stringify({ message }),
         },
       );
+    })
+    .catch((error) => {
+      console.log(error);
     });
 };
 
