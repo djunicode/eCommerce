@@ -369,6 +369,7 @@ export const listOrders = () => async (dispatch) => {
             paidAt
             isDelivered
             deliveredAt
+            createdAt
         }
     }`,
       variables: {},

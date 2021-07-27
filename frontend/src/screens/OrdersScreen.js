@@ -37,7 +37,6 @@ function OrdersScreen() {
       let d;
       if (completed) {
         d = data.filter((value) => {
-          console.log(value.isDelivered);
           if (value.isDelivered) {
             return value;
           }
@@ -60,12 +59,8 @@ function OrdersScreen() {
       const Sdate = new Date(sdate);
       const Edate = new Date(edate);
       const Filter = products.filter((product) => {
-        let date;
-        if (completed) {
-          date = new Date(product.deliveredAt);
-        } else {
-          date = new Date(product.paidAt);
-        }
+        const date = new Date(Number(product.createdAt));
+        console.log(Date);
         if (Sdate <= date && date <= Edate) {
           return product;
         }
