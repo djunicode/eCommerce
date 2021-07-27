@@ -360,7 +360,7 @@ function OrdersScreen() {
           <Container>
             <Row style={{ position: 'relative' }}>
               <h5 style={{ color: '#5EAAA8' }}>TOTAL ORDERS (50)</h5>
-              <Styledspan className="text-right">
+              <Styledspan>
                 <Form.Label style={{ transform: 'translateY(15%)' }}>
                   Filter by Date :&nbsp;
                 </Form.Label>
@@ -511,8 +511,11 @@ const GridHeadings = styled.th`
 const Styledspan = styled.span`
   position: absolute;
   right: 0;
+  text-align: right;
 
   @media (max-width: 768px) {
     position: static;
+    text-align: left;
+    padding-left: 1rem;
   }
 `;
