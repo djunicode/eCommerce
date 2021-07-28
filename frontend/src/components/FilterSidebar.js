@@ -560,6 +560,7 @@ const StyledTabToggleBtn = styled.button`
 `;
 
 const StyledLeftSidebar = styled.div`
+  background: white;
   position: fixed;
   top: 85px;
   left: 6px;
@@ -580,10 +581,11 @@ const StyledLeftSidebar = styled.div`
     display: ${(props) =>
       props.display.display && props.display.tab ? '' : 'none'};
     z-index: 2000 !important;
+    background: ${BACKGROUND};
   }
 
   @media (max-width: 990px) {
-    top: 145px;
+    top: 125px;
   }
 `;
 

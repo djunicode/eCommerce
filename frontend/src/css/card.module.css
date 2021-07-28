@@ -13,3 +13,9 @@
 .cardBody {
   padding-bottom: 10px;
 }
+
+@media screen and (max-width: 900px) {
+  .card, .cardHeader {
+    background-color: #F9F9F9;
+  }
+}

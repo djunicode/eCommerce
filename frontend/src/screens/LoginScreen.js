@@ -95,7 +95,7 @@ const LoginScreen = ({ location, history }) => {
                       : '/register'
                   }
                   style={{
-                    color: 'blue',
+                    color: '#5EAAA8',
                     textDecoration: 'underline',
                   }}
                 >

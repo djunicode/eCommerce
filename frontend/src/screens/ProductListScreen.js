@@ -430,13 +430,14 @@ const ProductListScreen = ({ history }) => {
           <Form.Label>Search Products</Form.Label>
           <Form
             style={{
-              border: '1px solid #929293',
+              border: '1px solid #CED4DA',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
             }}
           >
             <Form.Control
+              style={{border:'none'}}
               type="text"
               placeholder="Search products"
               value={searchProd}
@@ -454,7 +455,7 @@ const ProductListScreen = ({ history }) => {
         </Column>
         <Column>
           <Form.Label>Filter by Category</Form.Label>
-          <div style={{ border: '1px solid #929293' }}>
+          <div>
             <Select
               isClearable
               onChange={handleCategoryChange}
@@ -464,7 +465,7 @@ const ProductListScreen = ({ history }) => {
         </Column>
         <Column controlId="subCategory">
           <Form.Label>Filter by Sub Category</Form.Label>
-          <div style={{ border: '1px solid #929293' }}>
+          <div>
             <Select
               isClearable
               onChange={handleSubCategoryChange}
