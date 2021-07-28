@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import { Card } from 'react-bootstrap';
 import styled from 'styled-components';
 import Rating from './Rating';
-
-import { LIGHT_BLUE } from '../util/colors';
 import styles from '../css/card.module.css';
 
 const Product = ({ product }) => {
@@ -46,7 +44,6 @@ const Product = ({ product }) => {
 export default Product;
 
 const StyledCard = styled(Card)`
-  background-color: ${LIGHT_BLUE};
   margin: auto 12px;
   padding: 12px !important;
 

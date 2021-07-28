@@ -13,8 +13,6 @@ import FilterSidebar from '../components/FilterSidebar';
 import { getProductByCategory } from '../actions/categoryActions';
 import { filter } from '../actions/filterActions';
 
-import { DARK_BLUE_2 } from '../util/colors';
-
 import {
   StyledBadgeSortDiv,
   StyledBadge,
@@ -82,19 +80,20 @@ const CategoryScreen = () => {
           {localProducts[0] && (
             <StyledBadgeSortDiv>
               <StyledBadge variant="danger">
-                {localProducts[0].category.name.toUpperCase()}{' '}
+                <span style={{ color: '#5F5F5F' }}>
+                  Categories /{' '}
+                </span>
+                {localProducts[0].category.name}{' '}
                 <Link to="/">
                   <i
                     className="fas fa-times"
-                    style={{ color: DARK_BLUE_2 }}
+                    style={{ color: '#5F5F5F', marginLeft: '1rem' }}
                   />
                 </Link>
               </StyledBadge>
               <Dropdown>
-                <StyledDropdownToggle id="dropdown-basic">
-                  SORT BY
-                </StyledDropdownToggle>
-                <Dropdown.Menu>
+                <StyledDropdownToggle>Sort By</StyledDropdownToggle>
+                <Dropdown.Menu style={{ background: '#fff' }}>
                   <StyledDropdownItem
                     as="button"
                     onClick={() => {

@@ -1,11 +1,12 @@
+/* eslint-disable array-callback-return */
 import React, { useEffect, useState } from 'react';
+import Select from 'react-select';
 import { VariableSizeGrid as Grid } from 'react-window';
 import { LinkContainer } from 'react-router-bootstrap';
 import styled from 'styled-components';
 import { Table, Button, Row, Col, Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-// import AutoSizer from "react-virtualized-auto-sizer";
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import {
@@ -191,6 +192,48 @@ const ProductListScreen = ({ history }) => {
       window.confirm('Are you sure you want to delete this product?')
     ) {
       dispatch(deleteProduct(queryDeleteProduct));
+    }
+  };
+
+  const [categoryOptions, setCategoryOptions] = useState([]);
+  const [subCategoryOptions, setSubCategoryOptions] = useState([]);
+
+  useEffect(() => {
+    if (categories) {
+      const optionsTwo = [];
+      categories.map((cat) => {
+        const optionsTemp = { label: cat.name, value: cat._id };
+        optionsTwo.push(optionsTemp);
+      });
+      setCategoryOptions(optionsTwo);
+    }
+  }, [categories]);
+
+  useEffect(() => {
+    if (subcategories) {
+      const optionsTwo = [];
+      subcategories.map((subCat) => {
+        const optionsTemp = { label: subCat.name, value: subCat._id };
+        optionsTwo.push(optionsTemp);
+      });
+      setSubCategoryOptions(optionsTwo);
+    }
+  }, [subcategories]);
+
+  const handleCategoryChange = (newValue) => {
+    if (newValue != null) {
+      setCategory(newValue.value);
+    }
+    if (newValue == null) {
+      setCategory('');
+    }
+  };
+  const handleSubCategoryChange = (newValue) => {
+    if (newValue != null) {
+      setSubCategory(newValue.value);
+    }
+    if (newValue == null) {
+      setCategory('');
     }
   };
 
@@ -381,19 +424,20 @@ const ProductListScreen = ({ history }) => {
   );
 
   return (
-    <div style={{ padding: '0 4rem' }}>
-      <Row>
-        <Col>
+    <div>
+      <Row xs={1} sm={2} lg={4}>
+        <Column>
           <Form.Label>Search Products</Form.Label>
           <Form
             style={{
-              border: '1px solid #929293',
+              border: '1px solid #CED4DA',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
             }}
           >
             <Form.Control
+              style={{ border: 'none' }}
               type="text"
               placeholder="Search products"
               value={searchProd}
@@ -408,39 +452,28 @@ const ProductListScreen = ({ history }) => {
               }}
             />
           </Form>
-        </Col>
-        <Col>
+        </Column>
+        <Column>
           <Form.Label>Filter by Category</Form.Label>
-          <Form.Control
-            as="select"
-            defaultValue="Filter by Category"
-            // value={category}
-            onChange={(e) => {
-              setCategory(e.target.value);
-            }}
-            style={{ border: '1px solid #929293' }}
-          >
-            {categories.map((cat) => (
-              <option value={cat._id}>{cat.name}</option>
-            ))}
-          </Form.Control>
-        </Col>
-        <Col controlId="subCategory">
+          <div>
+            <Select
+              isClearable
+              onChange={handleCategoryChange}
+              options={categoryOptions}
+            />
+          </div>
+        </Column>
+        <Column controlId="subCategory">
           <Form.Label>Filter by Sub Category</Form.Label>
-          <Form.Control
-            as="select"
-            defaultValue="Filter by Sub Category"
-            onChange={(e) => {
-              setSubCategory(e.target.value);
-            }}
-            style={{ border: '1px solid #929293' }}
-          >
-            {subcategories.map((sub) => (
-              <option value={sub._id}>{sub.name}</option>
-            ))}
-          </Form.Control>
-        </Col>
-        <Col className="text-right">
+          <div>
+            <Select
+              isClearable
+              onChange={handleSubCategoryChange}
+              options={subCategoryOptions}
+            />
+          </div>
+        </Column>
+        <Column className="text-right">
           <Link to="/admin/product/create">
             <Button
               className="my-3"
@@ -449,7 +482,7 @@ const ProductListScreen = ({ history }) => {
               <i className="fas fa-plus" /> Create Product
             </Button>
           </Link>
-        </Col>
+        </Column>
       </Row>
       {loadingDelete && <Loader />}
       {errorDelete && (
@@ -466,8 +499,6 @@ const ProductListScreen = ({ history }) => {
       ) : (
         <>
           <div style={{ overflowX: 'auto', marginTop: '35px' }}>
-            {/* <AutoSizer>
-              {({ height, width }) => ( */}
             <Grid
               className="Grid"
               columnCount={5}
@@ -479,36 +510,7 @@ const ProductListScreen = ({ history }) => {
             >
               {Cell}
             </Grid>
-            {/* )}
-            </AutoSizer> */}
           </div>
-
-          {/* <tbody>
-              {products.map((product) => (
-                <tr key={product._id}>
-                  <td>{product.name}</td>
-                  <td>{product.category}</td>
-                  <td>{product.subcategory}</td>
-                  <td>{product._id}</td>
-                  <td>
-                    <LinkContainer
-                      to={`/admin/product/${product._id}/edit`}
-                    >
-                      <ActionButton className="btn-sm">
-                        <i className="fas fa-edit" />
-                      </ActionButton>
-                    </LinkContainer>
-                    <ActionButton
-                      className="btn-sm"
-                      onClick={() => deleteHandler(product._id)}
-                    >
-                      <i className="fas fa-trash" />
-                    </ActionButton>
-                  </td>
-                </tr>
-              ))}
-              </tbody> */}
-          {/* </Table>  */}
         </>
       )}
     </div>
@@ -517,10 +519,17 @@ const ProductListScreen = ({ history }) => {
 
 export default ProductListScreen;
 
-const GridHeadings = styled.th`
+const Column = styled(Col)`
+  @media screen and (max-width: 600px) {
+    margin-bottom: 20px;
+  }
+`;
+
+const GridHeadings = styled.td`
   text-transform: uppercase;
   color: #5eaaa8;
   font-size: 1rem;
+  font-weight: 600;
 `;
 const ActionButton = styled(Button)`
   background: none;

@@ -240,6 +240,7 @@ const ProductScreen = () => {
       });
     } else if (isDeliverable === true) {
       const mutation = [];
+      console.log(`${data._id}sjsks`);
       mutation.push(
         `{product:"${data._id}",isOptionSelected: ${
           options.length !== 0
@@ -303,7 +304,7 @@ const ProductScreen = () => {
         <Message>{error}</Message>
       ) : (
         <>
-          <Contain>
+          <Contain style={{ border: '1px solid #d5d5d5' }}>
             <Row style={{ height: '100%' }}>
               <Col lg={5} className="mr-4">
                 <div className="img-fluid" style={{ zIndex: '1000' }}>
@@ -721,7 +722,6 @@ const Box = styled.div`
 const Contain = styled.div`
   padding: 3rem;
   background-color: white;
-  border: 1px solid #d5d5d5;
   letter-spacing: 0.5px;
   height: auto;
   position: relative;
