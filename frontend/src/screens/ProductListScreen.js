@@ -437,7 +437,7 @@ const ProductListScreen = ({ history }) => {
             }}
           >
             <Form.Control
-              style={{border:'none'}}
+              style={{ border: 'none' }}
               type="text"
               placeholder="Search products"
               value={searchProd}
