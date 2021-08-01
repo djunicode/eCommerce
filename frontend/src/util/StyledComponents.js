@@ -55,10 +55,7 @@ export const StyledBadgeSortDiv = styled.div`
 
 export const StyledBadge = styled.p`
   font-size: 16px;
-  border-radius: 8px;
-  background-color: ${BACKGROUND} !important;
-  color: ${DARK_BLUE_2} !important;
-  border: 2px ${DARK_BLUE_2} solid;
+  color: #f05454 !important;
   padding: 7px;
   margin: 0 8px;
 
@@ -70,26 +67,32 @@ export const StyledBadge = styled.p`
 `;
 
 export const StyledDropdownToggle = styled(Dropdown.Toggle)`
-  background-color: ${DARK_BLUE_2} !important;
-  color: ${BACKGROUND} !important;
-  border-radius: 8px;
-  padding: 10px !important;
-  font-size: 16px;
+  background-color: #fff;
+  color: #5f5f5f !important;
+  border: 1px solid #ced4da;
+  padding: 0.5rem 1.5rem;
+  text-transform: initial;
   margin: 0 8px;
-
+  &:hover {
+    background-color: ${BACKGROUND};
+  }
+  &:focus {
+    background-color: ${BACKGROUND} !important;
+    border: 1px solid ${BACKGROUND} !important;
+  }
   @media (max-width: 500px) {
     margin-top: 8px;
   }
 `;
 
 export const StyledDropdownItem = styled(Dropdown.Item)`
-  background-color: ${DARK_BLUE_2};
-  color: ${BACKGROUND};
-  font-size: 16px;
-  border: none !important;
+  border: 1px solid #dfdfdf;
+  background-color: #fff;
+  font-size: 14px;
+  padding: 0.5rem 0.8rem;
 
   &:hover {
-    background-color: ${BACKGROUND};
+    background-color: #dff2fa;
     color: ${DARK_BLUE_2};
   }
 `;
@@ -105,7 +108,6 @@ export const StyledGridDiv = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   overflow-y: auto !important;
   z-index: 1000 !important;
-  background-color: ${BACKGROUND};
   text-align: left !important;
   margin: auto 12px auto 330px;
 

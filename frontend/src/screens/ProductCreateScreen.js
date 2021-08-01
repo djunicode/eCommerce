@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Button, Col, Row } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { createProduct } from '../actions/productActions';
@@ -186,7 +187,7 @@ const ProductCreateScreen = ({ history }) => {
   // }, [optionsInput]);
 
   return (
-    <div style={{ padding: '0 4rem' }}>
+    <div>
       <Link
         to="/admin/productlist"
         className="btn btn-light my-3"
@@ -211,14 +212,14 @@ const ProductCreateScreen = ({ history }) => {
             validated={validated}
           >
             <Row style={{ marginBottom: '1rem' }}>
-              <Col>
+              <Column>
                 <Row
                   style={{ marginBottom: '1rem' }}
                   xs={1}
                   md={2}
                   lg={4}
                 >
-                  <Col>
+                  <Column>
                     <Form.Label>Name</Form.Label>
                     <Form.Control
                       required
@@ -230,18 +231,19 @@ const ProductCreateScreen = ({ history }) => {
                     <Form.Control.Feedback type="invalid">
                       This field is required
                     </Form.Control.Feedback>
-                  </Col>
+                  </Column>
 
-                  <Col>
+                  <Column>
+                    <Form.Label>Brand</Form.Label>
                     <BrandDropdown
                       brand={brand}
                       setBrand={setBrand}
                       brandName={brandName}
                       dropdownError={dropdownError}
                     />
-                  </Col>
+                  </Column>
 
-                  <Col>
+                  <Column>
                     <Form.Label>Price</Form.Label>
                     <Form.Control
                       required
@@ -253,38 +255,43 @@ const ProductCreateScreen = ({ history }) => {
                     <Form.Control.Feedback type="invalid">
                       This field is required
                     </Form.Control.Feedback>
-                  </Col>
+                  </Column>
 
-                  <Col>
-                    <Form.Group as={Col}>
-                      <Form.Label>Quantity</Form.Label>
-                      <Form.Control
-                        required
-                        type="number"
-                        placeholder="Enter quantity"
-                        value={countInStock}
-                        onChange={(e) =>
-                          setCountInStock(e.target.value)
-                        }
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        This field is required
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                  </Col>
+                  <Column>
+                    <Form.Label>Quantity</Form.Label>
+                    <Form.Control
+                      required
+                      type="number"
+                      placeholder="Enter quantity"
+                      value={countInStock}
+                      onChange={(e) =>
+                        setCountInStock(e.target.value)
+                      }
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      This field is required
+                    </Form.Control.Feedback>
+                  </Column>
                 </Row>
 
-                <Row style={{ marginBottom: '1rem' }}>
-                  <Col>
+                <Row
+                  style={{ marginBottom: '1rem' }}
+                  xs={1}
+                  md={2}
+                  lg={4}
+                >
+                  <Column>
+                    <Form.Label>Category</Form.Label>
                     <CatDropdown
                       categ={categ}
                       setCateg={setCateg}
                       categoryName={categoryName}
                       dropdownError={dropdownError}
                     />
-                  </Col>
+                  </Column>
 
-                  <Col>
+                  <Column>
+                    <Form.Label>Sub Category</Form.Label>
                     <SubCatDropdown
                       categ={categ}
                       subCateg={subCateg}
@@ -292,9 +299,9 @@ const ProductCreateScreen = ({ history }) => {
                       subCategoryName={subCategoryName}
                       dropdownError={dropdownError}
                     />
-                  </Col>
+                  </Column>
 
-                  <Col>
+                  <Column>
                     <Form.Label>Discount</Form.Label>
                     <Form.Control
                       type="number"
@@ -302,9 +309,9 @@ const ProductCreateScreen = ({ history }) => {
                       value={discount}
                       onChange={(e) => setDiscount(e.target.value)}
                     />
-                  </Col>
+                  </Column>
                 </Row>
-              </Col>
+              </Column>
             </Row>
 
             <Form.Group>
@@ -405,3 +412,9 @@ const ProductCreateScreen = ({ history }) => {
 };
 
 export default ProductCreateScreen;
+
+const Column = styled(Col)`
+  @media screen and (max-width: 600px) {
+    margin-bottom: 20px;
+  }
+`;

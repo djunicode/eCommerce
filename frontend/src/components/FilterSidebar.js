@@ -299,7 +299,7 @@ const FilterSidebar = ({ page }) => {
       </StyledTabToggleBtn>
       <StyledLeftSidebar display={show}>
         <Row>
-          <StyledH1>
+          <h4 style={{ margin: '1.5rem 0 1rem 16px' }}>
             Filter By{' '}
             <StyledI
               className="fas fa-times"
@@ -310,7 +310,7 @@ const FilterSidebar = ({ page }) => {
                 })
               }
             />
-          </StyledH1>
+          </h4>
         </Row>
         <Row>
           <StyledAccordian defaultActiveKey="0">
@@ -560,6 +560,7 @@ const StyledTabToggleBtn = styled.button`
 `;
 
 const StyledLeftSidebar = styled.div`
+  background: white;
   position: fixed;
   top: 85px;
   left: 6px;
@@ -569,9 +570,7 @@ const StyledLeftSidebar = styled.div`
   box-shadow: 8px 0 6px -6px #bbb;
   padding-left: 15px;
   margin-right: 10px;
-  margin-left: 10px;
   height: 100vh;
-  background-color: ${BACKGROUND};
 
   &::-webkit-scrollbar {
     width: 0px;
@@ -582,18 +581,19 @@ const StyledLeftSidebar = styled.div`
     display: ${(props) =>
       props.display.display && props.display.tab ? '' : 'none'};
     z-index: 2000 !important;
+    background: ${BACKGROUND};
   }
 
   @media (max-width: 990px) {
-    top: 145px;
+    top: 125px;
   }
 `;
 
-const StyledH1 = styled.h1`
-  margin-left: 16px;
-  margin-top: 12px;
-  font-weight: 400;
-`;
+// const StyledH1 = styled.h1`
+//   margin-left: 16px;
+//   margin-top: 12px;
+//   font-weight: 400;
+// `;
 
 const StyledI = styled.i`
   color: ${DARK_BLUE_2};
@@ -624,12 +624,14 @@ const StyledClearFiltersBtn = styled(Button)`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  background-color: ${DARK_BLUE_2};
-  border-radius: 6px;
+  background-color: #fff;
+  border: 1px solid #929293;
+  color: #929293;
 
   :hover {
     transform: scale(0.98);
     transition: 0.2s;
-    background-color: ${DARK_BLUE_2};
+    background-color: #d4d4d4;
+    color: #5f5f5f;
   }
 `;

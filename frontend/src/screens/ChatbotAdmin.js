@@ -155,13 +155,7 @@ const ChatbotAdmin = () => {
 
   return (
     <>
-      <div
-        style={{
-          minHeight: '100vh',
-          minWidth: '100vw',
-          backgroundColor: 'white',
-        }}
-      >
+      <div>
         {loading ? (
           <Loader />
         ) : error ? (
@@ -170,18 +164,24 @@ const ChatbotAdmin = () => {
           <>
             <div>
               <Container>
-                <h3>CHATBOT</h3>
+                <h1>CHATBOT</h1>
                 <StyledRowFlex>
                   <StyledSubHeader>
-                    <StyledSubHeaderText>MESSAGE</StyledSubHeaderText>
+                    <StyledSubHeaderText>
+                      MESSAGE :
+                    </StyledSubHeaderText>
                   </StyledSubHeader>
                   <StyledBox>
-                    <InputGroup className="m-2">
+                    <InputGroup>
                       <FormControl
                         type="text"
                         placeholder="Message"
                         aria-describedby="basic-addon2"
                         value={fmsg.msg}
+                        style={{
+                          margin: 'none',
+                          backgroundColor: '#F9F9F9',
+                        }}
                         onChange={(e) => {
                           const { value } = e.target;
                           setFmsg((t) => {
@@ -198,11 +198,14 @@ const ChatbotAdmin = () => {
                         </InputGroup.Text>
                       </InputGroup.Append>
                     </InputGroup>
+                    <HR />
                   </StyledBox>
                 </StyledRowFlex>
                 <StyledRowFlex>
                   <StyledSubHeader>
-                    <StyledSubHeaderText>ANSWERS</StyledSubHeaderText>
+                    <StyledSubHeaderText>
+                      ANSWERS :
+                    </StyledSubHeaderText>
                   </StyledSubHeader>
                   <StyledBox>
                     {messages.map((msg, index) => {
@@ -217,14 +220,16 @@ const ChatbotAdmin = () => {
                           key={msg[0].index}
                         >
                           <Card
-                            style={{ backgroundColor: '#F9F9F9' }}
+                            style={{
+                              backgroundColor: '#F9F9F9',
+                              border: 'none',
+                            }}
                           >
                             <Card.Header
                               style={{
                                 backgroundColor: '#F9F9F9',
                                 padding: '0',
-                                borderBottom:
-                                  '2px solid rgba(0,0,0,0.125)',
+                                border: 'none',
                               }}
                             >
                               <Accordion.Toggle
@@ -243,16 +248,21 @@ const ChatbotAdmin = () => {
                                   });
                                 }}
                               >
-                                <span style={{ fontWeight: '100' }}>
+                                <span
+                                  style={{
+                                    color: '#55595c',
+                                    fontSize: '15px',
+                                  }}
+                                >
                                   {msg[0].msg}&nbsp;&nbsp;&nbsp;
                                   {arrow[`${index}`] ? (
                                     <i
-                                      style={{ color: '#222831' }}
+                                      style={{ color: '#55595c' }}
                                       className="fas fa-chevron-up"
                                     />
                                   ) : (
                                     <i
-                                      style={{ color: '#222831' }}
+                                      style={{ color: '#55595c' }}
                                       className="fas fa-chevron-down"
                                     />
                                   )}
@@ -336,15 +346,15 @@ const ChatbotAdmin = () => {
                   </StyledBox>
                 </StyledRowFlex>
                 <Stylediv>
-                  <StyledButtn
-                    variant="danger"
+                  <Button
+                    style={{ backgroundColor: '#FC7845' }}
                     onClick={() => {
                       setMessages(tmessages);
                     }}
                   >
                     Undo Changes
-                  </StyledButtn>
-                  <StyledButtn
+                  </Button>
+                  <Button
                     variant="danger"
                     onClick={() => {
                       handleSave();
@@ -352,7 +362,7 @@ const ChatbotAdmin = () => {
                     }}
                   >
                     Save Changes
-                  </StyledButtn>
+                  </Button>
                 </Stylediv>
                 {Loading && (
                   <>
@@ -396,25 +406,14 @@ const ChatbotAdmin = () => {
                 left: '0',
                 right: '0',
                 bottom: '0',
-                backgroundColor: 'rgba(0,0,0,.7)',
+                backgroundColor: 'rgba(0,0,0,0.8)',
                 zIndex: '1000',
               }}
               onClick={() => {
                 setOpen(false);
               }}
             />
-            <div
-              style={{
-                position: 'fixed',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                backgroundColor: '#FFF',
-                padding: '50px',
-                zIndex: 1000,
-                borderRadius: '20px',
-              }}
-            >
+            <ModalContainer>
               <Form>
                 <Form.Group controlId="formBasicEmail">
                   <Form.Label>Msg</Form.Label>
@@ -452,7 +451,7 @@ const ChatbotAdmin = () => {
                   Done
                 </StyledButton>
               </Form>
-            </div>
+            </ModalContainer>
           </>
         )}
         {delt && (
@@ -471,21 +470,10 @@ const ChatbotAdmin = () => {
                 setDelt(false);
               }}
             />
-            <div
-              style={{
-                position: 'fixed',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                backgroundColor: '#FFF',
-                padding: '50px',
-                zIndex: 1000,
-                borderRadius: '20px',
-              }}
-            >
-              Are you sure you want to delete this?
+            <ModalContainer>
+              Are you sure you want to delete this option?
               <StyledDiv>
-                <StyledButtn
+                <Button
                   variant="danger"
                   onClick={() => {
                     handleDelete(dmsg, di);
@@ -493,17 +481,17 @@ const ChatbotAdmin = () => {
                   }}
                 >
                   Yes
-                </StyledButtn>
-                <StyledButtn
+                </Button>
+                <Button
                   variant="danger"
                   onClick={() => {
                     setDelt(false);
                   }}
                 >
                   No
-                </StyledButtn>
+                </Button>
               </StyledDiv>
-            </div>
+            </ModalContainer>
           </>
         )}
       </div>
@@ -515,11 +503,13 @@ export default ChatbotAdmin;
 
 const StyledRowFlex = styled.div`
   display: flex !important;
-  flex-direction: row !important;
+  flex-direction: row;
   gap: 12px;
   vertical-align: middle;
-  margin: 12px auto;
   padding: auto;
+  @media screen and (max-width: 500px) {
+    flex-direction: column;
+  }
 `;
 
 const StyledSubHeader = styled.div`
@@ -528,9 +518,25 @@ const StyledSubHeader = styled.div`
 
 const StyledSubHeaderText = styled.p`
   text-transform: uppercase;
-  font-size: 20px;
+  color: #30475e;
+  margin-right: 0.8rem;
+  font-weight: 600;
+  font-size: 16px;
   @media (max-width: 768px) {
     width: 100%;
+  }
+  @media screen and (max-width: 500px) {
+    margin-bottom: 0;
+    margin-top: 1rem;
+  }
+`;
+
+const HR = styled.hr`
+  margin: 0;
+  color: #d4d4d4;
+  height: 2px;
+  @media screen and (max-width: 500px) {
+    display: none;
   }
 `;
 
@@ -560,11 +566,6 @@ const StyledButton = styled(Button)`
   margin-top: 12px;
 `;
 
-const StyledButtn = styled(Button)`
-  border-radius: 4px;
-  margin-top: 12px;
-`;
-
 const StyledBtn = styled(Button)`
   text-transform: none;
   font-size: 1rem;
@@ -589,12 +590,35 @@ const StyledDiv = styled.div`
   justify-content: space-evenly;
   align-items: center;
   width: 100%;
+  margin-top: 1.5rem;
 `;
 
 const Stylediv = styled.div`
   margin-top: 40px;
+  float: right;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 20rem;
+  @media screen and (max-width: 500px) {
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    height: 7rem;
+  }
+`;
+const ModalContainer = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 50px;
+  z-index: 1000;
+  @media screen and (max-width: 500px) {
+    padding: 20px;
+    top: 60%;
+    width: 90%;
+  }
 `;

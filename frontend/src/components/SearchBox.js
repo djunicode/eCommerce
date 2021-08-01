@@ -68,6 +68,7 @@ const StyledFormControl = styled(Form.Control)`
   color: ${LIGHT_PEACH};
   outline: none !important;
   box-shadow: none !important;
+  border: none !important;
 
   &:focus{
     background-color: ${DARK_BLUE_2} !important;

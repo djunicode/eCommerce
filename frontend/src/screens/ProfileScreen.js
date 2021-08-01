@@ -56,23 +56,21 @@ const classes = {
   },
   mainHeading: {
     background: BACKGROUND,
-    borderBottom: '3px solid',
-    borderBottomColor: LIGHT_PEACH,
     color: DARK_BLUE_2,
-    fontSize: '1.5rem',
+    border: 'none',
   },
   mainHeading2: {
     color: DARK_BLUE_2,
-    fontSize: '1.5rem',
+    border: 'none',
   },
   userDetailsContainer: {
     background: BACKGROUND,
-    borderBottom: '3px solid',
-    borderBottomColor: LIGHT_PEACH,
+    border: 'none',
   },
   addresses: {
     background: BACKGROUND,
     paddingTop: '20px',
+    border: 'none',
   },
   icon: {
     float: 'right',
@@ -207,12 +205,8 @@ const ProfileScreen = ({ history }) => {
 
   return (
     <Row>
-      <Col
-        md={{ span: 4, offset: 1 }}
-        xl={{ span: 3, offset: 1 }}
-        style={{ marginBottom: '25px' }}
-      >
-        <h2>Profile</h2>
+      <Col md={4} style={{ marginBottom: '25px' }}>
+        <h1>Profile</h1>
         {message && <Message variant="danger">{message}</Message>}
         {}
         {success && (
@@ -226,45 +220,55 @@ const ProfileScreen = ({ history }) => {
           <>
             <ListGroup>
               <ListGroup.Item style={classes.mainHeading}>
-                USER DETAILS
-                {isEditing ? (
-                  <div style={{ float: 'right' }}>
-                    <i
-                      className="fas fa-check"
-                      style={{
-                        marginLeft: '10px',
-                        marginRight: '15px',
-                        cursor: 'pointer',
-                      }}
-                      onClick={() => {
-                        submitHandler();
-                      }}
-                      onKeyDown={() => {}}
-                      role="textbox"
-                      tabIndex={0}
-                    />
-                    <i
-                      className="fas fa-times"
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => setEditing(false)}
-                      onKeyDown={() => {}}
-                      role="textbox"
-                      tabIndex={0}
-                    />
-                  </div>
-                ) : (
-                  <>
-                    <i
-                      className="fas fa-edit"
-                      style={classes.icon}
-                      onClick={() => setEditing(true)}
-                      onKeyDown={() => {}}
-                      role="textbox"
-                      tabIndex={0}
-                    />
-                  </>
-                )}
+                <Row>
+                  <Col xs={10}>
+                    <h4>USER DETAILS</h4>
+                  </Col>
+
+                  {isEditing ? (
+                    <Col xs={2}>
+                      <div style={{ float: 'right' }}>
+                        <i
+                          className="fas fa-check"
+                          style={{
+                            marginLeft: '10px',
+                            marginRight: '15px',
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => {
+                            submitHandler();
+                          }}
+                          onKeyDown={() => {}}
+                          role="textbox"
+                          tabIndex={0}
+                        />
+                        <i
+                          className="fas fa-times"
+                          style={{ cursor: 'pointer' }}
+                          onClick={() => setEditing(false)}
+                          onKeyDown={() => {}}
+                          role="textbox"
+                          tabIndex={0}
+                        />
+                      </div>
+                    </Col>
+                  ) : (
+                    <Col xs={2}>
+                      <i
+                        className="fas fa-edit"
+                        style={classes.icon}
+                        onClick={() => setEditing(true)}
+                        onKeyDown={() => {}}
+                        role="textbox"
+                        tabIndex={0}
+                      />
+                    </Col>
+                  )}
+                </Row>
               </ListGroup.Item>
+              <hr
+                style={{ backgroundColor: '#FFB396', margin: '0' }}
+              />
               <ListGroup.Item style={classes.userDetailsContainer}>
                 {isEditing ? (
                   <>
@@ -339,10 +343,12 @@ const ProfileScreen = ({ history }) => {
                 )}
 
                 <br />
-                <div style={classes.mainHeading2}>
-                  SAVED ADDRESSES
-                </div>
+                <br />
+                <h4 style={classes.mainHeading2}>SAVED ADDRESSES</h4>
               </ListGroup.Item>
+              <hr
+                style={{ backgroundColor: '#FFB396', margin: '0' }}
+              />
               <ListGroup.Item style={classes.addresses}>
                 {addresses.map((address, index) =>
                   isEditing ? (
@@ -464,8 +470,8 @@ const ProfileScreen = ({ history }) => {
           </>
         )}
       </Col>
-      <Col md={{ span: 6 }} xl={{ span: 6, offset: 1 }}>
-        <h2>My Orders</h2>
+      <Col>
+        <h1>My Orders</h1>
         {loadingOrders ? (
           <Loader />
         ) : errorOrders ? (

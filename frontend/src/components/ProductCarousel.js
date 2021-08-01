@@ -14,7 +14,6 @@ import styled from 'styled-components';
 import Loader from './Loader';
 import Message from './Message';
 import { listTopProducts } from '../actions/productActions';
-import { BACKGROUND } from '../util/colors';
 
 const ProductCarousel = () => {
   const dispatch = useDispatch();
@@ -46,7 +45,7 @@ const ProductCarousel = () => {
   } else if (width >= 576) {
     x = 3;
   } else if (width < 576) {
-    x = 2;
+    x = 1;
   }
 
   const content = [];
@@ -60,8 +59,8 @@ const ProductCarousel = () => {
         <Carousel.Item key={i}>
           <CardDeck>
             <Row
-              style={{ width: '100%' }}
-              xs={2}
+              style={{ width: '100%', margin: '0' }}
+              xs={1}
               sm={3}
               md={4}
               lg={5}
@@ -74,7 +73,6 @@ const ProductCarousel = () => {
                       <Card.Body
                         style={{
                           padding: '0',
-                          background: BACKGROUND,
                         }}
                       >
                         <img
@@ -84,7 +82,6 @@ const ProductCarousel = () => {
                           style={{
                             width: '100%',
                             height: 'auto',
-                            marginTop: 40,
                             marginBottom: 0,
                           }}
                         />
@@ -130,29 +127,29 @@ const NACard = styled(Card)`
   border: none;
   margin: 0;
   height: 100%;
-  background-color: ${BACKGROUND} !important;
+  background-color: white !important;
 `;
 const NAtitle = styled(Card.Title)`
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   text-transform: capitalize;
   margin: 25px 0 5px 0;
 
   @media screen and (max-width: 600px) {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 `;
 const NAprice = styled(Card.Text)`
   font-weight: light;
   text-transform: capitalize;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   margin: 10px 0 20px 0;
 
   @media screen and (max-width: 600px) {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 `;
 const NAFooter = styled(Card.Footer)`
-  background-color: ${BACKGROUND} !important;
+  background-color: white !important;
   padding: 0;
   border: none;
   margin-top: 15px;

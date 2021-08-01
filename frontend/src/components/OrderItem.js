@@ -1,37 +1,23 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
+import styled from 'styled-components';
 
-function OrderItem({ product }) {
+function OrderItem({ product, indexNo }) {
   return (
     <>
       <Row style={{ position: 'relative' }}>
-        <Col xs={3} />
         <Col xs={9}>
-          <h1
-            style={{
-              letterSpacing: '0',
-              textTransform: 'none',
-              paddingBottom: '0px',
-              overflow: 'wrap',
-              marginTop: '15px',
-            }}
-          >
-            {product.product.name}
-          </h1>
-          <h1
-            style={{
-              letterSpacing: '0',
-              textTransform: 'none',
-              paddingBottom: '0px',
-              position: 'absolute',
-              top: '0px',
-              right: '25px',
-              overflow: 'wrap',
-              marginTop: '15px',
-            }}
-          >
-            Rs {product.price}
-          </h1>
+          {product.product && (
+            <ProductName>
+              <span style={{ marginRight: '1rem' }}>
+                {indexNo + 1}.
+              </span>
+              {product.product.name}
+            </ProductName>
+          )}
+        </Col>
+        <Col>
+          <ProductPrice>Rs {product.price}</ProductPrice>
         </Col>
       </Row>
       <hr />
@@ -40,3 +26,14 @@ function OrderItem({ product }) {
 }
 
 export default OrderItem;
+
+const ProductName = styled.div`
+  font-size: 1.3rem;
+  margin: 1rem 0;
+  @media screen and (max-width: 576px) {
+    font-size: 1rem;
+  }
+`;
+const ProductPrice = styled(ProductName)`
+  float: right;
+`;

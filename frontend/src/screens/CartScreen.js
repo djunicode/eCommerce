@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars, operator-assignment, array-callback-return */
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,30 +7,28 @@ import {
   Col,
   ListGroup,
   Media,
-  Form,
   Button,
   Card,
   Image,
 } from 'react-bootstrap';
 import styled from 'styled-components';
 import Message from '../components/Message';
-import {
-  addToCart,
-  removeFromCart,
-  getCartItems,
-} from '../actions/cartActions';
+import { addToCart, getCartItems } from '../actions/cartActions';
+import Loader from '../components/Loader';
 
-const CartScreen = ({ match, location, history }) => {
+const CartScreen = ({ match, history }) => {
   const productId = match.params.id;
 
-  const qty = location.search
-    ? Number(location.search.split('=')[1])
-    : 1;
+  const [productQty, setProductQty] = useState([]);
+  const [removeItem, setRemoveItem] = useState(1);
+  const [totalPrice, setTotalPrice] = useState(0);
+  let totalAmount = 0;
+  let total = 0;
 
   const dispatch = useDispatch();
 
-  // const cart = useSelector((state) => state.cart);
-  // const { cartItems } = cart;
+  const cart = useSelector((state) => state.cart);
+  const { loading, cartItems, error } = cart;
 
   const query = `query {
     getCart {
@@ -42,11 +40,9 @@ const CartScreen = ({ match, location, history }) => {
         product {
           _id
           name
-          brand {
-            name
-            _id
-          }
+          price
           image
+          countInStock
         }
         isOptionSelected
         optionName
@@ -58,168 +54,436 @@ const CartScreen = ({ match, location, history }) => {
 
   useEffect(() => {
     dispatch(getCartItems(query));
-  }, [dispatch]);
+  }, [dispatch, removeItem]);
+
+  useEffect(() => {
+    const content = [];
+    if (cartItems.contents) {
+      cartItems.contents.map((ca, index) => {
+        content[index] = {
+          id: ca.product._id,
+          optionSelected: ca.isOptionSelected,
+          optionName: ca.optionName,
+          price: ca.price,
+          quantity: ca.quantity,
+          product: ca.product,
+        };
+        console.log();
+        // setTotalAmount(total + (content[index]['price'] * content[index]['qty']));
+        totalAmount = total + content[index].price;
+        total = totalAmount;
+        console.log(content[index].price);
+        console.log(totalAmount);
+        console.log(total);
+        return null;
+      });
+      console.log(content);
+      setProductQty(content);
+      setTotalPrice(totalAmount);
+    }
+  }, [cartItems]);
 
   // useEffect(() => {
   //   if (productId) {
-  //     dispatch(addToCart(productId, qty));
+  //     dispatch(addToCart(productQty));
   //   }
   // }, [dispatch, productId, qty]);
 
-  // const removeFromCartHandler = (id) => {
-  //   dispatch(removeFromCart(id));
-  // };
-
   const checkoutHandler = () => {
-    history.push('/login?redirect=shipping');
+    const mutation = [];
+    const mutationArray = [];
+    productQty.map((item) => {
+      if (productQty.quantity !== 0) {
+        mutation.push(
+          `{product:"${item.id}", isOptionSelected: ${item.optionSelected}, optionName: "${item.optionName}", price: ${item.price}, quantity: ${item.quantity}}`,
+        );
+        mutationArray.push(item);
+        console.log(mutationArray);
+        console.log(item);
+      }
+    });
+    dispatch(addToCart(mutation));
+    localStorage.setItem('cart', JSON.stringify(mutationArray));
+    console.log('check out is called');
   };
 
-  const [cartItems, setCartItems] = useState([]);
+  const removeHandler = (temp) => {
+    const mutation = [];
+    temp.map((item, index) => {
+      if (temp[index].quantity !== 0) {
+        console.log(temp[index].quantity);
+        mutation.push(
+          `{product:"${item.id}", isOptionSelected: ${item.optionSelected}, optionName: "${item.optionName}", price: ${item.price}, quantity: ${item.quantity}}`,
+        );
+      }
+    });
+    dispatch(addToCart(mutation));
+    console.log('remove handler is called');
+    console.log(mutation);
+  };
 
-  useEffect(() => {
-    setCartItems(JSON.parse(localStorage.getItem('cart')));
-    console.log(JSON.parse(localStorage.getItem('cart')));
-  }, []);
+  // let x;
+  // if (window.innerWidth <= 450) {
+  //   x = 300;
+  // } else {
+  //   x = 100;
+  // }
 
   return (
-    <Row style={{ padding: '0 4rem' }}>
-      <Col md={8}>
-        <Link
-          to="/"
-          className="btn btn-light my-3"
-          style={{ border: '1px solid #D4D4D4' }}
-        >
-          Go Back
-        </Link>
-        <h1>My Cart</h1>
-        {cartItems && cartItems.length === 0 ? (
-          <Message>
-            Your cart is empty. <br />
-          </Message>
-        ) : (
-          <ListGroup variant="flush">
-            {cartItems &&
-              cartItems.map((item, index) => (
-                <ListGroup.Item>
-                  <Media>
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      fluid
-                      className="mr-4"
-                      width={120}
-                      height={120}
-                    />
-                    <Media.Body>
-                      <Row>
-                        <Col>
-                          <div>{item.name}</div>
-                          <div>{item.brand.name}</div>
-                        </Col>
-                        <Col>Rs {item.price}</Col>
-                      </Row>
-                      <Row>
-                        <Col>
-                          Size:
-                          <span>
-                            {/* <Form.Control as="select" value={item.size}>
-                            <option>{item.size}</option>
-                          </Form.Control> */}
-                          </span>
-                        </Col>
-                        <Col>
-                          Qty:
-                          <span>
-                            <Form.Control
-                              value={item.quantity}
-                              // onChange={(e) =>
-                              //   dispatch(
-                              //     addToCart(
-                              //       item.product,
-                              //       Number(e.target.value),
-                              //     ),
-                              //   )
-                              // }
+    <div>
+      <Row xs={1} md={2}>
+        <Column md={9} lg={8}>
+          <Link
+            to="/"
+            className="btn btn-light my-3"
+            style={{ border: '1px solid #D4D4D4' }}
+          >
+            Go Back
+          </Link>
+          <h1>My Cart</h1>
+          <hr />
+          {loading ? (
+            <Loader />
+          ) : error ? (
+            <Message>
+              {error}
+              <br />
+              You need to <Link to="/login">Login</Link> first.
+            </Message>
+          ) : cartItems.contents &&
+            cartItems.contents.length === 0 ? (
+            <Message>
+              Your cart is empty. <br />
+            </Message>
+          ) : (
+            <ListGroup variant="flush">
+              {cartItems.contents &&
+                cartItems.contents.map((item, index) => (
+                  <ListItem>
+                    <MediaWrapper>
+                      <Image
+                        src={item.product.image}
+                        alt={item.product.name}
+                        fluid
+                        width={100}
+                        height={100}
+                        style={{ margin: '0 1rem 0 0' }}
+                      />
+                      <Media.Body>
+                        <Row style={{ marginBottom: '1.2rem' }}>
+                          <Col sm={8}>
+                            {item.product.countInStock === 0 ? (
+                              <div style={{ color: '#D81616' }}>
+                                This product is out of stock
+                              </div>
+                            ) : (
+                              ''
+                            )}
+                            <ProductName>
+                              {item.product.name}
+                            </ProductName>
+                          </Col>
+                          <Col xs={12} sm={4}>
+                            <ProductPrice>
+                              Rs {item.product.price}
+                            </ProductPrice>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <SecondCol xs={6} sm={4}>
+                            <span style={{ marginRight: '0.5rem' }}>
+                              Option:
+                            </span>
+                            <SpanBox>
+                              {item.isOptionSelected
+                                ? `${item.optionName}`
+                                : 'None'}
+                            </SpanBox>
+                          </SecondCol>
+                          <SecondCol xs={6}>
+                            Qty:
+                            <span>
+                              <QtyButtons
+                                disabled={
+                                  productQty[index] &&
+                                  (productQty[index].quantity === 1 ||
+                                    productQty[index].quantity === 0)
+                                }
+                                onClick={() => {
+                                  setProductQty((c) => {
+                                    const temp = [...c];
+                                    temp[index].quantity =
+                                      temp[index].quantity - 1;
+                                    temp[index].price =
+                                      temp[index].product.price *
+                                      temp[index].quantity;
+                                    return temp;
+                                  });
+                                  totalAmount =
+                                    totalPrice -
+                                    productQty[index].product.price;
+                                  console.log(totalAmount);
+                                  setTotalPrice(totalAmount);
+                                }}
+                              >
+                                -
+                              </QtyButtons>
+                            </span>
+                            <SpanBox>
+                              {productQty[index] &&
+                                productQty[index].quantity}
+                            </SpanBox>
+                            <span>
+                              <QtyButtons
+                                disabled={
+                                  productQty[index] &&
+                                  (productQty[index].quantity ===
+                                    item.product.countInStock ||
+                                    productQty[index].quantity === 0)
+                                }
+                                onClick={() => {
+                                  setProductQty((c) => {
+                                    const temp = [...c];
+                                    temp[index].quantity =
+                                      temp[index].quantity + 1;
+                                    temp[index].price =
+                                      temp[index].product.price *
+                                      temp[index].quantity;
+                                    return temp;
+                                  });
+                                  totalAmount =
+                                    totalPrice +
+                                    productQty[index].product.price;
+                                  console.log(totalAmount);
+                                  setTotalPrice(totalAmount);
+                                }}
+                              >
+                                +
+                              </QtyButtons>
+                            </span>
+                          </SecondCol>
+                          <SecondCol xs={2}>
+                            <TrashButton
+                              type="button"
+                              variant="light"
+                              onClick={() => {
+                                if (
+                                  window.confirm(
+                                    'Are you sure you want to remove this item from cart?',
+                                  )
+                                ) {
+                                  setProductQty((c) => {
+                                    const temp = [...c];
+                                    temp[index].quantity = 0;
+                                    console.log(temp);
+                                    removeHandler(temp);
+                                    return temp;
+                                  });
+                                  setRemoveItem(removeItem + 1);
+                                }
+                              }}
                             >
-                              {/* {[...Array(item.countInStock).keys()].map(
-                        (x) => (
-                          <option key={x + 1} value={x + 1}>
-                            {x + 1}
-                          </option>
-                        ),
-                      )} */}
-                            </Form.Control>
-                          </span>
-                        </Col>
-                        <Col>
-                          <Button
-                            type="button"
-                            variant="light"
-                            // onClick={() => {
-                            //   const cart = JSON.parse(
-                            //     localStorage.getItem('cart'),
-                            //   );
-                            //   cart.splice(index, 1);
-                            //   setCartItems(cart);
-                            //   console.log(cart);
-                            //   localStorage.setItem(
-                            //     'cart',
-                            //     JSON.stringify(cart),
-                            //   );
-                            // }}
-                          >
-                            <i className="fas fa-trash" />
-                          </Button>
-                        </Col>
-                      </Row>
-                    </Media.Body>
-                  </Media>
-                </ListGroup.Item>
-              ))}
-          </ListGroup>
-        )}
-      </Col>
+                              <i className="fas fa-trash" />
+                            </TrashButton>
+                          </SecondCol>
+                        </Row>
+                      </Media.Body>
+                    </MediaWrapper>
+                  </ListItem>
+                ))}
+            </ListGroup>
+          )}
+        </Column>
 
-      {/* ***** PAYMENT DETAILS ***** */}
-      <Col md={4}>
-        <Card>
-          <ListGroup variant="flush">
-            <PriceList>
-              <h4>PRICE DETAILS</h4>
-              <hr />
-            </PriceList>
-            {/* <ListGroup.Item>
-              <h2>
-                Subtotal (
-                {cartItems.reduce((acc, item) => acc + item.qty, 0)}
-                ) items
-              </h2>
-              $
-              {cartItems
-                .reduce((acc, item) => acc + item.qty * item.price, 0)
-                .toFixed(2)}
-            </ListGroup.Item> */}
-            <PriceList>
-              <Button
-                type="button"
-                className="btn-block"
-                disabled={cartItems && cartItems.length === 0}
-                onClick={checkoutHandler}
-                style={{ backgroundColor: '#F05454' }}
-              >
-                Proceed To Checkout
-              </Button>
-            </PriceList>
-          </ListGroup>
-        </Card>
-      </Col>
-    </Row>
+        {/* ***** PAYMENT DETAILS ***** */}
+        <Col md={3} lg={4}>
+          <Card style={{ border: 'none' }}>
+            <ListGroup variant="flush">
+              <PriceList>
+                <h4 style={{ color: '#30475E' }}>PRICE DETAILS</h4>
+              </PriceList>
+              <hr
+                style={{ backgroundColor: '#FFB396', margin: '0' }}
+              />
+
+              {cartItems.contents &&
+                cartItems.contents.map((item, index) => (
+                  <PriceList>
+                    <Row>
+                      <Col xs={8}>
+                        <ItemPriceName>
+                          {item.product.name}
+                        </ItemPriceName>
+                        <div style={{ color: '#5F5F5F' }}>
+                          {productQty[index] &&
+                            productQty[index].quantity}{' '}
+                          items
+                        </div>
+                      </Col>
+                      <Col xs={4}>
+                        <ItemPrice>
+                          Rs{' '}
+                          {productQty[index] &&
+                            productQty[index].price}
+                        </ItemPrice>
+                      </Col>
+                    </Row>
+                  </PriceList>
+                ))}
+
+              <PriceList>
+                <hr style={{ backgroundColor: '#E0E0E0' }} />
+                <Row>
+                  <Col>
+                    <TotalAmountText>Total Amount</TotalAmountText>
+                  </Col>
+                  <Col>
+                    <TotalAmount>Rs {totalPrice}</TotalAmount>
+                  </Col>
+                </Row>
+              </PriceList>
+
+              <PriceList>
+                <Link to="/OrderSummaryScreen">
+                  <CheckoutButton
+                    type="button"
+                    className="btn-block"
+                    disabled={
+                      cartItems.contents &&
+                      cartItems.contents.length === 0
+                    }
+                    onClick={checkoutHandler}
+                  >
+                    Proceed To Checkout
+                  </CheckoutButton>
+                </Link>
+              </PriceList>
+            </ListGroup>
+          </Card>
+        </Col>
+      </Row>
+    </div>
   );
 };
 
 export default CartScreen;
 
+const MediaWrapper = styled(Media)`
+  @media screen and (max-width: 450px) {
+    flex-direction: column;
+  }
+`;
+const Column = styled(Col)`
+  @media screen and (max-width: 768px) {
+    margin-bottom: 3rem;
+  }
+`;
+const SecondCol = styled(Col)`
+  @media screen and (max-width: 576px) {
+    padding-right: 0;
+    margin-bottom: 0.6rem;
+  }
+`;
+const ListItem = styled(ListGroup.Item)`
+  padding: 1.5rem 2rem;
+  @media screen and (max-width: 576px) {
+    padding: 1rem 1.2rem;
+    flex-direction: column;
+  }
+`;
 const PriceList = styled(ListGroup.Item)`
   background-color: #f9f9f9;
   border: none;
+  padding: 1rem 1.5rem;
+  padding-bottom: 0.3rem;
+`;
+const QtyButtons = styled(Button)`
+  font-size: 1rem;
+  background-color: #5eaaa8;
+  padding: 0 0.5rem;
+  border-radius: 2px;
+  margin: 0 0.5rem;
+  @media screen and (max-width: 625px) {
+    font-size: 0.7rem;
+    line-height: 1rem;
+    padding: 0 0.3rem;
+    margin: 0 0.3rem;
+  }
+`;
+const TrashButton = styled(Button)`
+  padding: 0;
+  font-size: 1rem;
+  float: right;
+  &:hover {
+    background: none;
+    color: #929293;
+  }
+  @media screen and (max-width: 576px) {
+    margin-right: 1rem;
+  }
+  @media screen and (max-width: 425px) {
+    margin-right: 0.5rem;
+  }
+`;
+const SpanBox = styled.span`
+  padding: 0.2rem 1rem;
+  border: 1px solid #929293;
+  @media screen and (max-width: 576px) {
+    padding: 0.2rem 0.5rem;
+  }
+`;
+const ProductName = styled.div`
+  font-size: 1.2rem;
+  @media screen and (max-width: 576px) {
+    font-size: 0.8rem;
+  }
+`;
+const ProductPrice = styled.div`
+  font-size: 1rem;
+  font-weight: 600;
+  float: right;
+  @media screen and (max-width: 576px) {
+    font-size: 0.7rem;
+    float: left;
+    margin-top: 0.5rem;
+    font-weight: 600;
+  }
+`;
+const CheckoutButton = styled(Button)`
+  background-color: #f05454;
+  margin-bottom: 1rem;
+  &:hover {
+    background-color: #30475e;
+  }
+  @media screen and (max-width: 360) {
+    font-size: 0.5rem !important;
+  }
+`;
+const ItemPriceName = styled.div`
+  font-size: 1rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  @media screen and (max-width: 625px) {
+    font-size: 0.7rem;
+  }
+`;
+const ItemPrice = styled.div`
+  font-size: 1rem;
+  float: right;
+  @media screen and (max-width: 625px) {
+    font-size: 0.7rem;
+  }
+`;
+const TotalAmountText = styled.div`
+  font-size: 1rem;
+  font-weight: 600;
+  @media screen and (max-width: 625px) {
+    font-size: 0.7rem;
+  }
+`;
+const TotalAmount = styled(ProductPrice)`
+  @media screen and (max-width: 576px) {
+    float: right;
+  }
 `;
