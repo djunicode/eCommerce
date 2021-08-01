@@ -141,6 +141,9 @@ function OrderSummaryScreen() {
     console.log(c);
     setCart(c);
     dispatch(getUserDetails());
+    dispatch({
+      type: PINCODE_CHECKED,
+    });
   }, [dispatch]);
 
   useEffect(() => {
