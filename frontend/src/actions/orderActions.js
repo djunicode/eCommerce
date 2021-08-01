@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CART_CLEAR_ITEMS } from '../constants/cartConstants';
+// import { CART_CLEAR_ITEMS } from '../constants/cartConstants';
 import {
   ORDER_CREATE_REQUEST,
   ORDER_CREATE_SUCCESS,
@@ -21,6 +21,7 @@ import {
   ORDER_DELIVER_REQUEST,
 } from '../constants/orderConstants';
 import { logout } from './userActions';
+import { addToCart } from './cartActions';
 
 const url = 'http://localhost:5000/graphql';
 
@@ -55,10 +56,7 @@ export const createOrder =
         payload: response.data,
       });
       if (cart) {
-        dispatch({
-          type: CART_CLEAR_ITEMS,
-          payload: response.data,
-        });
+        dispatch(addToCart([]));
       }
       localStorage.removeItem('cartItems');
     } catch (error) {

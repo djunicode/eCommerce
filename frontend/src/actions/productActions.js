@@ -282,9 +282,6 @@ export const listTopProducts = (query) => async (dispatch) => {
           ? error.response.data.message
           : error.message,
     });
-    if (error.response.status === 401) {
-      dispatch(logout());
-    }
   }
 };
 
@@ -315,9 +312,6 @@ export const searchProducts = (query) => async (dispatch) => {
           ? error.response.data.message
           : error.message,
     });
-    if (error.response.status === 401) {
-      dispatch(logout());
-    }
   }
 };
 
@@ -348,9 +342,6 @@ export const listProductByCategory = (query) => async (dispatch) => {
           ? error.response.data.message
           : error.message,
     });
-    if (error.response.status === 401) {
-      dispatch(logout());
-    }
   }
 };
 

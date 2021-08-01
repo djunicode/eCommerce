@@ -28,6 +28,7 @@ import { getUserDetails } from '../actions/userActions';
 import { createOrder, payOrder } from '../actions/orderActions';
 import useSubscribe from '../hooks/useSubscribe';
 import useNotification from '../hooks/useNotification';
+import { ORDER_CREATE_RESET } from '../constants/orderConstants';
 
 function OrderSummaryScreen() {
   const initialValues = {
@@ -74,6 +75,9 @@ function OrderSummaryScreen() {
 
   useEffect(() => {
     if (orderStatus.success) {
+      dispatch({
+        type: ORDER_CREATE_RESET,
+      });
       history.push('/');
       setCodError({
         color: 'red',
@@ -288,7 +292,12 @@ function OrderSummaryScreen() {
         _id
       }
     }`;
-    dispatch(createOrder(query, false));
+    if (localStorage.getItem('iscart')) {
+      dispatch(createOrder(query, true));
+      localStorage.removeItem('iscart');
+    } else {
+      dispatch(createOrder(query, false));
+    }
   };
 
   // RAZORPAY
@@ -354,7 +363,12 @@ function OrderSummaryScreen() {
                   _id
                 }
               }`;
-              dispatch(createOrder(createOrderMutation, false));
+              if (localStorage.getItem('iscart')) {
+                dispatch(createOrder(createOrderMutation, true));
+                localStorage.removeItem('iscart');
+              } else {
+                dispatch(createOrder(createOrderMutation, false));
+              }
 
               const paidMutation = `mutation {
                 updateOrderToPaid(

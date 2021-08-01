@@ -233,6 +233,9 @@ const ProductScreen = ({ match }) => {
         type: PINCODE_CHECKED,
       });
       localStorage.setItem('cart', JSON.stringify([temp]));
+      if (localStorage.getItem('iscart')) {
+        localStorage.removeItem('iscart');
+      }
       history.push('/OrderSummaryScreen');
     } else {
       setMessage({
