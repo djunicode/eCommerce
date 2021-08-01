@@ -220,7 +220,7 @@ const ProductScreen = ({ match }) => {
       });
     } else if (isDeliverable === true) {
       const temp = { ...tempData };
-      temp.price = price;
+      temp.price = price * qty;
       temp.optionName = options;
       temp.isOptionSelected = options.localeCompare('') !== 0;
       temp.product = {
