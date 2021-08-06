@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Rating = ({ value, text, color }) => {
+const Rating = ({ value, text, color, nomargin }) => {
   return (
-    <div className="rating mt-3">
+    <div className={nomargin ? 'rating' : 'rating mt-3'}>
       <span>
         <i
           style={{ color, fontSize: '1.1rem' }}
@@ -64,7 +64,7 @@ const Rating = ({ value, text, color }) => {
         />
       </span>
       <span style={{ fontSize: '1.1rem', fontWeight: '1000' }}>
-        {text && text}
+        {text}
       </span>
     </div>
   );

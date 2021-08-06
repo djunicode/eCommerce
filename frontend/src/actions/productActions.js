@@ -58,18 +58,16 @@ export const listProducts = (query) => async (dispatch) => {
       payload: data.data.getProducts,
     });
   } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-    // if (message === 'Not authorized, token failed') {
-    //   dispatch(logout());
-    // }
-    console.log(message);
     dispatch({
       type: PRODUCT_LIST_FAIL,
-      payload: message,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
     });
+    if (error.response.status === 401) {
+      dispatch(logout());
+    }
   }
 };
 
@@ -91,6 +89,9 @@ export const listProductDetails = (id) => async (dispatch) => {
           ? error.response.data.message
           : error.message,
     });
+    if (error.response.status === 401) {
+      dispatch(logout());
+    }
   }
 };
 
@@ -120,17 +121,16 @@ export const deleteProduct = (query) => async (dispatch) => {
       payload: data.data.deleteProduct,
     });
   } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-    // if (message === 'Not authorized, token failed') {
-    //   dispatch(logout());
-    // }
     dispatch({
       type: PRODUCT_DELETE_FAIL,
-      payload: message,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
     });
+    if (error.response.status === 401) {
+      dispatch(logout());
+    }
   }
 };
 
@@ -162,18 +162,16 @@ export const createProduct = (query) => async (dispatch) => {
       payload: data.data.createProduct,
     });
   } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-    // if (message === 'Not authorized, token failed') {
-    //   dispatch(logout());
-    // }
-    console.log(message);
     dispatch({
       type: PRODUCT_CREATE_FAIL,
-      payload: message,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
     });
+    if (error.response.status === 401) {
+      dispatch(logout());
+    }
   }
 };
 
@@ -202,19 +200,17 @@ export const updateProduct = (query) => async (dispatch) => {
       type: PRODUCT_UPDATE_SUCCESS,
       payload: data.data.updateProduct,
     });
-    // dispatch({ type: PRODUCT_DETAILS_SUCCESS, payload: data });
   } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-    // if (message === 'Not authorized, token failed') {
-    //   dispatch(logout());
-    // }
     dispatch({
       type: PRODUCT_UPDATE_FAIL,
-      payload: message,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
     });
+    if (error.response.status === 401) {
+      dispatch(logout());
+    }
   }
 };
 
@@ -246,17 +242,16 @@ export const createProductReview =
         type: PRODUCT_CREATE_REVIEW_SUCCESS,
       });
     } catch (error) {
-      const message =
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message;
-      if (message === 'Not authorized, token failed') {
-        dispatch(logout());
-      }
       dispatch({
         type: PRODUCT_CREATE_REVIEW_FAIL,
-        payload: message,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
       });
+      if (error.response.status === 401) {
+        dispatch(logout());
+      }
     }
   };
 
@@ -378,5 +373,8 @@ export const listProductBySubCategory =
             ? error.response.data.message
             : error.message,
       });
+      if (error.response.status === 401) {
+        dispatch(logout());
+      }
     }
   };

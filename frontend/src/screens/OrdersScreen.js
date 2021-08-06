@@ -1,3 +1,4 @@
+/* eslint-disable react/button-has-type */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -6,7 +7,7 @@ import { Container, Row, Form, Nav, Table } from 'react-bootstrap';
 import { FixedSizeGrid as Grid } from 'react-window';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { listOrders } from '../actions/orderActions';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
@@ -19,7 +20,6 @@ function OrdersScreen() {
   const [message, setMessage] = useState('');
   const [completed, setCompleted] = useState(true);
   const dispatch = useDispatch();
-  const history = useHistory();
   const { data, loading, error } = useSelector(
     (state) => state.orderList,
   );
@@ -37,7 +37,6 @@ function OrdersScreen() {
       let d;
       if (completed) {
         d = data.filter((value) => {
-          console.log(value.isDelivered);
           if (value.isDelivered) {
             return value;
           }
@@ -60,12 +59,8 @@ function OrdersScreen() {
       const Sdate = new Date(sdate);
       const Edate = new Date(edate);
       const Filter = products.filter((product) => {
-        let date;
-        if (completed) {
-          date = new Date(product.deliveredAt);
-        } else {
-          date = new Date(product.paidAt);
-        }
+        const date = new Date(Number(product.createdAt));
+        console.log(Date);
         if (Sdate <= date && date <= Edate) {
           return product;
         }
@@ -146,12 +141,7 @@ function OrdersScreen() {
             ) : columnIndex === 2 ? (
               <tbody>
                 {filtered.map((product, index) => {
-                  let date;
-                  if (completed) {
-                    date = new Date(product.deliveredAt);
-                  } else {
-                    date = new Date(product.paidAt);
-                  }
+                  const date = new Date(Number(product.createdAt));
                   return (
                     <tr key={index}>
                       <td>
@@ -190,19 +180,15 @@ function OrdersScreen() {
                       <td>
                         {product.totalPrice} Rs
                         <br />
-                        <span
+                        <Link
                           style={{
-                            color: '#5F5F5F',
+                            color: 'blue',
                             cursor: 'pointer',
                           }}
-                          onClick={() => {
-                            history.push(
-                              `orderdetails/${product._id}`,
-                            );
-                          }}
+                          to={`/orderdetails/${product._id}`}
                         >
                           SEE DETAILS &gt;
-                        </span>
+                        </Link>
                       </td>
                     </tr>
                   );
@@ -281,12 +267,7 @@ function OrdersScreen() {
           ) : columnIndex === 2 ? (
             <tbody>
               {products.map((product, index) => {
-                let date;
-                if (completed) {
-                  date = new Date(product.deliveredAt);
-                } else {
-                  date = new Date(product.paidAt);
-                }
+                const date = new Date(Number(product.createdAt));
                 return (
                   <tr key={index}>
                     <td>
@@ -326,17 +307,15 @@ function OrdersScreen() {
                     <td>
                       {product.totalPrice} Rs
                       <br />
-                      <span
+                      <Link
                         style={{
-                          color: '#5F5F5F',
+                          color: 'blue',
                           cursor: 'pointer',
                         }}
-                        onClick={() => {
-                          history.push(`orderdetails/${product._id}`);
-                        }}
+                        to={`/orderdetails/${product._id}`}
                       >
                         SEE DETAILS &gt;
-                      </span>
+                      </Link>
                     </td>
                   </tr>
                 );
@@ -360,16 +339,7 @@ function OrdersScreen() {
           <Container>
             <Row style={{ position: 'relative' }}>
               <h5 style={{ color: '#5EAAA8' }}>TOTAL ORDERS (50)</h5>
-              <span
-                className="text-right"
-                style={{
-                  // display: 'flex',
-                  // justifyContent: 'center',
-                  // alignItems: 'center',
-                  position: 'absolute',
-                  right: '0',
-                }}
-              >
+              <Styledspan>
                 <Form.Label style={{ transform: 'translateY(15%)' }}>
                   Filter by Date :&nbsp;
                 </Form.Label>
@@ -419,7 +389,7 @@ function OrdersScreen() {
                 />
                 <br />
                 <small className="text-danger">{message}&nbsp;</small>
-              </span>
+              </Styledspan>
             </Row>
             <Nav
               className="mt-4"
@@ -502,6 +472,24 @@ function OrdersScreen() {
                 {Cell}
               </Grid>
             </div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+              }}
+            >
+              <button
+                className="btn btn-danger mt-1"
+                onClick={() => {
+                  setFiltered(null);
+                  setEdate('');
+                  setSdate('');
+                }}
+              >
+                RESET
+              </button>
+            </div>
           </Container>
         </div>
       )}
@@ -515,4 +503,16 @@ const GridHeadings = styled.th`
   text-transform: uppercase;
   color: #5eaaa8;
   font-size: 1rem;
+`;
+
+const Styledspan = styled.span`
+  position: absolute;
+  right: 0;
+  text-align: right;
+
+  @media (max-width: 768px) {
+    position: static;
+    text-align: left;
+    padding-left: 1rem;
+  }
 `;

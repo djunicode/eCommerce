@@ -104,6 +104,7 @@ const CartScreen = ({ match, history }) => {
     });
     dispatch(addToCart(mutation));
     localStorage.setItem('cart', JSON.stringify(mutationArray));
+    localStorage.setItem('iscart', true);
     console.log('check out is called');
   };
 

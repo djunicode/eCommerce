@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import SearchBox from './SearchBox';
 import { logout } from '../actions/userActions';
 import { DARK_BLUE_2, LIGHT_PEACH } from '../util/colors';
+import { PINCODE_CHECKED } from '../constants/productidConstants';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -46,6 +47,13 @@ const Header = () => {
                 <StyledNavLink
                   as={Link}
                   to={userInfo ? '/cart' : '/register'}
+                  onClick={() => {
+                    if (userInfo) {
+                      dispatch({
+                        type: PINCODE_CHECKED,
+                      });
+                    }
+                  }}
                 >
                   <i
                     className={userInfo ? 'fas fa-shopping-cart' : ''}
